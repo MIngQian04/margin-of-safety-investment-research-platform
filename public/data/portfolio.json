@@ -1,0 +1,178 @@
+{
+  "asOf": "2026-07-13",
+  "generatedAt": "2026-07-14T17:10:30+08:00",
+  "summary": {
+    "anchorWeight": 0.65,
+    "futureWeight": 0.075,
+    "cashWeight": 0.2749999999999999,
+    "universeScanned": 5524,
+    "financialReviewed": 237,
+    "financialComplete": 230,
+    "anchorEligible": 132
+  },
+  "holdings": [
+    {
+      "code": "000651.SZ",
+      "name": "格力电器",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "家用电器",
+      "weight": 0.1,
+      "metrics": {
+        "股息率": "7.7%",
+        "所有者收益率": "14.9%",
+        "三年ROE": "23.4%",
+        "稳定分": "83.1"
+      }
+    },
+    {
+      "code": "000568.SZ",
+      "name": "泸州老窖",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "食品饮料",
+      "weight": 0.1,
+      "metrics": {
+        "股息率": "7.8%",
+        "所有者收益率": "11.7%",
+        "三年ROE": "28.4%",
+        "稳定分": "81.1"
+      }
+    },
+    {
+      "code": "002032.SZ",
+      "name": "苏泊尔",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "家用电器",
+      "weight": 0.1,
+      "metrics": {
+        "股息率": "6.6%",
+        "所有者收益率": "6.5%",
+        "三年ROE": "34.4%",
+        "稳定分": "75.7"
+      }
+    },
+    {
+      "code": "601717.SH",
+      "name": "中创智领",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "机械设备",
+      "weight": 0.125,
+      "metrics": {
+        "股息率": "7.9%",
+        "所有者收益率": "15.1%",
+        "三年ROE": "17.8%",
+        "稳定分": "72.7"
+      }
+    },
+    {
+      "code": "300979.SZ",
+      "name": "华利集团",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "纺织服饰",
+      "weight": 0.125,
+      "metrics": {
+        "股息率": "10.9%",
+        "所有者收益率": "8.8%",
+        "三年ROE": "21.2%",
+        "稳定分": "71.3"
+      }
+    },
+    {
+      "code": "600809.SH",
+      "name": "山西汾酒",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "食品饮料",
+      "weight": 0.1,
+      "metrics": {
+        "股息率": "5.5%",
+        "所有者收益率": "9.1%",
+        "三年ROE": "35.2%",
+        "稳定分": "70.7"
+      }
+    },
+    {
+      "code": "600941.SH",
+      "name": "中国移动",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "十五五六网",
+      "industry": "通信",
+      "weight": 0.025,
+      "metrics": {
+        "未来逻辑分": "88.8",
+        "DCF安全边际": "25.8%",
+        "当前状态": "BOTTOM_HOLD_NO_ADD"
+      }
+    },
+    {
+      "code": "000400.SZ",
+      "name": "许继电气",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "电力系统扩容",
+      "industry": "电力设备",
+      "weight": 0.025,
+      "metrics": {
+        "未来逻辑分": "82.5",
+        "DCF安全边际": "12.0%",
+        "当前状态": "BOTTOM_HOLD_NO_ADD"
+      }
+    },
+    {
+      "code": "600312.SH",
+      "name": "平高电气",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "电力系统扩容",
+      "industry": "电力设备",
+      "weight": 0.025,
+      "metrics": {
+        "未来逻辑分": "79.5",
+        "DCF安全边际": "5.6%",
+        "当前状态": "BOTTOM_HOLD_NO_ADD"
+      }
+    }
+  ],
+  "pendingFinancials": [
+    "菜百股份",
+    "浙版传媒",
+    "陕西能源",
+    "军信股份",
+    "国邦医药",
+    "三一重能",
+    "可孚医疗"
+  ],
+  "logic": [
+    {
+      "step": "01",
+      "title": "先建立稳定锚",
+      "body": "从全A股筛选高现金回报、稳定ROE、低收益波动、合理负债与估值的成熟公司，让组合有时间等待。"
+    },
+    {
+      "step": "02",
+      "title": "再保留未来期权",
+      "body": "只从国家规划与明确需求链中选择少量公司；产业逻辑、价值支撑和底部位置同时通过后，先给2.5%试错仓。"
+    },
+    {
+      "step": "03",
+      "title": "确认趋势才加仓",
+      "body": "需求、利润池、公司兑现三类里程碑与底部放量趋势全部确认，未来期权才允许升级为核心仓。"
+    },
+    {
+      "step": "04",
+      "title": "剩余预算留现金",
+      "body": "不为了满仓降低标准。没有足够合格标的、行业达到上限或证据缺失时，预算自动保留为现金。"
+    }
+  ]
+}
