@@ -15,11 +15,11 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: "护城河价值策略｜前瞻哑铃策略",
       description: "稳定锚、未来期权与现金，一眼看清今天应该持有多少。",
-      images: [{ url: "/og.png", width: 1200, height: 630, alt: "护城河价值策略" }],
+      images: [{ url: "/images/west-lake-willow-bg.png", width: 1824, height: 864, alt: "护城河价值策略的西湖柳影背景" }],
       type: "website",
       locale: "zh_CN",
     },
-    twitter: { card: "summary_large_image", title: "护城河价值策略", images: ["/og.png"] },
+    twitter: { card: "summary_large_image", title: "护城河价值策略", images: ["/images/west-lake-willow-bg.png"] },
   };
 }
 
