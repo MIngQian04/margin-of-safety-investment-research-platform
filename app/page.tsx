@@ -6,56 +6,30 @@ type Holding = {
   code: string;
   name: string;
   bucket: "ANCHOR" | "FUTURE";
-  state: string;
   theme: string;
   industry: string;
   weight: number;
-  metrics: Record<string, string>;
+  price: number;
 };
 
+type NavPoint = { date: string; nav: number; dailyReturn: number; priceCoverage: number };
 type PortfolioData = {
   asOf: string;
   generatedAt: string;
-  summary: {
-    anchorWeight: number;
-    futureWeight: number;
-    cashWeight: number;
-    universeScanned: number;
-    financialReviewed: number;
-    financialComplete: number;
-    anchorEligible: number;
-  };
+  summary: { anchorWeight: number; futureWeight: number; cashWeight: number };
   holdings: Holding[];
-  pendingFinancials: string[];
-  logic: { step: string; title: string; body: string }[];
+  navHistory: NavPoint[];
 };
+type Lot = { date: string; entryNav: number };
 
-const pct = (value: number) => `${(value * 100).toFixed(value < 0.1 ? 1 : 0)}%`;
-
-function HoldingCard({ holding }: { holding: Holding }) {
-  return (
-    <article className={`holding-card ${holding.bucket === "FUTURE" ? "future-card" : ""}`}>
-      <div className="holding-head">
-        <div>
-          <p className="eyebrow">{holding.industry} · {holding.code}</p>
-          <h3>{holding.name}</h3>
-        </div>
-        <strong className="holding-weight">{pct(holding.weight)}</strong>
-      </div>
-      <div className="metric-row">
-        {Object.entries(holding.metrics).map(([label, value]) => (
-          <div className="metric" key={label}>
-            <span>{label}</span>
-            <b>{value.replace("BOTTOM_HOLD_NO_ADD", "底部持有 · 暂不加仓")}</b>
-          </div>
-        ))}
-      </div>
-    </article>
-  );
-}
+const STORAGE_KEY = "ming-portfolio-units-v1";
+const pct = (value: number, digits = 1) => `${(value * 100).toFixed(digits)}%`;
+const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value, 2)}`;
+const money = (value: number) => `¥${value.toFixed(2)}`;
 
 export default function Home() {
   const [data, setData] = useState<PortfolioData | null>(null);
+  const [lots, setLots] = useState<Lot[]>([]);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
 
@@ -73,99 +47,121 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) setLots(JSON.parse(saved));
+    } catch { localStorage.removeItem(STORAGE_KEY); }
+  }, [load]);
 
-  const anchors = useMemo(() => data?.holdings.filter((item) => item.bucket === "ANCHOR") ?? [], [data]);
-  const futures = useMemo(() => data?.holdings.filter((item) => item.bucket === "FUTURE") ?? [], [data]);
+  const saveLots = (next: Lot[]) => {
+    setLots(next);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  };
 
-  if (!data && !error) {
-    return <main className="status-page"><p className="eyebrow">PORTFOLIO NOTE</p><h1>正在读取今日组合…</h1></main>;
-  }
-  if (!data) {
-    return <main className="status-page"><p className="eyebrow">DATA OFFLINE</p><h1>{error}</h1><button onClick={load}>重新读取</button></main>;
-  }
+  const latest = data?.navHistory.at(-1);
+  const currentNav = latest?.nav ?? 1;
+  const totalValue = useMemo(
+    () => lots.reduce((sum, lot) => sum + currentNav / lot.entryNav, 0),
+    [lots, currentNav],
+  );
+  const personalReturn = lots.length ? totalValue / lots.length - 1 : 0;
+  const firstDate = lots.at(0)?.date;
 
-  const ring = `conic-gradient(var(--sage) 0 ${data.summary.anchorWeight * 100}%, var(--terracotta) ${data.summary.anchorWeight * 100}% ${(data.summary.anchorWeight + data.summary.futureWeight) * 100}%, var(--sand) ${(data.summary.anchorWeight + data.summary.futureWeight) * 100}% 100%)`;
+  if (!data && !error) return <main className="status"><p>正在读取今日组合…</p></main>;
+  if (!data) return <main className="status"><p>{error}</p><button onClick={load}>重新读取</button></main>;
+
+  const history = data.navHistory.slice(-7);
 
   return (
-    <main>
-      <header className="site-header">
-        <a className="brand" href="#top" aria-label="回到顶部">MING <span>/</span> PORTFOLIO NOTE</a>
-        <div className="header-actions">
-          <span className="live-dot">策略快照</span>
-          <button className="refresh-button" onClick={load} disabled={refreshing}>{refreshing ? "读取中" : "重新读取"}</button>
-        </div>
-      </header>
-
-      <section className="hero" id="top">
-        <div className="hero-copy">
-          <p className="eyebrow">AS OF {data.asOf} · FORWARD BARBELL</p>
-          <h1>今天，<br />组合应该怎么拿。</h1>
-          <p className="hero-note">稳定现金流负责等待，未来产业负责可能性，现金负责选择权。</p>
-        </div>
-        <div className="allocation-card">
-          <div className="ring" style={{ background: ring }} role="img" aria-label={`稳定锚${pct(data.summary.anchorWeight)}，未来期权${pct(data.summary.futureWeight)}，现金${pct(data.summary.cashWeight)}`}>
-            <div className="ring-center"><strong>{pct(1 - data.summary.cashWeight)}</strong><span>已配置</span></div>
+    <main className="canvas">
+      <section className="sheet" aria-label="今日组合总览">
+        <header className="topbar">
+          <div>
+            <p className="kicker">FORWARD BARBELL · {data.asOf}</p>
+            <h1>今日组合</h1>
           </div>
-          <div className="allocation-list">
-            <div><i className="dot sage" /><span>稳定锚</span><b>{pct(data.summary.anchorWeight)}</b></div>
-            <div><i className="dot terra" /><span>未来期权</span><b>{pct(data.summary.futureWeight)}</b></div>
-            <div><i className="dot sand" /><span>现金</span><b>{pct(data.summary.cashWeight)}</b></div>
+          <div className="top-actions">
+            <span>最近完成交易日收盘价</span>
+            <button className="text-button" onClick={load} disabled={refreshing}>{refreshing ? "读取中" : "刷新"}</button>
           </div>
-        </div>
-      </section>
+        </header>
 
-      <section className="section holdings-section" aria-labelledby="anchor-title">
-        <div className="section-heading">
-          <div><p className="eyebrow">01 · STABLE ANCHORS</p><h2 id="anchor-title">稳定锚仓</h2></div>
-          <p>目标 {pct(data.summary.anchorWeight)} · {anchors.length} 家公司</p>
+        <div className="summary-grid">
+          <article>
+            <span>组合单位净值</span>
+            <strong>{currentNav.toFixed(4)}</strong>
+            <small>起始价格 1.0000</small>
+          </article>
+          <article>
+            <span>今日涨跌</span>
+            <strong className={(latest?.dailyReturn ?? 0) >= 0 ? "up" : "down"}>{signedPct(latest?.dailyReturn ?? 0)}</strong>
+            <small>按上一交易日仓位计算</small>
+          </article>
+          <article>
+            <span>我的累计收益</span>
+            <strong className={personalReturn >= 0 ? "up" : "down"}>{lots.length ? signedPct(personalReturn) : "—"}</strong>
+            <small>{firstDate ? `从 ${firstDate} 开始` : "投入1单位后开始记录"}</small>
+          </article>
+          <article>
+            <span>我的组合总价值</span>
+            <strong>{lots.length ? totalValue.toFixed(4) : "0.0000"}</strong>
+            <small>{lots.length} 个累计单位</small>
+          </article>
         </div>
-        <div className="holding-grid">{anchors.map((holding) => <HoldingCard holding={holding} key={holding.code} />)}</div>
-      </section>
 
-      <section className="section future-section" aria-labelledby="future-title">
-        <div className="section-heading">
-          <div><p className="eyebrow">02 · FUTURE OPTIONS</p><h2 id="future-title">未来产业期权</h2></div>
-          <p>目标 {pct(data.summary.futureWeight)} · 只试错，不追涨</p>
-        </div>
-        <div className="holding-grid future-grid">{futures.map((holding) => <HoldingCard holding={holding} key={holding.code} />)}</div>
-      </section>
+        <div className="content-grid">
+          <section className="positions" aria-labelledby="positions-title">
+            <div className="panel-title">
+              <div><p className="kicker">TARGET POSITIONS</p><h2 id="positions-title">买入价与仓位</h2></div>
+              <div className="allocation-tags">
+                <span className="anchor-tag">锚仓 {pct(data.summary.anchorWeight, 0)}</span>
+                <span className="future-tag">期权 {pct(data.summary.futureWeight)}</span>
+                <span className="cash-tag">现金 {pct(data.summary.cashWeight)}</span>
+              </div>
+            </div>
+            <div className="table" role="table" aria-label="目标持仓表">
+              <div className="table-head" role="row"><span>股票</span><span>类型</span><span>参考价</span><span>目标仓位</span></div>
+              {data.holdings.map((holding) => (
+                <div className="stock-row" role="row" key={holding.code}>
+                  <span className="stock-name"><b>{holding.name}</b><small>{holding.code}</small></span>
+                  <span><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} />{holding.bucket === "ANCHOR" ? "稳定锚" : "未来期权"}</span>
+                  <span className="price">{money(holding.price)}</span>
+                  <strong>{pct(holding.weight)}</strong>
+                </div>
+              ))}
+              <div className="stock-row cash-row" role="row">
+                <span className="stock-name"><b>现金</b><small>CASH</small></span>
+                <span><i className="cash-dot" />选择权</span><span className="price">—</span><strong>{pct(data.summary.cashWeight)}</strong>
+              </div>
+            </div>
+          </section>
 
-      <section className="cash-panel" aria-label="现金仓位">
-        <div><p className="eyebrow">03 · OPTIONALITY</p><h2>现金也是仓位。</h2></div>
-        <strong>{pct(data.summary.cashWeight)}</strong>
-        <p>没有足够证据时，不为了满仓降低标准。现金等待更好的价格、产业里程碑与趋势确认。</p>
-      </section>
+          <aside className="unit-panel" aria-labelledby="unit-title">
+            <p className="kicker">PERSONAL ACCUMULATION</p>
+            <h2 id="unit-title">单位1，慢慢积累。</h2>
+            <p className="unit-explain">每次投入1单位，按当天组合净值买入一份完整组合。不同人的记录互不相同，只保存在自己的浏览器里。</p>
+            <div className="unit-number"><strong>{lots.length}</strong><span>累计单位</span></div>
+            <div className="unit-buttons">
+              <button className="primary-button" onClick={() => saveLots([...lots, { date: data.asOf, entryNav: currentNav }])}>+ 投入 1 单位</button>
+              <button className="secondary-button" onClick={() => saveLots(lots.slice(0, -1))} disabled={!lots.length}>撤回上一单位</button>
+            </div>
+            <button className="reset-button" onClick={() => { if (!lots.length || window.confirm("清零后将从单位0重新开始，确定吗？")) saveLots([]); }}>清零，重新开始</button>
+            <p className="unit-note">1单位是归一化记账单位，不代表1元，也不自动下单。参考价为最近收盘价。</p>
+          </aside>
+        </div>
 
-      <section className="section logic-section" aria-labelledby="logic-title">
-        <div className="logic-intro">
-          <p className="eyebrow">THE PORTFOLIO LOGIC</p>
-          <h2 id="logic-title">组合不是预测，<br />而是一套升级规则。</h2>
-          <p>先决定买什么，再决定什么时候加仓。财务数据用于判断能否长期等待，国家规划与产业需求用于寻找未来，价格与成交量只负责时机。</p>
-        </div>
-        <div className="logic-list">
-          {data.logic.map((item) => <article key={item.step}><span>{item.step}</span><div><h3>{item.title}</h3><p>{item.body}</p></div></article>)}
-        </div>
+        <footer className="history-bar">
+          <div><p className="kicker">DAILY RECORD</p><h2>组合价格记录</h2></div>
+          <div className="history-points">
+            {history.map((point) => (
+              <div key={point.date}><span>{point.date.slice(5)}</span><strong>{point.nav.toFixed(4)}</strong><small className={point.dailyReturn >= 0 ? "up" : "down"}>{signedPct(point.dailyReturn)}</small></div>
+            ))}
+          </div>
+          <p className="disclaimer">系统每个交易日自动追加；研究用途，不构成投资建议。</p>
+        </footer>
       </section>
-
-      <section className="section funnel" aria-labelledby="funnel-title">
-        <div className="section-heading">
-          <div><p className="eyebrow">FULL MARKET FUNNEL</p><h2 id="funnel-title">全A股海选进度</h2></div>
-          <p>缺失数据永远不会被当作合格</p>
-        </div>
-        <div className="funnel-grid">
-          <div><strong>{data.summary.universeScanned.toLocaleString("zh-CN")}</strong><span>全市场扫描</span></div>
-          <div><strong>{data.summary.financialReviewed}</strong><span>进入财务复核</span></div>
-          <div><strong>{data.summary.financialComplete}</strong><span>财务数据完整</span></div>
-          <div><strong>{data.summary.anchorEligible}</strong><span>锚仓规则合格</span></div>
-        </div>
-        {data.pendingFinancials.length > 0 && <p className="pending-note">待网络恢复后补齐：{data.pendingFinancials.join("、")}。这些公司当前强制保持观察。</p>}
-      </section>
-
-      <footer>
-        <p>研究规则输出，不构成投资建议或自动交易指令。</p>
-        <p>数据日期 {data.asOf} · 页面生成 {new Date(data.generatedAt).toLocaleString("zh-CN", { hour12: false })}</p>
-      </footer>
     </main>
   );
 }
