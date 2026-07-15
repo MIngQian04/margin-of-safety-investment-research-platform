@@ -55,12 +55,12 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .line-key { display:inline-block; width:22px; height:2px; margin:0 7px 3px 0; background:var(--sage-dark); }
 
 .portfolio-panel { min-height:0; padding:15px; overflow:hidden; background:rgba(225,233,222,.45); border:1px solid rgba(199,212,195,.68); border-radius:16px; backdrop-filter:blur(.35px); display:flex; flex-direction:column; }
-.holding-list { margin-top:8px; border-top:1px solid rgba(183,199,178,.78); }
-.holding-list>div { display:flex; justify-content:space-between; align-items:center; min-height:29px; border-bottom:1px solid rgba(190,203,186,.76); }
+.holding-list { margin-top:6px; border-top:1px solid rgba(183,199,178,.78); }
+.holding-list>div { display:flex; justify-content:space-between; align-items:center; min-height:27px; border-bottom:1px solid rgba(190,203,186,.76); }
 .holding-list span { display:flex; align-items:center; min-width:0; }
 .holding-list b { font-family:"Songti SC",serif; font-size:14px; font-weight:600; }
 .holding-list small { margin-left:7px; color:var(--muted); font-size:8px; }
-.holding-list-head { min-height:23px!important; color:var(--muted); font-size:9px; }
+.holding-list-head { min-height:22px!important; color:var(--muted); font-size:9px; }
 .holding-list-head span:last-child { display:block; text-align:right; }
 .holding-list-head small { display:block; margin:1px 0 0; font-size:7px; }
 .holding-values { display:grid; grid-template-columns:58px 44px; align-items:center; text-align:right; }
@@ -69,7 +69,7 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .anchor-dot,.future-dot,.cash-dot { flex:0 0 auto; display:inline-block; width:6px; height:6px; margin-right:7px; border-radius:50%; background:var(--sage); }
 .future-dot { background:var(--terra); }.cash-dot { background:var(--sand); }
 .cash-line { background:rgba(255,255,255,.25); }
-.portfolio-distribution { margin-top:auto; padding-top:6px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:9px; }
+.portfolio-distribution { margin-top:auto; padding-top:4px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:9px; }
 .portfolio-distribution>.kicker { grid-column:1 / -1; }
 .portfolio-distribution>div { min-width:0; display:grid; grid-template-columns:1fr auto; column-gap:6px; padding:6px 0 2px; border-top:1px solid rgba(183,199,178,.78); }
 .portfolio-distribution span,.portfolio-distribution span small,.portfolio-distribution em { display:block; color:var(--muted); font-size:8px; font-style:normal; }
