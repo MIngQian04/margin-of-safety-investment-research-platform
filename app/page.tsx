@@ -9,6 +9,7 @@ type Holding = {
   industry: string;
   weight: number;
   price: number;
+  dailyReturn: number;
   distribution: {
     skewness: number;
     excessKurtosis: number;
@@ -107,7 +108,7 @@ function PerformanceChart({ history, range }: { history: NavPoint[]; range: Rang
         <text className="axis-label axis-end" x={width - right} y={height - 18}>{points.at(-1)?.date ?? "—"}</text>
       </svg>
       {active && (
-        <div className="chart-tooltip" style={{ left: `${active.x / width * 100}%`, top: `${active.y / height * 100}%` }}>
+        <div className="chart-tooltip" style={{ left: `clamp(52px, ${active.x / width * 100}%, calc(100% - 52px))`, top: `${active.y / height * 100}%` }}>
           <span>{active.point.date}</span><strong>{signedPct(active.value)}</strong><small>NAV {active.point.nav.toFixed(4)}</small>
         </div>
       )}
@@ -215,14 +216,14 @@ export default function Home() {
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
             <div><p className="kicker">CURRENT ALLOCATION</p><h2 id="positions-heading">当前仓位<small>Current Positions</small></h2></div>
             <div className="holding-list">
-              <div className="holding-list-head"><span>标的<small>Stock</small></span><span>价格 / 仓位<small>Price / Weight</small></span></div>
+              <div className="holding-list-head"><span>标的<small>Stock</small></span><div className="holding-values"><em>价格<small>Price</small></em><em>今日<small>Today</small></em><strong>仓位<small>Weight</small></strong></div></div>
               {data.holdings.map((holding) => (
                 <div key={holding.code}>
                   <span><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><b>{holding.name}</b><small>{holding.code}</small></span>
-                  <div className="holding-values"><em>{money(holding.price)}</em><strong>{pct(holding.weight)}</strong></div>
+                  <div className="holding-values"><em>{money(holding.price)}</em><em className={holding.dailyReturn >= 0 ? "holding-up" : "holding-down"}>{signedPct(holding.dailyReturn)}</em><strong>{pct(holding.weight)}</strong></div>
                 </div>
               ))}
-              <div className="cash-line"><span><i className="cash-dot" /><b>现金</b><small>Cash</small></span><div className="holding-values"><em>—</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
+              <div className="cash-line"><span><i className="cash-dot" /><b>现金</b><small>Cash</small></span><div className="holding-values"><em>—</em><em>0</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
             </div>
 
             <div className="portfolio-distribution">

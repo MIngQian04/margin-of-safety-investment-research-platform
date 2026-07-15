@@ -1,6 +1,6 @@
 {
   "asOf": "2026-07-15",
-  "generatedAt": "2026-07-15T18:33:17+08:00",
+  "generatedAt": "2026-07-15T18:54:09+08:00",
   "summary": {
     "anchorWeight": 0.65,
     "futureWeight": 0.075,
@@ -20,6 +20,7 @@
       "industry": "家用电器",
       "weight": 0.1,
       "price": 39.83,
+      "dailyReturn": 0.016590096988259306,
       "distribution": {
         "skewness": -1.9455795529455353,
         "excessKurtosis": 20.176781264326753,
@@ -43,6 +44,7 @@
       "industry": "食品饮料",
       "weight": 0.1,
       "price": 83.12,
+      "dailyReturn": 0.07044430135222157,
       "distribution": {
         "skewness": 1.1980070985822024,
         "excessKurtosis": 4.824483266192626,
@@ -66,6 +68,7 @@
       "industry": "家用电器",
       "weight": 0.1,
       "price": 43.82,
+      "dailyReturn": 0.02025611175785791,
       "distribution": {
         "skewness": -2.5084367393163416,
         "excessKurtosis": 21.337452036106043,
@@ -89,6 +92,7 @@
       "industry": "机械设备",
       "weight": 0.125,
       "price": 15.01,
+      "dailyReturn": 0.016249153689912088,
       "distribution": {
         "skewness": 0.017514423979498036,
         "excessKurtosis": 3.763143223396293,
@@ -112,6 +116,7 @@
       "industry": "纺织服饰",
       "weight": 0.125,
       "price": 31.45,
+      "dailyReturn": 0.035220539828834774,
       "distribution": {
         "skewness": -0.2553452836677807,
         "excessKurtosis": 1.6901511229957231,
@@ -135,6 +140,7 @@
       "industry": "食品饮料",
       "weight": 0.1,
       "price": 118.25,
+      "dailyReturn": 0.07013574660633481,
       "distribution": {
         "skewness": 1.2729208290934804,
         "excessKurtosis": 4.5746350519753385,
@@ -158,6 +164,7 @@
       "industry": "通信",
       "weight": 0.025,
       "price": 91.8,
+      "dailyReturn": 0.01089324618736387,
       "distribution": {
         "skewness": -0.025135505378000522,
         "excessKurtosis": 2.3920670216492717,
@@ -180,6 +187,7 @@
       "industry": "电力设备",
       "weight": 0.025,
       "price": 19.85,
+      "dailyReturn": 0.007556675062972307,
       "distribution": {
         "skewness": 0.05131309690395015,
         "excessKurtosis": 2.961893367906538,
@@ -202,6 +210,7 @@
       "industry": "电力设备",
       "weight": 0.025,
       "price": 17.33,
+      "dailyReturn": -0.006924408540103677,
       "distribution": {
         "skewness": 0.38852846767791716,
         "excessKurtosis": 1.6393402320504205,
