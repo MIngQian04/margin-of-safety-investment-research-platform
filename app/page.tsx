@@ -1,12 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Holding = {
   code: string;
   name: string;
   bucket: "ANCHOR" | "FUTURE";
-  theme: string;
   industry: string;
   weight: number;
   price: number;
@@ -22,7 +21,6 @@ type Holding = {
 type NavPoint = { date: string; nav: number; dailyReturn: number; priceCoverage: number };
 type PortfolioData = {
   asOf: string;
-  generatedAt: string;
   summary: { anchorWeight: number; futureWeight: number; cashWeight: number };
   holdings: Holding[];
   navHistory: NavPoint[];
@@ -32,18 +30,19 @@ type PortfolioData = {
     method: string;
   };
 };
-type Lot = { date: string; entryNav: number };
 
-const STORAGE_KEY = "ming-portfolio-units-v1";
+type RangeKey = "TODAY" | "5D" | "1M" | "6M" | "1Y";
+const ranges: { key: RangeKey; cn: string; en: string; days: number }[] = [
+  { key: "TODAY", cn: "今日", en: "Today", days: 1 },
+  { key: "5D", cn: "5日", en: "5 Days", days: 5 },
+  { key: "1M", cn: "1个月", en: "1 Month", days: 22 },
+  { key: "6M", cn: "6个月", en: "6 Months", days: 126 },
+  { key: "1Y", cn: "1年", en: "1 Year", days: 252 },
+];
+
 const pct = (value: number, digits = 1) => `${(value * 100).toFixed(digits)}%`;
 const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value, 2)}`;
-const money = (value: number) => `¥${value.toFixed(2)}`;
-const decimal = (value: number, digits = 2) => Number.isFinite(value) ? value.toFixed(digits) : "—";
-const industryEnglish: Record<string, string> = {
-  "家用电器": "Home Appliances", "食品饮料": "Food & Beverage", "机械设备": "Machinery",
-  "纺织服饰": "Textiles & Apparel", "通信": "Telecom", "电力设备": "Power Equipment",
-  "未分类": "Unclassified",
-};
+const decimal = (value: number) => Number.isFinite(value) ? value.toFixed(2) : "—";
 const distributionEnglish: Record<string, string> = {
   "右尾机会型": "Right-tail opportunity", "左尾风险型": "Left-tail risk",
   "近对称分布": "Near-symmetric", "高厚尾跳跃型": "High fat-tail jumps",
@@ -56,47 +55,69 @@ function trailingReturn(history: NavPoint[], tradingDays: number) {
   return history.at(-1)!.nav / history.at(-1 - tradingDays)!.nav - 1;
 }
 
-function NavChart({ history }: { history: NavPoint[] }) {
-  const points = history.slice(-252);
-  const width = 320;
-  const top = 10;
-  const bottom = 78;
-  const values = points.map((point) => point.nav);
-  const rawMin = Math.min(...values, 1);
-  const rawMax = Math.max(...values, 1);
-  const padding = Math.max((rawMax - rawMin) * 0.15, 0.002);
-  const min = rawMin - padding;
-  const max = rawMax + padding;
-  const x = (index: number) => points.length <= 1 ? width / 2 : 8 + index * (width - 16) / (points.length - 1);
+function PerformanceChart({ history, range }: { history: NavPoint[]; range: RangeKey }) {
+  const [hovered, setHovered] = useState<number | null>(null);
+  const rangeDays = ranges.find((item) => item.key === range)!.days;
+  const needed = range === "TODAY" ? 2 : rangeDays + 1;
+  const points = history.slice(-needed);
+  const width = 900;
+  const height = 330;
+  const left = 62;
+  const right = 24;
+  const top = 24;
+  const bottom = 274;
+  const base = points.at(0)?.nav ?? 1;
+  const returns = points.map((point) => point.nav / base - 1);
+  const rawMin = Math.min(...returns, 0);
+  const rawMax = Math.max(...returns, 0);
+  const pad = Math.max((rawMax - rawMin) * 0.16, 0.0015);
+  const min = rawMin - pad;
+  const max = rawMax + pad;
+  const x = (index: number) => points.length <= 1 ? (left + width - right) / 2 : left + index * (width - left - right) / (points.length - 1);
   const y = (value: number) => top + (max - value) * (bottom - top) / (max - min);
-  const coordinates = points.map((point, index) => ({ x: x(index), y: y(point.nav), point }));
+  const coordinates = points.map((point, index) => ({ x: x(index), y: y(returns[index]), point, value: returns[index] }));
   const line = coordinates.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ");
-  const area = coordinates.length > 1 ? `${line} L${coordinates.at(-1)!.x.toFixed(1)},${bottom} L${coordinates[0].x.toFixed(1)},${bottom} Z` : "";
-  const latest = coordinates.at(-1);
+  const area = coordinates.length > 1 ? `${line} L${coordinates.at(-1)!.x.toFixed(1)},${y(0).toFixed(1)} L${coordinates[0].x.toFixed(1)},${y(0).toFixed(1)} Z` : "";
+  const activeIndex = hovered ?? Math.max(coordinates.length - 1, 0);
+  const active = coordinates[activeIndex];
+  const yTicks = [max, (max + min) / 2, min];
 
   return (
-    <div className="nav-chart">
-      <svg viewBox={`0 0 ${width} 102`} role="img" aria-labelledby="nav-chart-title nav-chart-desc">
-        <title id="nav-chart-title">每日组合单位净值曲线 / Daily portfolio NAV</title>
-        <desc id="nav-chart-desc">从开始记录日起，每个完成交易日追加一个组合单位净值。</desc>
-        {[top, (top + bottom) / 2, bottom].map((gridY) => <line className="chart-grid" key={gridY} x1="8" x2={width - 8} y1={gridY} y2={gridY} />)}
+    <div className="performance-chart" onMouseLeave={() => setHovered(null)}>
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby="performance-chart-title performance-chart-desc">
+        <title id="performance-chart-title">组合收益曲线 / Portfolio return curve</title>
+        <desc id="performance-chart-desc">根据已记录的每日组合单位净值绘制，可用上方周期按钮切换观察区间。</desc>
+        {yTicks.map((tick) => (
+          <g key={tick}>
+            <line className="chart-grid" x1={left} x2={width - right} y1={y(tick)} y2={y(tick)} />
+            <text className="axis-label" x={left - 10} y={y(tick) + 4}>{signedPct(tick)}</text>
+          </g>
+        ))}
+        <line className="chart-zero" x1={left} x2={width - right} y1={y(0)} y2={y(0)} />
         {area && <path className="chart-area" d={area} />}
         {line && <path className="chart-line" d={line} />}
-        {latest && <circle className="chart-point" cx={latest.x} cy={latest.y} r="3.5" />}
-        <text className="chart-value" x={Math.min(latest?.x ?? 8, width - 40)} y={Math.max((latest?.y ?? top) - 7, 8)}>{latest?.point.nav.toFixed(4) ?? "—"}</text>
-        <text className="chart-date" x="8" y="96">{points.at(0)?.date.slice(5) ?? "—"}</text>
-        <text className="chart-date chart-date-end" x={width - 8} y="96">{points.at(-1)?.date.slice(5) ?? "—"}</text>
+        {coordinates.map((point, index) => (
+          <circle key={point.point.date} className="chart-hit" cx={point.x} cy={point.y} r="13" onMouseEnter={() => setHovered(index)} onTouchStart={() => setHovered(index)} />
+        ))}
+        {active && <circle className="chart-point" cx={active.x} cy={active.y} r="5" />}
+        <text className="axis-label axis-start" x={left} y={height - 18}>{points.at(0)?.date ?? "—"}</text>
+        <text className="axis-label axis-end" x={width - right} y={height - 18}>{points.at(-1)?.date ?? "—"}</text>
       </svg>
-      {points.length < 2 && <p className="chart-building">正在积累每日记录 · Building daily history</p>}
+      {active && (
+        <div className="chart-tooltip" style={{ left: `${active.x / width * 100}%`, top: `${active.y / height * 100}%` }}>
+          <span>{active.point.date}</span><strong>{signedPct(active.value)}</strong><small>NAV {active.point.nav.toFixed(4)}</small>
+        </div>
+      )}
+      {points.length < needed && <p className="chart-building">正在积累该周期记录 · Building this range</p>}
     </div>
   );
 }
 
 export default function Home() {
   const [data, setData] = useState<PortfolioData | null>(null);
-  const [lots, setLots] = useState<Lot[]>([]);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedRange, setSelectedRange] = useState<RangeKey>("1Y");
 
   const load = useCallback(async () => {
     setRefreshing(true);
@@ -112,144 +133,74 @@ export default function Home() {
     }
   }, []);
 
-  useEffect(() => {
-    load();
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) setLots(JSON.parse(saved));
-    } catch { localStorage.removeItem(STORAGE_KEY); }
-  }, [load]);
-
-  const saveLots = (next: Lot[]) => {
-    setLots(next);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  };
-
-  const latest = data?.navHistory.at(-1);
-  const currentNav = latest?.nav ?? 1;
-  const totalValue = useMemo(
-    () => lots.reduce((sum, lot) => sum + currentNav / lot.entryNav, 0),
-    [lots, currentNav],
-  );
-  const personalReturn = lots.length ? totalValue / lots.length - 1 : 0;
-  const firstDate = lots.at(0)?.date;
+  useEffect(() => { load(); }, [load]);
 
   if (!data && !error) return <main className="status"><p>正在读取今日组合…<small>Loading today&apos;s portfolio…</small></p></main>;
   if (!data) return <main className="status"><p>{error}<small>Portfolio data is temporarily unavailable.</small></p><button onClick={load}>重新读取<small>Retry</small></button></main>;
 
-  const history = data.navHistory.slice(-7);
-  const periods = [
-    { cn: "今日", en: "Today", value: latest?.dailyReturn ?? 0 },
-    { cn: "5日", en: "5 Days", value: trailingReturn(data.navHistory, 5) },
-    { cn: "1个月", en: "1 Month", value: trailingReturn(data.navHistory, 22) },
-    { cn: "6个月", en: "6 Months", value: trailingReturn(data.navHistory, 126) },
-    { cn: "1年", en: "1 Year", value: trailingReturn(data.navHistory, 252) },
-  ];
+  const latest = data.navHistory.at(-1);
+  const periods = ranges.map((item) => ({
+    ...item,
+    value: item.key === "TODAY" ? latest?.dailyReturn ?? 0 : trailingReturn(data.navHistory, item.days),
+  }));
 
   return (
     <main className="canvas">
       <section className="sheet" aria-label="今日组合总览">
         <header className="topbar">
-          <div>
-            <p className="kicker">FORWARD BARBELL · {data.asOf}</p>
-            <h1>今日组合<small className="title-en">Today&apos;s Portfolio</small></h1>
-          </div>
+          <div><p className="kicker">FORWARD BARBELL · {data.asOf}</p><h1>今日组合<small>Today&apos;s Portfolio</small></h1></div>
           <div className="top-actions">
-            <span>最近完成交易日收盘价<small>Latest completed-session close</small></span>
+            <span>单位净值 {latest?.nav.toFixed(4) ?? "1.0000"}<small>Portfolio Unit NAV</small></span>
             <button className="text-button" onClick={load} disabled={refreshing}>{refreshing ? "读取中" : "刷新"}<small>{refreshing ? "Loading" : "Refresh"}</small></button>
           </div>
         </header>
 
-        <div className="summary-grid">
-          <article>
-            <span>组合单位净值<small>Portfolio Unit NAV</small></span>
-            <strong>{currentNav.toFixed(4)}</strong>
-            <small>起始价格 1.0000 · Base 1.0000</small>
-          </article>
-          <article>
-            <span>今日涨跌<small>Daily Return</small></span>
-            <strong className={(latest?.dailyReturn ?? 0) >= 0 ? "up" : "down"}>{signedPct(latest?.dailyReturn ?? 0)}</strong>
-            <small>按上一交易日仓位计算 · Prior weights</small>
-          </article>
-          <article>
-            <span>我的累计收益<small>My Cumulative Return</small></span>
-            <strong className={personalReturn >= 0 ? "up" : "down"}>{lots.length ? signedPct(personalReturn) : "—"}</strong>
-            <small>{firstDate ? `从 ${firstDate} 开始 · Since ${firstDate}` : "投入1单位后开始记录 · Starts after +1 unit"}</small>
-          </article>
-          <article>
-            <span>我的组合总价值<small>My Portfolio Value</small></span>
-            <strong>{lots.length ? totalValue.toFixed(4) : "0.0000"}</strong>
-            <small>{lots.length} 个累计单位 · Accumulated units</small>
-          </article>
+        <div className="period-summary" aria-label="组合周期收益">
+          {periods.map((period) => (
+            <button key={period.key} className={selectedRange === period.key ? "is-active" : ""} aria-pressed={selectedRange === period.key} onClick={() => setSelectedRange(period.key)}>
+              <span>{period.cn}<small>{period.en}</small></span>
+              <strong className={period.value == null ? "pending" : period.value >= 0 ? "up" : "down"}>{period.value == null ? "—" : signedPct(period.value)}</strong>
+              <em>{period.value == null ? "记录积累中 · Building" : "点击查看曲线 · View chart"}</em>
+            </button>
+          ))}
         </div>
 
-        <div className="content-grid">
-          <section className="positions" aria-labelledby="positions-title">
-            <div className="panel-title">
-              <div><p className="kicker">TARGET POSITIONS</p><h2 id="positions-title">买入价与仓位<small className="heading-en">Price & Allocation</small></h2></div>
-              <div className="allocation-tags">
-                <span className="anchor-tag">锚仓 {pct(data.summary.anchorWeight, 0)}<small>Anchor</small></span>
-                <span className="future-tag">期权 {pct(data.summary.futureWeight)}<small>Option</small></span>
-                <span className="cash-tag">现金 {pct(data.summary.cashWeight)}<small>Cash</small></span>
-              </div>
+        <div className="main-grid">
+          <section className="chart-section" aria-labelledby="chart-heading">
+            <div className="section-heading">
+              <div><p className="kicker">PORTFOLIO PERFORMANCE</p><h2 id="chart-heading">组合收益曲线<small>Portfolio Return Curve</small></h2></div>
+              <p>{ranges.find((item) => item.key === selectedRange)?.cn}视图<small>{ranges.find((item) => item.key === selectedRange)?.en} view</small></p>
             </div>
-            <div className="positions-table" role="table" aria-label="目标持仓表">
-              <div className="table-head" role="row"><span>股票 / 申万行业<small>Stock / SW Industry</small></span><span>参考价<small>Price</small></span><span>仓位<small>Weight</small></span><span>偏度<small>Skew</small></span><span>方向特征<small>Direction</small></span><span>峰度<small>Kurtosis</small></span><span>尾部特征<small>Tail Type</small></span><span>每1单位<small>Per Unit</small></span></div>
-              {data.holdings.map((holding) => (
-                <div className="stock-row" role="row" key={holding.code}>
-                  <span className="stock-name"><b>{holding.name}</b><small>{holding.code} · {holding.industry} / {industryEnglish[holding.industry] ?? holding.industry} · <i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} />{holding.bucket === "ANCHOR" ? "稳定锚 / Stable Anchor" : "未来期权 / Future Option"}</small></span>
-                  <span className="price">{money(holding.price)}</span>
-                  <strong>{pct(holding.weight)}</strong>
-                  <span>{decimal(holding.distribution.skewness)}</span>
-                  <span className="distribution-label">{holding.distribution.skewLabel}<small>{distributionEnglish[holding.distribution.skewLabel]}</small></span>
-                  <span>{decimal(holding.distribution.excessKurtosis)}</span>
-                  <span className="distribution-label">{holding.distribution.kurtosisLabel}<small>{distributionEnglish[holding.distribution.kurtosisLabel]}</small></span>
-                  <span className="unit-allocation">{holding.weight.toFixed(4)}</span>
-                </div>
-              ))}
-              <div className="stock-row cash-row" role="row">
-                <span className="stock-name"><b>现金</b><small>CASH · <i className="cash-dot" />选择权 / Optionality</small></span>
-                <span className="price">—</span><strong>{pct(data.summary.cashWeight)}</strong><span>—</span><span>—</span><span>—</span><span>—</span><span className="unit-allocation">{data.summary.cashWeight.toFixed(4)}</span>
-              </div>
+            <PerformanceChart history={data.navHistory} range={selectedRange} />
+            <div className="chart-caption">
+              <span><i className="line-key" />每日单位净值收益 · Daily unit-NAV return</span>
+              <span>自 {data.navHistory.at(0)?.date ?? data.asOf} 开始真实记录 · Live record since {data.navHistory.at(0)?.date ?? data.asOf}</span>
             </div>
-            <p className="risk-method">近 {data.distributionSummary.observations} 个共同交易日 · 偏度看尾部方向，峰度观察极端行情频率<br />Latest {data.distributionSummary.observations} common sessions · Skew shows tail direction; excess kurtosis shows extreme-move frequency</p>
           </section>
 
-          <aside className="unit-panel" aria-labelledby="unit-title">
-            <p className="kicker">DAILY PERFORMANCE</p>
-            <h2 id="unit-title">每日收益记录<small className="heading-en">Daily Performance Record</small></h2>
-            <NavChart history={data.navHistory} />
-            <div className="period-grid" aria-label="不同周期组合收益">
-              {periods.map((period) => (
-                <div key={period.en}>
-                  <span>{period.cn}<small>{period.en}</small></span>
-                  <b className={period.value == null ? "pending" : period.value >= 0 ? "up" : "down"}>{period.value == null ? "—" : signedPct(period.value)}</b>
+          <aside className="portfolio-panel" aria-labelledby="positions-heading">
+            <div><p className="kicker">CURRENT ALLOCATION</p><h2 id="positions-heading">当前仓位<small>Current Positions</small></h2></div>
+            <div className="holding-list">
+              {data.holdings.map((holding) => (
+                <div key={holding.code}>
+                  <span><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><b>{holding.name}</b><small>{holding.code}</small></span>
+                  <strong>{pct(holding.weight)}</strong>
                 </div>
               ))}
+              <div className="cash-line"><span><i className="cash-dot" /><b>现金</b><small>Cash</small></span><strong>{pct(data.summary.cashWeight)}</strong></div>
             </div>
-            <div className="unit-composition" aria-label="每单位组成">
-              <div><span><i className="anchor-dot" />稳定锚仓<small>Stable Anchor</small></span><b>{data.summary.anchorWeight.toFixed(4)}</b></div>
-              <div><span><i className="future-dot" />未来期权<small>Future Option</small></span><b>{data.summary.futureWeight.toFixed(4)}</b></div>
-              <div><span><i className="cash-dot" />现金<small>Cash</small></span><b>{data.summary.cashWeight.toFixed(4)}</b></div>
+
+            <div className="portfolio-distribution">
+              <p className="kicker">PORTFOLIO DISTRIBUTION</p>
+              <div><span>偏度判断<small>Skewness</small></span><strong>{data.distributionSummary.skewLabel}</strong><b>{decimal(data.distributionSummary.skewness)}</b><em>{distributionEnglish[data.distributionSummary.skewLabel]}</em></div>
+              <div><span>峰度判断<small>Kurtosis</small></span><strong>{data.distributionSummary.kurtosisLabel}</strong><b>{decimal(data.distributionSummary.excessKurtosis)}</b><em>{distributionEnglish[data.distributionSummary.kurtosisLabel]}</em></div>
             </div>
-            <div className="unit-number"><strong>{lots.length}</strong><span>累计单位 · 单位1，慢慢积累<small>Accumulated units · Build gradually</small></span></div>
-            <div className="unit-buttons">
-              <button className="primary-button" onClick={() => saveLots([...lots, { date: data.asOf, entryNav: currentNav }])}>+ 投入 1 单位<small>+ Add 1 Unit</small></button>
-              <button className="secondary-button" onClick={() => saveLots(lots.slice(0, -1))} disabled={!lots.length}>撤回上一单位<small>Undo Last Unit</small></button>
-            </div>
-            <button className="reset-button" onClick={() => { if (!lots.length || window.confirm("清零后将从单位0重新开始，确定吗？")) saveLots([]); }}>清零，重新开始<small>Reset & Restart</small></button>
-            <p className="unit-note">1单位是归一化记账单位，不代表1元，也不自动下单。参考价为最近收盘价。<br />A unit is normalized bookkeeping, not ¥1 or an automatic order. Prices are latest closes.</p>
           </aside>
         </div>
 
-        <footer className="history-bar">
-          <div><p className="kicker">DAILY RECORD</p><h2>组合价格记录<small className="heading-en">Portfolio Price Log</small></h2></div>
-          <div className="history-points">
-            {history.map((point) => (
-              <div key={point.date}><span>{point.date.slice(5)}</span><strong>{point.nav.toFixed(4)}</strong><small className={point.dailyReturn >= 0 ? "up" : "down"}>{signedPct(point.dailyReturn)}</small></div>
-            ))}
-          </div>
-          <p className="disclaimer">系统每个交易日自动追加；研究用途，不构成投资建议。<br />Appended each trading day. Research only, not investment advice.</p>
+        <footer>
+          <span>系统每个交易日自动追加 · Updated each trading day</span>
+          <span>研究用途，不构成投资建议 · Research only, not investment advice</span>
         </footer>
       </section>
     </main>

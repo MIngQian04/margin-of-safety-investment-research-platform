@@ -20,27 +20,24 @@ test("server renders the portfolio shell and finished metadata", async () => {
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
-test("portfolio card includes unit accounting, reset, prices and daily NAV", async () => {
+test("portfolio card includes interactive period returns, chart, positions and portfolio distribution", async () => {
   const [page, dataText] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../public/data/portfolio.json", import.meta.url), "utf8"),
   ]);
   const data = JSON.parse(dataText);
-  assert.match(page, /ming-portfolio-units-v1/);
-  assert.match(page, /投入 1 单位/);
-  assert.match(page, /清零，重新开始/);
-  assert.match(page, /我的累计收益/);
+  assert.doesNotMatch(page, /ming-portfolio-units-v1|投入 1 单位|清零，重新开始/);
   assert.doesNotMatch(page, /组合 Sharpe|加权个股 Sharpe|年化波动|最大回撤/);
-  assert.match(page, /右尾机会型/);
-  assert.match(page, /左尾风险型/);
-  assert.match(page, /厚尾跳跃型/);
   assert.match(page, /Kurtosis/);
-  assert.match(page, /Daily Performance Record/);
+  assert.match(page, /Portfolio Return Curve/);
+  assert.match(page, /aria-pressed/);
   assert.match(page, /5 Days/);
   assert.match(page, /1 Month/);
   assert.match(page, /6 Months/);
   assert.match(page, /1 Year/);
-  assert.match(page, /Daily portfolio NAV/);
+  assert.match(page, /Current Positions/);
+  assert.match(page, /PORTFOLIO DISTRIBUTION/);
+  assert.match(page, /chart-tooltip/);
   assert.match(page, /Today&apos;s Portfolio/);
   assert.ok(data.holdings.length > 0);
   assert.ok(data.holdings.every((holding) => holding.price > 0));
