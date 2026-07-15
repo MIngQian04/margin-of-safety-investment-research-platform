@@ -118,6 +118,7 @@ export default function Home() {
   const [data, setData] = useState<PortfolioData | null>(null);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [confirmRefresh, setConfirmRefresh] = useState(false);
   const [selectedRange, setSelectedRange] = useState<RangeKey>("1Y");
 
   const load = useCallback(async () => {
@@ -136,6 +137,15 @@ export default function Home() {
 
   useEffect(() => { load(); }, [load]);
 
+  useEffect(() => {
+    if (!confirmRefresh) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setConfirmRefresh(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [confirmRefresh]);
+
   if (!data && !error) return <main className="status"><p>正在读取护城河价值策略…<small>Loading the Moat Value Strategy…</small></p></main>;
   if (!data) return <main className="status"><p>{error}<small>Portfolio data is temporarily unavailable.</small></p><button onClick={load}>重新读取<small>Retry</small></button></main>;
 
@@ -152,7 +162,7 @@ export default function Home() {
           <div><p className="kicker">FORWARD BARBELL · {data.asOf}</p><h1>护城河价值策略<small>Moat Value Strategy</small></h1></div>
           <div className="top-actions">
             <span>单位净值 {latest?.nav.toFixed(4) ?? "1.0000"}<small>Portfolio Unit NAV</small></span>
-            <button className="text-button" onClick={load} disabled={refreshing}>{refreshing ? "读取中" : "刷新"}<small>{refreshing ? "Loading" : "Refresh"}</small></button>
+            <button className="text-button" onClick={() => setConfirmRefresh(true)} disabled={refreshing}>{refreshing ? "读取中" : "刷新"}<small>{refreshing ? "Loading" : "Refresh"}</small></button>
           </div>
         </header>
 
@@ -205,6 +215,20 @@ export default function Home() {
           <span>研究用途，不构成投资建议 · Research only, not investment advice</span>
         </footer>
       </section>
+
+      {confirmRefresh && (
+        <div className="confirm-backdrop" role="presentation">
+          <section className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="refresh-dialog-title" aria-describedby="refresh-dialog-description">
+            <p className="kicker">REFRESH PORTFOLIO DATA</p>
+            <h2 id="refresh-dialog-title">确认刷新？<small>Confirm Refresh</small></h2>
+            <p id="refresh-dialog-description">刷新只会重新读取最新组合和最近交易日价格，不会清零、不改变起始日期，也不会删除历史收益记录。<small>Refresh only reloads the latest portfolio data. It does not reset or delete history.</small></p>
+            <div className="confirm-actions">
+              <button className="dialog-button secondary" autoFocus onClick={() => setConfirmRefresh(false)}>取消<small>Cancel</small></button>
+              <button className="dialog-button primary" onClick={() => { setConfirmRefresh(false); load(); }}>确认刷新<small>Refresh Now</small></button>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   );
 }

@@ -43,6 +43,11 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /Moat Value Strategy/);
   assert.match(page, /Price \/ Weight/);
   assert.match(page, /money\(holding\.price\)/);
+  assert.match(page, /确认刷新？/);
+  assert.match(page, /不会清零、不改变起始日期，也不会删除历史收益记录/);
+  assert.match(page, /aria-modal="true"/);
+  assert.match(page, /setConfirmRefresh\(true\)/);
+  assert.match(css, /\.confirm-dialog/);
   assert.match(css, /west-lake-willow-bg\.png/);
   assert.match(css, /west-lake-breeze/);
   assert.match(css, /prefers-reduced-motion/);
