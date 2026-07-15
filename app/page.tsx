@@ -43,6 +43,7 @@ const ranges: { key: RangeKey; cn: string; en: string; days: number }[] = [
 const pct = (value: number, digits = 1) => `${(value * 100).toFixed(digits)}%`;
 const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value, 2)}`;
 const decimal = (value: number) => Number.isFinite(value) ? value.toFixed(2) : "—";
+const money = (value: number) => `¥${value.toFixed(2)}`;
 const distributionEnglish: Record<string, string> = {
   "右尾机会型": "Right-tail opportunity", "左尾风险型": "Left-tail risk",
   "近对称分布": "Near-symmetric", "高厚尾跳跃型": "High fat-tail jumps",
@@ -135,7 +136,7 @@ export default function Home() {
 
   useEffect(() => { load(); }, [load]);
 
-  if (!data && !error) return <main className="status"><p>正在读取今日组合…<small>Loading today&apos;s portfolio…</small></p></main>;
+  if (!data && !error) return <main className="status"><p>正在读取护城河价值策略…<small>Loading the Moat Value Strategy…</small></p></main>;
   if (!data) return <main className="status"><p>{error}<small>Portfolio data is temporarily unavailable.</small></p><button onClick={load}>重新读取<small>Retry</small></button></main>;
 
   const latest = data.navHistory.at(-1);
@@ -146,9 +147,9 @@ export default function Home() {
 
   return (
     <main className="canvas">
-      <section className="sheet" aria-label="今日组合总览">
+      <section className="sheet" aria-label="护城河价值策略总览">
         <header className="topbar">
-          <div><p className="kicker">FORWARD BARBELL · {data.asOf}</p><h1>今日组合<small>Today&apos;s Portfolio</small></h1></div>
+          <div><p className="kicker">FORWARD BARBELL · {data.asOf}</p><h1>护城河价值策略<small>Moat Value Strategy</small></h1></div>
           <div className="top-actions">
             <span>单位净值 {latest?.nav.toFixed(4) ?? "1.0000"}<small>Portfolio Unit NAV</small></span>
             <button className="text-button" onClick={load} disabled={refreshing}>{refreshing ? "读取中" : "刷新"}<small>{refreshing ? "Loading" : "Refresh"}</small></button>
@@ -181,13 +182,14 @@ export default function Home() {
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
             <div><p className="kicker">CURRENT ALLOCATION</p><h2 id="positions-heading">当前仓位<small>Current Positions</small></h2></div>
             <div className="holding-list">
+              <div className="holding-list-head"><span>标的<small>Stock</small></span><span>价格 / 仓位<small>Price / Weight</small></span></div>
               {data.holdings.map((holding) => (
                 <div key={holding.code}>
                   <span><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><b>{holding.name}</b><small>{holding.code}</small></span>
-                  <strong>{pct(holding.weight)}</strong>
+                  <div className="holding-values"><em>{money(holding.price)}</em><strong>{pct(holding.weight)}</strong></div>
                 </div>
               ))}
-              <div className="cash-line"><span><i className="cash-dot" /><b>现金</b><small>Cash</small></span><strong>{pct(data.summary.cashWeight)}</strong></div>
+              <div className="cash-line"><span><i className="cash-dot" /><b>现金</b><small>Cash</small></span><div className="holding-values"><em>—</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
             </div>
 
             <div className="portfolio-distribution">
