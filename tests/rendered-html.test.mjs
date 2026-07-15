@@ -47,6 +47,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /rankedHoldings/);
   assert.match(page, /right\.dailyReturn - left\.dailyReturn/);
   assert.match(page, /今日↓/);
+  assert.match(page, /可上下滚动/);
+  assert.match(page, /tabIndex=\{0\}/);
   assert.match(page, /<em>0<\/em>/);
   assert.match(page, /确认刷新？/);
   assert.match(page, /不会清零、不改变起始日期，也不会删除历史收益记录/);
@@ -72,6 +74,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /\.holding-list b \{[^}]*font-size:15px/);
   assert.match(css, /\.holding-list>div \{[^}]*min-height:36px/);
   assert.match(css, /\.holding-identity b,\.holding-identity small \{[^}]*white-space:nowrap/);
+  assert.match(css, /\.holding-list \{[^}]*overflow-y:auto/);
+  assert.match(css, /writing-mode:horizontal-tb/);
   assert.match(css, /background:rgba\(37,36,31,\.46\)/);
   assert.match(css, /background:rgba\(250,248,243,\.48\)/);
   assert.match(css, /backdrop-filter:blur\(\.5px\)/);

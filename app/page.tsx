@@ -218,7 +218,7 @@ export default function Home() {
 
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
             <div><p className="kicker">CURRENT ALLOCATION</p><h2 id="positions-heading">当前仓位<small>Current Positions</small></h2></div>
-            <div className="holding-list">
+            <div className="holding-list" role="region" aria-label="按今日收益率排序的当前持仓，可上下滚动" tabIndex={0}>
               <div className="holding-list-head"><span>标的<small>Stock</small></span><div className="holding-values"><em>价格<small>Price</small></em><em>今日↓<small>Today</small></em><strong>仓位<small>Weight</small></strong></div></div>
               {rankedHoldings.map((holding) => (
                 <div key={holding.code}>
