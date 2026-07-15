@@ -1,62 +1,110 @@
 {
   "asOf": "2026-07-15",
-  "generatedAt": "2026-07-15T18:54:09+08:00",
+  "generatedAt": "2026-07-16T03:11:41+08:00",
   "summary": {
     "anchorWeight": 0.65,
     "futureWeight": 0.075,
     "cashWeight": 0.2749999999999999,
     "universeScanned": 5525,
-    "financialReviewed": 231,
-    "financialComplete": 231,
-    "anchorEligible": 136
+    "financialReviewed": 204,
+    "financialComplete": 204,
+    "anchorEligible": 36
   },
   "holdings": [
     {
-      "code": "000651.SZ",
-      "name": "格力电器",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "家用电器",
-      "weight": 0.1,
-      "price": 39.83,
-      "dailyReturn": 0.016590096988259306,
-      "distribution": {
-        "skewness": -1.9455795529455353,
-        "excessKurtosis": 20.176781264326753,
-        "skewLabel": "左尾风险型",
-        "kurtosisLabel": "高厚尾跳跃型",
-        "observations": 252
-      },
-      "metrics": {
-        "股息率": "7.5%",
-        "所有者收益率": "14.5%",
-        "三年ROE": "23.4%",
-        "稳定分": "81.9"
-      }
-    },
-    {
-      "code": "000568.SZ",
-      "name": "泸州老窖",
+      "code": "600519.SH",
+      "name": "贵州茅台",
       "bucket": "ANCHOR",
       "state": "ANCHOR",
       "theme": "稳定现金流",
       "industry": "食品饮料",
-      "weight": 0.1,
-      "price": 83.12,
-      "dailyReturn": 0.07044430135222157,
+      "weight": 0.0702702702702702,
+      "price": 1251.06,
+      "dailyReturn": 0.029780719083366103,
       "distribution": {
-        "skewness": 1.1980070985822024,
-        "excessKurtosis": 4.824483266192626,
+        "skewness": 1.3483273000896876,
+        "excessKurtosis": 7.777533621479087,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
       },
       "metrics": {
-        "股息率": "7.2%",
-        "所有者收益率": "10.8%",
-        "三年ROE": "28.4%",
-        "稳定分": "78.2"
+        "股息率": "4.1%",
+        "所有者收益率": "5.2%",
+        "三年ROE": "34.7%",
+        "护城河代理分": "93.4"
+      }
+    },
+    {
+      "code": "300760.SZ",
+      "name": "迈瑞医疗",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "医药生物",
+      "weight": 0.15,
+      "price": 146.0,
+      "dailyReturn": 0.043155187196341815,
+      "distribution": {
+        "skewness": 0.536760929516482,
+        "excessKurtosis": 0.430842238220166,
+        "skewLabel": "右尾机会型",
+        "kurtosisLabel": "常态尾部",
+        "observations": 252
+      },
+      "metrics": {
+        "股息率": "3.2%",
+        "所有者收益率": "6.5%",
+        "三年ROE": "32.5%",
+        "护城河代理分": "88.5"
+      }
+    },
+    {
+      "code": "300628.SZ",
+      "name": "亿联网络",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "通信",
+      "weight": 0.15,
+      "price": 37.49,
+      "dailyReturn": 0.10687924416888106,
+      "distribution": {
+        "skewness": 0.5220952248079079,
+        "excessKurtosis": 5.0493695319147545,
+        "skewLabel": "右尾机会型",
+        "kurtosisLabel": "高厚尾跳跃型",
+        "observations": 252
+      },
+      "metrics": {
+        "股息率": "4.8%",
+        "所有者收益率": "5.5%",
+        "三年ROE": "27.9%",
+        "护城河代理分": "70.3"
+      }
+    },
+    {
+      "code": "000786.SZ",
+      "name": "北新建材",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "建筑材料",
+      "weight": 0.15,
+      "price": 17.75,
+      "dailyReturn": 0.030778164924506468,
+      "distribution": {
+        "skewness": 0.5120666141298431,
+        "excessKurtosis": 1.2789757357164389,
+        "skewLabel": "右尾机会型",
+        "kurtosisLabel": "厚尾波动型",
+        "observations": 252
+      },
+      "metrics": {
+        "股息率": "4.8%",
+        "所有者收益率": "11.4%",
+        "三年ROE": "14.2%",
+        "护城河代理分": "67.6"
       }
     },
     {
@@ -66,7 +114,7 @@
       "state": "ANCHOR",
       "theme": "稳定现金流",
       "industry": "家用电器",
-      "weight": 0.1,
+      "weight": 0.0648648648648648,
       "price": 43.82,
       "dailyReturn": 0.02025611175785791,
       "distribution": {
@@ -80,79 +128,31 @@
         "股息率": "6.4%",
         "所有者收益率": "6.3%",
         "三年ROE": "34.4%",
-        "稳定分": "74.9"
+        "护城河代理分": "70.5"
       }
     },
     {
-      "code": "601717.SH",
-      "name": "中创智领",
+      "code": "000651.SZ",
+      "name": "格力电器",
       "bucket": "ANCHOR",
       "state": "ANCHOR",
       "theme": "稳定现金流",
-      "industry": "机械设备",
-      "weight": 0.125,
-      "price": 15.01,
-      "dailyReturn": 0.016249153689912088,
+      "industry": "家用电器",
+      "weight": 0.0648648648648648,
+      "price": 39.83,
+      "dailyReturn": 0.016590096988259306,
       "distribution": {
-        "skewness": 0.017514423979498036,
-        "excessKurtosis": 3.763143223396293,
-        "skewLabel": "近对称分布",
+        "skewness": -1.9455795529455353,
+        "excessKurtosis": 20.176781264326753,
+        "skewLabel": "左尾风险型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
       },
       "metrics": {
         "股息率": "7.5%",
-        "所有者收益率": "14.3%",
-        "三年ROE": "17.8%",
-        "稳定分": "70.7"
-      }
-    },
-    {
-      "code": "300979.SZ",
-      "name": "华利集团",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "纺织服饰",
-      "weight": 0.125,
-      "price": 31.45,
-      "dailyReturn": 0.035220539828834774,
-      "distribution": {
-        "skewness": -0.2553452836677807,
-        "excessKurtosis": 1.6901511229957231,
-        "skewLabel": "近对称分布",
-        "kurtosisLabel": "厚尾波动型",
-        "observations": 252
-      },
-      "metrics": {
-        "股息率": "10.5%",
-        "所有者收益率": "8.5%",
-        "三年ROE": "21.2%",
-        "稳定分": "70.6"
-      }
-    },
-    {
-      "code": "600809.SH",
-      "name": "山西汾酒",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "食品饮料",
-      "weight": 0.1,
-      "price": 118.25,
-      "dailyReturn": 0.07013574660633481,
-      "distribution": {
-        "skewness": 1.2729208290934804,
-        "excessKurtosis": 4.5746350519753385,
-        "skewLabel": "右尾机会型",
-        "kurtosisLabel": "高厚尾跳跃型",
-        "observations": 252
-      },
-      "metrics": {
-        "股息率": "5.1%",
-        "所有者收益率": "8.5%",
-        "三年ROE": "35.2%",
-        "稳定分": "68.6"
+        "所有者收益率": "14.5%",
+        "三年ROE": "23.4%",
+        "护城河代理分": "52.5"
       }
     },
     {
@@ -163,7 +163,7 @@
       "theme": "十五五六网",
       "industry": "通信",
       "weight": 0.025,
-      "price": 91.8,
+      "price": 92.8,
       "dailyReturn": 0.01089324618736387,
       "distribution": {
         "skewness": -0.025135505378000522,
@@ -174,7 +174,7 @@
       },
       "metrics": {
         "未来逻辑分": "88.8",
-        "DCF安全边际": "25.3%",
+        "DCF安全边际": "23.9%",
         "当前状态": "BOTTOM_HOLD_NO_ADD"
       }
     },
@@ -186,7 +186,7 @@
       "theme": "电力系统扩容",
       "industry": "电力设备",
       "weight": 0.025,
-      "price": 19.85,
+      "price": 20.0,
       "dailyReturn": 0.007556675062972307,
       "distribution": {
         "skewness": 0.05131309690395015,
@@ -197,7 +197,7 @@
       },
       "metrics": {
         "未来逻辑分": "82.5",
-        "DCF安全边际": "11.1%",
+        "DCF安全边际": "10.2%",
         "当前状态": "BOTTOM_HOLD_NO_ADD"
       }
     },
@@ -209,7 +209,7 @@
       "theme": "电力系统扩容",
       "industry": "电力设备",
       "weight": 0.025,
-      "price": 17.33,
+      "price": 17.21,
       "dailyReturn": -0.006924408540103677,
       "distribution": {
         "skewness": 0.38852846767791716,
@@ -220,16 +220,16 @@
       },
       "metrics": {
         "未来逻辑分": "79.5",
-        "DCF安全边际": "1.6%",
+        "DCF安全边际": "2.4%",
         "当前状态": "BOTTOM_HOLD_NO_ADD"
       }
     }
   ],
   "distributionSummary": {
-    "skewness": -0.013077744645353741,
-    "excessKurtosis": 0.8568837750799538,
+    "skewness": 0.2696270639718538,
+    "excessKurtosis": 1.2948640963921827,
     "skewLabel": "近对称分布",
-    "kurtosisLabel": "常态尾部",
+    "kurtosisLabel": "厚尾波动型",
     "observations": 252,
     "periodStart": "2025-07-02",
     "periodEnd": "2026-07-15",
@@ -253,8 +253,8 @@
   "logic": [
     {
       "step": "01",
-      "title": "先建立稳定锚",
-      "body": "从全A股筛选高现金回报、稳定ROE、低收益波动、合理负债与估值的成熟公司，让组合有时间等待。"
+      "title": "先建立护城河锚",
+      "body": "先要求细分行业领先，再用长期毛利率、ROE、收入韧性与现金转化识别品牌溢价或规模成本优势；这些是研究代理，不把高股息直接当护城河。"
     },
     {
       "step": "02",
