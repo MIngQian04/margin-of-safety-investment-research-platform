@@ -8,7 +8,7 @@ body::after { content:""; position:fixed; z-index:1; inset:48% -8% -8%; backgrou
 button { font:inherit; }
 button:focus-visible { outline:2px solid var(--terra); outline-offset:3px; }
 .canvas { position:relative; z-index:2; min-height:100vh; padding:34px; display:grid; place-items:center; }
-.sheet { width:min(1280px,100%); min-height:min(760px,calc(100vh - 68px)); padding:22px 28px 15px; background:rgba(250,248,243,.67); border:1px solid rgba(255,255,255,.66); border-radius:21px; box-shadow:0 20px 64px rgba(48,43,35,.1); backdrop-filter:blur(1.5px) saturate(.92); display:flex; flex-direction:column; }
+.sheet { width:min(1280px,100%); min-height:min(760px,calc(100vh - 68px)); padding:22px 28px 15px; background:rgba(250,248,243,.48); border:1px solid rgba(255,255,255,.58); border-radius:21px; box-shadow:0 20px 64px rgba(48,43,35,.1); backdrop-filter:blur(.5px) saturate(.96); display:flex; flex-direction:column; }
 .kicker { margin:0 0 6px; color:var(--muted); font-size:8px; font-weight:700; letter-spacing:.18em; }
 h1,h2 { margin:0; font-family:"Songti SC","STSong",serif; font-weight:500; letter-spacing:-.035em; }
 h1 { font-size:34px; line-height:1; }
@@ -25,7 +25,7 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .period-summary button:first-child { padding-left:0; }
 .period-summary button:last-child { border-right:0; }
 .period-summary button:hover { background:rgba(113,128,110,.06); }
-.period-summary button.is-active { background:rgba(220,229,216,.48); transform:translateY(1px); }
+.period-summary button.is-active { background:rgba(220,229,216,.34); transform:translateY(1px); }
 .period-summary span,.period-summary span small { display:block; color:var(--muted); font-size:10px; }
 .period-summary span small { margin-top:2px; font-family:Arial,sans-serif; font-size:7px; letter-spacing:.05em; text-transform:uppercase; }
 .period-summary strong { display:block; margin:6px 0 4px; font-family:"Songti SC",serif; font-size:25px; font-weight:500; line-height:1; }
@@ -54,7 +54,7 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .chart-caption { display:flex; justify-content:space-between; gap:16px; padding-top:9px; color:var(--muted); font-size:8px; }
 .line-key { display:inline-block; width:22px; height:2px; margin:0 7px 3px 0; background:var(--sage-dark); }
 
-.portfolio-panel { padding:18px; background:rgba(225,233,222,.62); border:1px solid rgba(199,212,195,.72); border-radius:16px; backdrop-filter:blur(1px); display:flex; flex-direction:column; }
+.portfolio-panel { padding:18px; background:rgba(225,233,222,.45); border:1px solid rgba(199,212,195,.68); border-radius:16px; backdrop-filter:blur(.35px); display:flex; flex-direction:column; }
 .holding-list { margin-top:11px; border-top:1px solid rgba(183,199,178,.78); }
 .holding-list>div { display:flex; justify-content:space-between; align-items:center; min-height:31px; border-bottom:1px solid rgba(190,203,186,.76); }
 .holding-list span { display:flex; align-items:center; min-width:0; }
