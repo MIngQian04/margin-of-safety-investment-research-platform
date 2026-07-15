@@ -10,12 +10,11 @@ type Holding = {
   industry: string;
   weight: number;
   price: number;
-  risk: {
-    sharpe: number;
-    volatility: number;
+  distribution: {
     skewness: number;
     excessKurtosis: number;
-    maxDrawdown: number;
+    skewLabel: string;
+    kurtosisLabel: string;
     observations: number;
   };
 };
@@ -27,8 +26,7 @@ type PortfolioData = {
   summary: { anchorWeight: number; futureWeight: number; cashWeight: number };
   holdings: Holding[];
   navHistory: NavPoint[];
-  riskSummary: Holding["risk"] & {
-    weightedStockSharpe: number;
+  distributionSummary: Holding["distribution"] & {
     periodStart: string;
     periodEnd: string;
     method: string;
@@ -137,42 +135,41 @@ export default function Home() {
               </div>
             </div>
             <div className="positions-table" role="table" aria-label="目标持仓表">
-              <div className="table-head" role="row"><span>股票 / 申万行业</span><span>参考价</span><span>仓位</span><span>Sharpe</span><span>Vol</span><span>偏度</span><span>峰度</span><span>最大回撤</span><span>每1单位</span></div>
+              <div className="table-head" role="row"><span>股票 / 申万行业</span><span>参考价</span><span>仓位</span><span>偏度</span><span>方向特征</span><span>峰度</span><span>尾部特征</span><span>每1单位</span></div>
               {data.holdings.map((holding) => (
                 <div className="stock-row" role="row" key={holding.code}>
                   <span className="stock-name"><b>{holding.name}</b><small>{holding.code} · {holding.industry} · <i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} />{holding.bucket === "ANCHOR" ? "稳定锚" : "未来期权"}</small></span>
                   <span className="price">{money(holding.price)}</span>
                   <strong>{pct(holding.weight)}</strong>
-                  <span>{decimal(holding.risk.sharpe)}</span>
-                  <span>{pct(holding.risk.volatility)}</span>
-                  <span>{decimal(holding.risk.skewness)}</span>
-                  <span>{decimal(holding.risk.excessKurtosis)}</span>
-                  <span className="drawdown">{pct(holding.risk.maxDrawdown)}</span>
+                  <span>{decimal(holding.distribution.skewness)}</span>
+                  <span className="distribution-label">{holding.distribution.skewLabel}</span>
+                  <span>{decimal(holding.distribution.excessKurtosis)}</span>
+                  <span className="distribution-label">{holding.distribution.kurtosisLabel}</span>
                   <span className="unit-allocation">{holding.weight.toFixed(4)}</span>
                 </div>
               ))}
               <div className="stock-row cash-row" role="row">
                 <span className="stock-name"><b>现金</b><small>CASH · <i className="cash-dot" />选择权</small></span>
-                <span className="price">—</span><strong>{pct(data.summary.cashWeight)}</strong><span>—</span><span>—</span><span>—</span><span>—</span><span>—</span><span className="unit-allocation">{data.summary.cashWeight.toFixed(4)}</span>
+                <span className="price">—</span><strong>{pct(data.summary.cashWeight)}</strong><span>—</span><span>—</span><span>—</span><span>—</span><span className="unit-allocation">{data.summary.cashWeight.toFixed(4)}</span>
               </div>
             </div>
-            <p className="risk-method">近 {data.riskSummary.observations} 个共同交易日 · Sharpe / Vol 年化（rf=0）· 峰度为超额峰度 · 最大回撤按复权收盘价计算</p>
+            <p className="risk-method">近 {data.distributionSummary.observations} 个共同交易日 · 偏度看大涨或大跌落在哪一侧 · 峰度为超额峰度，观察极端行情是否频繁</p>
           </section>
 
           <aside className="unit-panel" aria-labelledby="unit-title">
-            <p className="kicker">HISTORICAL RISK · 252D</p>
-            <h2 id="unit-title">组合风险画像</h2>
-            <div className="portfolio-sharpe">
-              <div><span>组合 Sharpe</span><strong>{decimal(data.riskSummary.sharpe)}</strong></div>
-              <div><span>加权个股 Sharpe</span><b>{decimal(data.riskSummary.weightedStockSharpe)}</b></div>
+            <p className="kicker">RETURN DISTRIBUTION · 252D</p>
+            <h2 id="unit-title">收益分布画像</h2>
+            <div className="distribution-summary">
+              <div><span>当前组合</span><strong>{data.distributionSummary.skewLabel}</strong></div>
+              <div><span>偏度</span><b>{decimal(data.distributionSummary.skewness)}</b></div>
+              <div><span>尾部</span><strong>{data.distributionSummary.kurtosisLabel}</strong></div>
+              <div><span>超额峰度</span><b>{decimal(data.distributionSummary.excessKurtosis)}</b></div>
             </div>
-            <div className="risk-grid">
-              <div><span>年化波动</span><b>{pct(data.riskSummary.volatility)}</b></div>
-              <div><span>最大回撤</span><b>{pct(data.riskSummary.maxDrawdown)}</b></div>
-              <div><span>偏度</span><b>{decimal(data.riskSummary.skewness)}</b></div>
-              <div><span>超额峰度</span><b>{decimal(data.riskSummary.excessKurtosis)}</b></div>
+            <div className="distribution-legend">
+              <div><b>右尾机会型</b><span>多数时间平淡或小幅波动，少数大涨贡献主要回报。</span></div>
+              <div><b>左尾风险型</b><span>多数时间小赚或平稳，少数大跌可能吞掉此前积累。</span></div>
+              <div><b>厚尾跳跃型</b><span>极端涨跌比常态更频繁；峰度只看强度，不判断方向。</span></div>
             </div>
-            <p className="risk-explain">以当前目标仓位回看。组合 Sharpe 由每日组合收益计算，已计入股票间相关性；加权值按仓位汇总个股 Sharpe，现金按零计。</p>
             <div className="unit-composition" aria-label="每单位组成">
               <div><span><i className="anchor-dot" />稳定锚仓</span><b>{data.summary.anchorWeight.toFixed(4)}</b></div>
               <div><span><i className="future-dot" />未来期权</span><b>{data.summary.futureWeight.toFixed(4)}</b></div>

@@ -29,7 +29,7 @@ h2 { font-size:23px; }
 .allocation-tags span { padding:6px 9px; border-radius:999px; font-size:9px; }
 .anchor-tag { background:var(--sage-soft); color:#53604f; }.future-tag { background:var(--terra-soft); color:#96503d; }.cash-tag { background:#e9e1d3; color:#786b57; }
 .positions-table { display:block; width:100%; border-top:1px solid var(--ink); }
-.table-head,.stock-row { width:100%; display:grid; grid-template-columns:1.65fr .62fr .48fr .52fr .52fr .48fr .48fr .65fr .65fr; align-items:center; column-gap:10px; }
+.table-head,.stock-row { width:100%; display:grid; grid-template-columns:1.65fr .62fr .48fr .5fr .82fr .5fr .88fr .65fr; align-items:center; column-gap:10px; }
 .table-head { height:29px; color:var(--muted); font-size:8px; border-bottom:1px solid var(--line); }
 .table-head span:not(:first-child),.stock-row>span:not(:first-child),.stock-row>strong { text-align:right; }
 .stock-row { min-height:39px; border-bottom:1px solid var(--line); font-size:10px; }
@@ -39,7 +39,7 @@ h2 { font-size:23px; }
 .stock-row strong { font-family:"Songti SC",serif; font-size:15px; font-weight:500; }
 .price,.stock-row>span:not(:first-child) { font-variant-numeric:tabular-nums; }
 .unit-allocation { color:var(--muted); font-variant-numeric:tabular-nums; }
-.drawdown { color:var(--terra); }
+.distribution-label { color:#5f6f5b; font-size:9px; }
 .anchor-dot,.future-dot,.cash-dot { display:inline-block; width:6px; height:6px; margin-right:5px; border-radius:50%; background:var(--sage); }
 .future-dot { background:var(--terra); }.cash-dot { background:var(--sand); }
 .cash-row { background:rgba(215,203,182,.16); }
@@ -47,14 +47,16 @@ h2 { font-size:23px; }
 .unit-panel { padding:23px; background:#e8ede5; color:var(--ink); border:1px solid #d8e0d4; border-radius:18px; display:flex; flex-direction:column; }
 .unit-panel .kicker { color:#73806f; }
 .unit-panel h2 { font-size:25px; }
-.portfolio-sharpe { display:grid; grid-template-columns:1.25fr 1fr; gap:14px; margin:15px 0 11px; align-items:end; }
-.portfolio-sharpe span,.risk-grid span { display:block; color:var(--muted); font-size:8px; }
-.portfolio-sharpe strong { display:block; margin-top:3px; color:#596b55; font-family:"Songti SC",serif; font-size:42px; font-weight:500; line-height:1; }
-.portfolio-sharpe b { display:block; margin-top:6px; font-family:"Songti SC",serif; font-size:22px; font-weight:500; }
-.risk-grid { display:grid; grid-template-columns:repeat(2,1fr); border-top:1px solid #cad4c6; border-left:1px solid #cad4c6; }
-.risk-grid div { padding:8px 9px; border-right:1px solid #cad4c6; border-bottom:1px solid #cad4c6; }
-.risk-grid b { display:block; margin-top:2px; font-family:"Songti SC",serif; font-size:15px; font-weight:500; }
-.risk-explain { margin:9px 0 0; color:var(--muted); font-size:8px; line-height:1.55; }
+.distribution-summary { display:grid; grid-template-columns:1.35fr .65fr; margin:14px 0 11px; border-top:1px solid #cad4c6; border-left:1px solid #cad4c6; }
+.distribution-summary>div { padding:9px; border-right:1px solid #cad4c6; border-bottom:1px solid #cad4c6; }
+.distribution-summary span { display:block; color:var(--muted); font-size:8px; }
+.distribution-summary strong,.distribution-summary b { display:block; margin-top:3px; font-family:"Songti SC",serif; font-weight:500; }
+.distribution-summary strong { color:#596b55; font-size:18px; }
+.distribution-summary b { font-size:21px; }
+.distribution-legend { display:grid; gap:6px; }
+.distribution-legend div { padding:7px 9px; background:rgba(255,255,255,.42); border-radius:8px; }
+.distribution-legend b { display:block; margin-bottom:2px; color:#52624e; font-family:"Songti SC",serif; font-size:12px; font-weight:600; }
+.distribution-legend span { display:block; color:var(--muted); font-size:8px; line-height:1.45; }
 .unit-composition { margin:12px 0 14px; padding:8px 0; border-top:1px solid #cad4c6; border-bottom:1px solid #cad4c6; }
 .unit-composition>div { display:flex; align-items:center; justify-content:space-between; min-height:22px; }
 .unit-composition span { display:flex; align-items:center; color:var(--muted); font-size:9px; }
@@ -79,5 +81,5 @@ h2 { font-size:23px; }
 .status { min-height:100vh; display:grid; place-content:center; text-align:center; }
 .status button { border:1px solid var(--line); background:transparent; padding:8px 14px; border-radius:999px; }
 @media(max-width:900px){.canvas{padding:14px}.sheet{padding:24px;min-height:auto}.summary-grid{grid-template-columns:repeat(2,1fr)}.summary-grid article:nth-child(2){border-right:0}.summary-grid article:nth-child(-n+2){border-bottom:1px solid var(--line)}.content-grid{grid-template-columns:1fr}.unit-panel{min-height:390px}.history-bar{grid-template-columns:1fr}.disclaimer{text-align:left;max-width:none}}
-@media(max-width:600px){.canvas{padding:0}.sheet{border-radius:0;padding:20px 16px}.topbar{align-items:start}.top-actions>span{display:none}h1{font-size:32px}.summary-grid strong{font-size:26px}.summary-grid article,.summary-grid article:not(:first-child){padding:14px 10px}.panel-title{align-items:start;gap:12px}.allocation-tags{flex-wrap:wrap;justify-content:flex-end}.positions-table{overflow-x:auto}.table-head,.stock-row{min-width:920px;grid-template-columns:1.5fr .6fr .5fr .5fr .5fr .48fr .48fr .62fr .62fr;gap:8px}.stock-name{display:block}.stock-name small{display:block;margin-top:2px}.unit-buttons{grid-template-columns:1fr}.history-points{padding-bottom:4px}}
+@media(max-width:600px){.canvas{padding:0}.sheet{border-radius:0;padding:20px 16px}.topbar{align-items:start}.top-actions>span{display:none}h1{font-size:32px}.summary-grid strong{font-size:26px}.summary-grid article,.summary-grid article:not(:first-child){padding:14px 10px}.panel-title{align-items:start;gap:12px}.allocation-tags{flex-wrap:wrap;justify-content:flex-end}.positions-table{overflow-x:auto}.table-head,.stock-row{min-width:840px;grid-template-columns:1.5fr .6fr .5fr .5fr .78fr .5fr .84fr .62fr;gap:8px}.stock-name{display:block}.stock-name small{display:block;margin-top:2px}.unit-buttons{grid-template-columns:1fr}.history-points{padding-bottom:4px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
