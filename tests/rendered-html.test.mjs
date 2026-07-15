@@ -34,7 +34,14 @@ test("portfolio card includes unit accounting, reset, prices and daily NAV", asy
   assert.match(page, /右尾机会型/);
   assert.match(page, /左尾风险型/);
   assert.match(page, /厚尾跳跃型/);
-  assert.match(page, /超额峰度/);
+  assert.match(page, /Kurtosis/);
+  assert.match(page, /Daily Performance Record/);
+  assert.match(page, /5 Days/);
+  assert.match(page, /1 Month/);
+  assert.match(page, /6 Months/);
+  assert.match(page, /1 Year/);
+  assert.match(page, /Daily portfolio NAV/);
+  assert.match(page, /Today&apos;s Portfolio/);
   assert.ok(data.holdings.length > 0);
   assert.ok(data.holdings.every((holding) => holding.price > 0));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.distribution.skewness)));
