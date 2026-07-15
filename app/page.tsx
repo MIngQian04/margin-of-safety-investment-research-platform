@@ -121,19 +121,21 @@ export default function Home() {
                 <span className="cash-tag">现金 {pct(data.summary.cashWeight)}</span>
               </div>
             </div>
-            <div className="table" role="table" aria-label="目标持仓表">
-              <div className="table-head" role="row"><span>股票</span><span>类型</span><span>参考价</span><span>目标仓位</span></div>
+            <div className="positions-table" role="table" aria-label="目标持仓表">
+              <div className="table-head" role="row"><span>股票</span><span>申万行业</span><span>类型</span><span>参考价</span><span>目标仓位</span><span>每1单位配置</span></div>
               {data.holdings.map((holding) => (
                 <div className="stock-row" role="row" key={holding.code}>
                   <span className="stock-name"><b>{holding.name}</b><small>{holding.code}</small></span>
+                  <span className="industry">{holding.industry}</span>
                   <span><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} />{holding.bucket === "ANCHOR" ? "稳定锚" : "未来期权"}</span>
                   <span className="price">{money(holding.price)}</span>
                   <strong>{pct(holding.weight)}</strong>
+                  <span className="unit-allocation">{holding.weight.toFixed(4)}</span>
                 </div>
               ))}
               <div className="stock-row cash-row" role="row">
-                <span className="stock-name"><b>现金</b><small>CASH</small></span>
-                <span><i className="cash-dot" />选择权</span><span className="price">—</span><strong>{pct(data.summary.cashWeight)}</strong>
+                <span className="stock-name"><b>现金</b><small>CASH</small></span><span className="industry">—</span>
+                <span><i className="cash-dot" />选择权</span><span className="price">—</span><strong>{pct(data.summary.cashWeight)}</strong><span className="unit-allocation">{data.summary.cashWeight.toFixed(4)}</span>
               </div>
             </div>
           </section>
@@ -142,6 +144,11 @@ export default function Home() {
             <p className="kicker">PERSONAL ACCUMULATION</p>
             <h2 id="unit-title">单位1，慢慢积累。</h2>
             <p className="unit-explain">每次投入1单位，按当天组合净值买入一份完整组合。不同人的记录互不相同，只保存在自己的浏览器里。</p>
+            <div className="unit-composition" aria-label="每单位组成">
+              <div><span><i className="anchor-dot" />稳定锚仓</span><b>{data.summary.anchorWeight.toFixed(4)}</b></div>
+              <div><span><i className="future-dot" />未来期权</span><b>{data.summary.futureWeight.toFixed(4)}</b></div>
+              <div><span><i className="cash-dot" />现金</span><b>{data.summary.cashWeight.toFixed(4)}</b></div>
+            </div>
             <div className="unit-number"><strong>{lots.length}</strong><span>累计单位</span></div>
             <div className="unit-buttons">
               <button className="primary-button" onClick={() => saveLots([...lots, { date: data.asOf, entryNav: currentNav }])}>+ 投入 1 单位</button>
