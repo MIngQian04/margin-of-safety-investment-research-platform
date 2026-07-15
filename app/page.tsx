@@ -51,6 +51,8 @@ const distributionEnglish: Record<string, string> = {
   "常态尾部": "Normal tails", "数据不足": "Insufficient data",
 };
 
+const personalStartKey = "moat-value-personal-start-date-v1";
+
 function trailingReturn(history: NavPoint[], tradingDays: number) {
   if (history.length <= tradingDays) return null;
   return history.at(-1)!.nav / history.at(-1 - tradingDays)!.nav - 1;
@@ -119,6 +121,9 @@ export default function Home() {
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [confirmRefresh, setConfirmRefresh] = useState(false);
+  const [showStartSettings, setShowStartSettings] = useState(false);
+  const [personalStartDate, setPersonalStartDate] = useState("");
+  const [draftStartDate, setDraftStartDate] = useState("");
   const [selectedRange, setSelectedRange] = useState<RangeKey>("1Y");
 
   const load = useCallback(async () => {
@@ -138,18 +143,33 @@ export default function Home() {
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
-    if (!confirmRefresh) return;
+    if (!confirmRefresh && !showStartSettings) return;
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setConfirmRefresh(false);
+      if (event.key === "Escape") {
+        setConfirmRefresh(false);
+        setShowStartSettings(false);
+      }
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [confirmRefresh]);
+  }, [confirmRefresh, showStartSettings]);
+
+  useEffect(() => {
+    if (!data?.navHistory.length) return;
+    const firstDate = data.navHistory[0].date;
+    const latestDate = data.navHistory.at(-1)!.date;
+    const stored = window.localStorage.getItem(personalStartKey);
+    const initialDate = stored && stored >= firstDate && stored <= latestDate ? stored : latestDate;
+    window.localStorage.setItem(personalStartKey, initialDate);
+    setPersonalStartDate(initialDate);
+  }, [data]);
 
   if (!data && !error) return <main className="status"><p>正在读取护城河价值策略…<small>Loading the Moat Value Strategy…</small></p></main>;
   if (!data) return <main className="status"><p>{error}<small>Portfolio data is temporarily unavailable.</small></p><button onClick={load}>重新读取<small>Retry</small></button></main>;
 
   const latest = data.navHistory.at(-1);
+  const personalStart = personalStartDate ? data.navHistory.find((point) => point.date >= personalStartDate) ?? latest : latest;
+  const personalReturn = latest && personalStart ? latest.nav / personalStart.nav - 1 : 0;
   const periods = ranges.map((item) => ({
     ...item,
     value: item.key === "TODAY" ? latest?.dailyReturn ?? 0 : trailingReturn(data.navHistory, item.days),
@@ -162,6 +182,9 @@ export default function Home() {
           <div><p className="kicker">FORWARD BARBELL · {data.asOf}</p><h1>护城河价值策略<small>Moat Value Strategy</small></h1></div>
           <div className="top-actions">
             <span>单位净值 {latest?.nav.toFixed(4) ?? "1.0000"}<small>Portfolio Unit NAV</small></span>
+            <button className="start-date-button" onClick={() => { setDraftStartDate(personalStart?.date ?? latest?.date ?? data.asOf); setShowStartSettings(true); }}>
+              我的起始日 {personalStart?.date ?? "—"}<small>个人累计 {signedPct(personalReturn)} · Set Start</small>
+            </button>
             <button className="text-button" onClick={() => setConfirmRefresh(true)} disabled={refreshing}>{refreshing ? "读取中" : "刷新"}<small>{refreshing ? "Loading" : "Refresh"}</small></button>
           </div>
         </header>
@@ -225,6 +248,27 @@ export default function Home() {
             <div className="confirm-actions">
               <button className="dialog-button secondary" autoFocus onClick={() => setConfirmRefresh(false)}>取消<small>Cancel</small></button>
               <button className="dialog-button primary" onClick={() => { setConfirmRefresh(false); load(); }}>确认刷新<small>Refresh Now</small></button>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {showStartSettings && (
+        <div className="confirm-backdrop" role="presentation">
+          <section className="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="start-dialog-title" aria-describedby="start-dialog-description">
+            <p className="kicker">PERSONAL START DATE</p>
+            <h2 id="start-dialog-title">设置个人起始日<small>Set Personal Start Date</small></h2>
+            <p id="start-dialog-description">每位访问者可以从不同日期开始观察。日期只保存在当前浏览器，不改变公共组合历史，也不会影响其他人。<small>Saved only in this browser. The public portfolio history remains unchanged.</small></p>
+            <label className="date-field">选择日期<small>Select Date</small><input type="date" min={data.navHistory[0]?.date} max={latest?.date} value={draftStartDate} onChange={(event) => setDraftStartDate(event.target.value)} /></label>
+            <p className="dialog-note">若选择非交易日，将从其后的首个已记录交易日开始计算。<small>A non-trading date moves to the next recorded session.</small></p>
+            <div className="confirm-actions">
+              <button className="dialog-button secondary" autoFocus onClick={() => setShowStartSettings(false)}>取消<small>Cancel</small></button>
+              <button className="dialog-button primary" onClick={() => {
+                const resolvedDate = data.navHistory.find((point) => point.date >= draftStartDate)?.date ?? latest?.date ?? data.asOf;
+                window.localStorage.setItem(personalStartKey, resolvedDate);
+                setPersonalStartDate(resolvedDate);
+                setShowStartSettings(false);
+              }}>保存起始日<small>Save Start Date</small></button>
             </div>
           </section>
         </div>

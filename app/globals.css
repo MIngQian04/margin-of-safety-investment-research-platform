@@ -19,6 +19,7 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .top-actions span small,.top-actions button small { display:block; margin-top:2px; font-size:8px; }
 .text-button { border:0; padding:0; background:transparent; color:var(--terra); cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
 .text-button:disabled { opacity:.5; }
+.start-date-button { border:0; padding:0; background:transparent; color:var(--sage-dark); cursor:pointer; text-align:right; }
 
 .period-summary { display:grid; grid-template-columns:repeat(5,1fr); border-bottom:1px solid var(--line); }
 .period-summary button { min-width:0; padding:9px 14px 8px; border:0; border-right:1px solid var(--line); background:transparent; color:inherit; text-align:left; cursor:pointer; transition:background-color .2s ease,transform .2s ease; }
@@ -89,6 +90,10 @@ footer { display:flex; justify-content:space-between; gap:20px; padding-top:8px;
 .confirm-dialog>p:not(.kicker) { margin:18px 0 0; color:var(--ink); font-size:14px; line-height:1.7; }
 .confirm-dialog>p small { display:block; margin-top:7px; color:var(--muted); font-family:Arial,sans-serif; font-size:10px; line-height:1.45; }
 .confirm-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:22px; }
+.date-field { display:block; margin-top:18px; color:var(--ink); font-size:13px; font-weight:600; }
+.date-field small { display:block; margin-top:2px; color:var(--muted); font-family:Arial,sans-serif; font-size:8px; font-weight:500; text-transform:uppercase; }
+.date-field input { width:100%; margin-top:8px; padding:11px 12px; border:1px solid var(--line); border-radius:10px; background:rgba(255,255,255,.55); color:var(--ink); font:inherit; }
+.confirm-dialog .dialog-note { margin-top:10px; color:var(--muted); font-size:11px; line-height:1.5; }
 .dialog-button { min-height:48px; padding:8px 14px; border-radius:999px; cursor:pointer; }
 .dialog-button small { display:block; margin-top:2px; font-size:8px; }
 .dialog-button.secondary { border:1px solid var(--line); background:transparent; color:var(--ink); }
@@ -96,7 +101,7 @@ footer { display:flex; justify-content:space-between; gap:20px; padding-top:8px;
 .dialog-button:hover { transform:translateY(-1px); }
 
 @media(max-width:900px){body{overflow:auto}.canvas{height:auto;min-height:100svh;padding:14px;overflow:visible}.sheet{height:auto;min-height:auto;padding:22px;overflow:visible}.period-summary{grid-template-columns:repeat(5,minmax(100px,1fr));overflow-x:auto}.period-summary button:first-child{padding-left:14px}.main-grid{grid-template-columns:1fr;overflow:visible}.portfolio-panel{min-height:0;overflow:visible}.portfolio-distribution{margin-top:14px}.performance-chart{min-height:280px}.performance-chart svg{min-height:280px}}
-@media(max-width:600px){.canvas{padding:0}.sheet{border-radius:0;padding:20px 16px}.topbar{align-items:start}h1{font-size:33px}.top-actions>span{display:none}.period-summary{margin:0 -16px;padding-left:16px}.period-summary button{padding:14px 12px}.period-summary strong{font-size:23px}.main-grid{padding-top:18px}.performance-chart{min-height:260px}.performance-chart svg{min-height:260px}.chart-caption{display:block}.chart-caption span{display:block;margin-top:4px}.portfolio-panel{padding:19px}footer{display:block}footer span{display:block;margin-top:4px}.confirm-dialog{padding:22px}.confirm-actions{grid-template-columns:1fr}}
+@media(max-width:600px){.canvas{padding:0}.sheet{border-radius:0;padding:20px 16px}.topbar{align-items:start}h1{font-size:33px}.top-actions{gap:12px}.top-actions>span{display:none}.start-date-button{max-width:138px}.period-summary{margin:0 -16px;padding-left:16px}.period-summary button{padding:14px 12px}.period-summary strong{font-size:23px}.main-grid{padding-top:18px}.performance-chart{min-height:260px}.performance-chart svg{min-height:260px}.chart-caption{display:block}.chart-caption span{display:block;margin-top:4px}.portfolio-panel{padding:19px}footer{display:block}footer span{display:block;margin-top:4px}.confirm-dialog{padding:22px}.confirm-actions{grid-template-columns:1fr}}
 @keyframes west-lake-breeze { 0%{transform:scale(1.035) translate3d(-.35%,0,0)} 50%{transform:scale(1.045) translate3d(.25%,-.18%,0)} 100%{transform:scale(1.035) translate3d(.5%,.1%,0)} }
 @keyframes water-shimmer { from{transform:translateX(-4%) skewX(-3deg);opacity:.34} to{transform:translateX(7%) skewX(3deg);opacity:.62} }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}body::before,body::after{animation:none!important}}
