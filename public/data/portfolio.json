@@ -1,6 +1,6 @@
 {
   "asOf": "2026-07-14",
-  "generatedAt": "2026-07-14T21:34:09+08:00",
+  "generatedAt": "2026-07-15T15:08:37+08:00",
   "summary": {
     "anchorWeight": 0.65,
     "futureWeight": 0.075,
@@ -20,6 +20,14 @@
       "industry": "家用电器",
       "weight": 0.1,
       "price": 39.18,
+      "risk": {
+        "sharpe": -0.6386761339092908,
+        "volatility": 0.18643193422502058,
+        "skewness": -1.9602509110068806,
+        "excessKurtosis": 20.339344499827483,
+        "maxDrawdown": -0.2373831775700942,
+        "observations": 252
+      },
       "metrics": {
         "股息率": "7.6%",
         "所有者收益率": "14.7%",
@@ -36,6 +44,14 @@
       "industry": "食品饮料",
       "weight": 0.1,
       "price": 77.65,
+      "risk": {
+        "sharpe": -1.1361346490634403,
+        "volatility": 0.2952934089733387,
+        "skewness": 1.1273592995899797,
+        "excessKurtosis": 4.957698011291416,
+        "maxDrawdown": -0.47732347195087954,
+        "observations": 252
+      },
       "metrics": {
         "股息率": "7.7%",
         "所有者收益率": "11.5%",
@@ -52,6 +68,14 @@
       "industry": "家用电器",
       "weight": 0.1,
       "price": 42.95,
+      "risk": {
+        "sharpe": -0.8576524927223075,
+        "volatility": 0.2062500390564991,
+        "skewness": -2.5435898290148455,
+        "excessKurtosis": 21.670715862793287,
+        "maxDrawdown": -0.25912067352666035,
+        "observations": 252
+      },
       "metrics": {
         "股息率": "6.5%",
         "所有者收益率": "6.4%",
@@ -68,6 +92,14 @@
       "industry": "机械设备",
       "weight": 0.125,
       "price": 14.77,
+      "risk": {
+        "sharpe": -0.11153418650336083,
+        "volatility": 0.3872233902845898,
+        "skewness": 0.026109724147332668,
+        "excessKurtosis": 3.785953846867332,
+        "maxDrawdown": -0.4976525821596248,
+        "observations": 252
+      },
       "metrics": {
         "股息率": "7.6%",
         "所有者收益率": "14.5%",
@@ -84,6 +116,14 @@
       "industry": "纺织服饰",
       "weight": 0.125,
       "price": 30.38,
+      "risk": {
+        "sharpe": -1.7677792789941202,
+        "volatility": 0.2865866069287727,
+        "skewness": -0.26323352790819193,
+        "excessKurtosis": 1.74227650491203,
+        "maxDrawdown": -0.53001579778831,
+        "observations": 252
+      },
       "metrics": {
         "股息率": "10.9%",
         "所有者收益率": "8.8%",
@@ -100,6 +140,14 @@
       "industry": "食品饮料",
       "weight": 0.1,
       "price": 110.5,
+      "risk": {
+        "sharpe": -1.4995180801486065,
+        "volatility": 0.2849424042137047,
+        "skewness": 1.193635372015418,
+        "excessKurtosis": 4.611356569298636,
+        "maxDrawdown": -0.4957531551418006,
+        "observations": 252
+      },
       "metrics": {
         "股息率": "5.5%",
         "所有者收益率": "9.1%",
@@ -116,6 +164,14 @@
       "industry": "通信",
       "weight": 0.025,
       "price": 91.8,
+      "risk": {
+        "sharpe": -1.3019320739443443,
+        "volatility": 0.14806653628180297,
+        "skewness": -0.019220961547938648,
+        "excessKurtosis": 2.448951189598259,
+        "maxDrawdown": -0.2412790697674414,
+        "observations": 252
+      },
       "metrics": {
         "未来逻辑分": "88.8",
         "DCF安全边际": "25.3%",
@@ -131,6 +187,14 @@
       "industry": "电力设备",
       "weight": 0.025,
       "price": 19.85,
+      "risk": {
+        "sharpe": -0.044710473906324884,
+        "volatility": 0.3878533504139356,
+        "skewness": 0.05820525939525222,
+        "excessKurtosis": 2.963266460563071,
+        "maxDrawdown": -0.42066529290550536,
+        "observations": 252
+      },
       "metrics": {
         "未来逻辑分": "82.5",
         "DCF安全边际": "11.1%",
@@ -146,6 +210,14 @@
       "industry": "电力设备",
       "weight": 0.025,
       "price": 17.33,
+      "risk": {
+        "sharpe": 0.495644808131482,
+        "volatility": 0.3970063091444733,
+        "skewness": 0.3897091230807314,
+        "excessKurtosis": 1.6364304296125276,
+        "maxDrawdown": -0.3438498402555906,
+        "observations": 252
+      },
       "metrics": {
         "未来逻辑分": "79.5",
         "DCF安全边际": "1.6%",
@@ -153,6 +225,18 @@
       }
     }
   ],
+  "riskSummary": {
+    "sharpe": -1.4297072629054826,
+    "volatility": 0.12235566839077132,
+    "skewness": -0.10947521819262067,
+    "excessKurtosis": 0.7277627339569612,
+    "maxDrawdown": -0.26795826923675237,
+    "observations": 252,
+    "weightedStockSharpe": -0.6693872622645294,
+    "periodStart": "2025-07-01",
+    "periodEnd": "2026-07-14",
+    "method": "252个交易日；无风险利率为0；现金收益为0；峰度为超额峰度"
+  },
   "navHistory": [
     {
       "date": "2026-07-14",
