@@ -175,6 +175,9 @@ export default function Home() {
     ...item,
     value: item.key === "TODAY" ? latest?.dailyReturn ?? 0 : trailingReturn(data.navHistory, item.days),
   }));
+  const rankedHoldings = [...data.holdings].sort((left, right) =>
+    right.dailyReturn - left.dailyReturn || right.weight - left.weight || left.code.localeCompare(right.code)
+  );
 
   return (
     <main className="canvas">
@@ -216,14 +219,14 @@ export default function Home() {
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
             <div><p className="kicker">CURRENT ALLOCATION</p><h2 id="positions-heading">当前仓位<small>Current Positions</small></h2></div>
             <div className="holding-list">
-              <div className="holding-list-head"><span>标的<small>Stock</small></span><div className="holding-values"><em>价格<small>Price</small></em><em>今日<small>Today</small></em><strong>仓位<small>Weight</small></strong></div></div>
-              {data.holdings.map((holding) => (
+              <div className="holding-list-head"><span>标的<small>Stock</small></span><div className="holding-values"><em>价格<small>Price</small></em><em>今日↓<small>Today</small></em><strong>仓位<small>Weight</small></strong></div></div>
+              {rankedHoldings.map((holding) => (
                 <div key={holding.code}>
-                  <span><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><b>{holding.name}</b><small>{holding.code}</small></span>
+                  <span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{holding.name}</b><small>{holding.code}</small></span></span>
                   <div className="holding-values"><em>{money(holding.price)}</em><em className={holding.dailyReturn >= 0 ? "holding-up" : "holding-down"}>{signedPct(holding.dailyReturn)}</em><strong>{pct(holding.weight)}</strong></div>
                 </div>
               ))}
-              <div className="cash-line"><span><i className="cash-dot" /><b>现金</b><small>Cash</small></span><div className="holding-values"><em>—</em><em>0</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
+              <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>现金</b><small>Cash</small></span></span><div className="holding-values"><em>—</em><em>0</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
             </div>
 
             <div className="portfolio-distribution">
