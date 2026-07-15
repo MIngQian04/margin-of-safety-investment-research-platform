@@ -50,6 +50,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /height:min\(780px,calc\(100svh - 36px\)\)/);
   assert.match(css, /grid-template-columns:minmax\(0,3fr\) minmax\(0,1fr\)/);
   assert.match(css, /\.period-summary strong \{[^}]*font-size:32px/);
+  assert.match(css, /\.axis-label \{[^}]*font-size:12px/);
+  assert.match(css, /\.chart-building \{[^}]*font-size:12px/);
+  assert.match(css, /\.portfolio-distribution \{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(css, /\.holding-list b \{[^}]*font-size:14px/);
   assert.match(css, /background:rgba\(250,248,243,\.48\)/);
   assert.match(css, /backdrop-filter:blur\(\.5px\)/);
