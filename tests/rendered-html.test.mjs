@@ -46,6 +46,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /west-lake-willow-bg\.png/);
   assert.match(css, /west-lake-breeze/);
   assert.match(css, /prefers-reduced-motion/);
+  assert.match(css, /width:min\(1280px,100%\)/);
+  assert.match(css, /background:rgba\(250,248,243,\.67\)/);
+  assert.match(css, /backdrop-filter:blur\(1\.5px\)/);
   assert.ok(background.byteLength > 100_000);
   assert.ok(data.holdings.length > 0);
   assert.ok(data.holdings.every((holding) => holding.price > 0));
