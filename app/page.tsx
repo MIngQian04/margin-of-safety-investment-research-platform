@@ -113,7 +113,6 @@ function PerformanceChart({ history, range }: { history: NavPoint[]; range: Rang
           <span>{active.point.date}</span><strong>{signedPct(active.value)}</strong><small>NAV {(active.point.nav / personalBase).toFixed(4)}</small>
         </div>
       )}
-      {points.length < needed && <p className="chart-building">正在积累该周期记录 · Building this range</p>}
     </div>
   );
 }
@@ -205,7 +204,7 @@ export default function Home() {
             <button key={period.key} className={selectedRange === period.key ? "is-active" : ""} aria-pressed={selectedRange === period.key} onClick={() => setSelectedRange(period.key)}>
               <span>{period.cn}<small>{period.en}</small></span>
               <strong className={period.value == null ? "pending" : period.value >= 0 ? "up" : "down"}>{period.value == null ? "—" : signedPct(period.value)}</strong>
-              <em>{period.value == null ? "记录积累中 · Building" : "点击查看曲线 · View chart"}</em>
+              {period.value != null && <em>点击查看曲线 · View chart</em>}
             </button>
           ))}
         </div>

@@ -62,6 +62,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /data\.navHistory\.filter\(\(point\) => point\.date >= personalStart\.date\)/);
   assert.match(page, /PerformanceChart history=\{personalHistory\}/);
   assert.match(page, /Personal Unit NAV/);
+  assert.doesNotMatch(page, /正在积累该周期记录|记录积累中|Building this range|记录积累中 · Building/);
   assert.match(css, /\.confirm-dialog/);
   assert.match(css, /\.date-field input/);
   assert.match(css, /west-lake-willow-bg\.png/);
@@ -72,7 +73,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /grid-template-columns:minmax\(0,3fr\) minmax\(0,1fr\)/);
   assert.match(css, /\.period-summary strong \{[^}]*font-size:32px/);
   assert.match(css, /\.axis-label \{[^}]*font-size:12px/);
-  assert.match(css, /\.chart-building \{[^}]*font-size:12px/);
+  assert.doesNotMatch(css, /\.chart-building/);
   assert.match(css, /\.portfolio-distribution \{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(css, /\.holding-list b \{[^}]*font-size:15px/);
   assert.match(css, /\.holding-list>div \{[^}]*min-height:36px/);
