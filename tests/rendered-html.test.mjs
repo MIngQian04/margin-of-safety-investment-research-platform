@@ -69,6 +69,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /查看\$\{holding\.name\}的护城河动态档案/);
   assert.match(page, /什么变化代表削弱/);
   assert.match(page, /A current falsifiable thesis, not a permanent label/);
+  assert.match(page, /待人工复核事件/);
+  assert.match(page, /公告雷达未确认/);
+  assert.match(page, /这不代表护城河已经得到证明/);
   assert.doesNotMatch(page, /正在积累该周期记录|记录积累中|Building this range|记录积累中 · Building/);
   assert.match(css, /\.confirm-dialog/);
   assert.match(css, /\.date-field input/);
@@ -91,6 +94,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /background:rgba\(250,248,243,\.48\)/);
   assert.match(css, /backdrop-filter:blur\(\.5px\)/);
   assert.match(css, /\.moat-dialog/);
+  assert.match(css, /\.moat-radar-alert/);
   assert.match(css, /\.holding-row:hover/);
   assert.ok(background.byteLength > 100_000);
   assert.ok(data.holdings.length > 0);
@@ -105,6 +109,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.holdings.every((holding) => holding.moat.monitoringSignals.length > 0));
   assert.ok(data.holdings.every((holding) => holding.moat.invalidationSignals.length > 0));
   assert.ok(data.holdings.every((holding) => holding.moat.nextReviewDate));
+  assert.ok(data.holdings.every((holding) => Number.isInteger(holding.moat.radar.pendingAlertCount)));
+  assert.ok(data.moatRadar.announcementStatus);
+  assert.ok(Number.isInteger(data.moatRadar.pendingAlerts));
   assert.ok(Number.isFinite(data.distributionSummary.skewness));
   assert.ok(Number.isFinite(data.distributionSummary.excessKurtosis));
   assert.ok(Number.isFinite(data.dividendSummary.cumulativeCash));

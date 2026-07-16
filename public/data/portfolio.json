@@ -1,6 +1,6 @@
 {
   "asOf": "2026-07-15",
-  "generatedAt": "2026-07-16T13:56:07+08:00",
+  "generatedAt": "2026-07-16T14:17:16+08:00",
   "summary": {
     "anchorWeight": 0.65,
     "futureWeight": 0.075,
@@ -50,7 +50,14 @@
         "nextReviewDate": "2026-10-31",
         "supportingEvidenceCount": 0,
         "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
       },
       "metrics": {
         "股息率": "4.1%",
@@ -99,7 +106,14 @@
         "nextReviewDate": "2026-10-31",
         "supportingEvidenceCount": 0,
         "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
       },
       "metrics": {
         "股息率": "3.2%",
@@ -148,7 +162,14 @@
         "nextReviewDate": "2026-10-31",
         "supportingEvidenceCount": 0,
         "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 1,
+          "highAlertCount": 0,
+          "latestAlertDate": "2026-04-22",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-42.7%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
+        }
       },
       "metrics": {
         "股息率": "4.8%",
@@ -197,7 +218,14 @@
         "nextReviewDate": "2026-10-31",
         "supportingEvidenceCount": 0,
         "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
       },
       "metrics": {
         "股息率": "4.8%",
@@ -246,7 +274,14 @@
         "nextReviewDate": "2026-10-31",
         "supportingEvidenceCount": 0,
         "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 1,
+          "highAlertCount": 0,
+          "latestAlertDate": "2026-04-24",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
+        }
       },
       "metrics": {
         "股息率": "6.4%",
@@ -295,7 +330,14 @@
         "nextReviewDate": "2026-10-31",
         "supportingEvidenceCount": 0,
         "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 1,
+          "highAlertCount": 0,
+          "latestAlertDate": "2026-04-29",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-29.1%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
+        }
       },
       "metrics": {
         "股息率": "7.5%",
@@ -344,7 +386,14 @@
         "nextReviewDate": "2026-10-31",
         "supportingEvidenceCount": 0,
         "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
       },
       "metrics": {
         "未来逻辑分": "88.8",
@@ -392,7 +441,14 @@
         "nextReviewDate": "2026-10-31",
         "supportingEvidenceCount": 0,
         "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 2,
+          "highAlertCount": 2,
+          "latestAlertDate": "2026-04-11",
+          "latestAlertTitle": "2026-03-31 归母净利润同比-46.5%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
+        }
       },
       "metrics": {
         "未来逻辑分": "82.5",
@@ -440,7 +496,14 @@
         "nextReviewDate": "2026-10-31",
         "supportingEvidenceCount": 0,
         "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
       },
       "metrics": {
         "未来逻辑分": "79.5",
@@ -449,6 +512,16 @@
       }
     }
   ],
+  "moatRadar": {
+    "asOf": "2026-07-15",
+    "checkedAt": "2026-07-16T14:16:45+08:00",
+    "announcementStatus": "UNAVAILABLE",
+    "financialStatus": "OK",
+    "pendingAlerts": 5,
+    "highAlerts": 2,
+    "announcementRowsInWindow": 0,
+    "note": "规则命中只生成待人工复核事件，不会自动改变护城河结论或触发交易"
+  },
   "distributionSummary": {
     "skewness": 0.2696270639718538,
     "excessKurtosis": 1.2948640963921827,

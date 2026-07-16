@@ -30,6 +30,13 @@ type Holding = {
     supportingEvidenceCount: number;
     cautionEvidenceCount: number;
     contradictoryEvidenceCount: number;
+    radar: {
+      pendingAlertCount: number;
+      highAlertCount: number;
+      latestAlertDate: string;
+      latestAlertTitle: string;
+      latestAlertSource: string;
+    };
   };
 };
 
@@ -37,6 +44,16 @@ type NavPoint = { date: string; nav: number; dailyReturn: number; priceCoverage:
 type PortfolioData = {
   asOf: string;
   summary: { anchorWeight: number; futureWeight: number; cashWeight: number };
+  moatRadar: {
+    asOf: string;
+    checkedAt: string;
+    announcementStatus: "OK" | "PARTIAL" | "UNAVAILABLE" | "OFFLINE" | "NOT_RUN";
+    financialStatus: "OK" | "PARTIAL" | "NOT_RUN";
+    pendingAlerts: number;
+    highAlerts: number;
+    announcementRowsInWindow: number;
+    note: string;
+  };
   holdings: Holding[];
   navHistory: NavPoint[];
   dividendSummary: {
@@ -325,6 +342,22 @@ export default function Home() {
               <span>{moatStatus[selectedHolding.moat.status].cn}<small>{moatStatus[selectedHolding.moat.status].en}</small></span>
               <b>下次复核 {selectedHolding.moat.nextReviewDate}<small>Next review</small></b>
             </div>
+            {selectedHolding.moat.radar.pendingAlertCount > 0 ? (
+              <div className="moat-radar-alert" role="status">
+                <span>发现 {selectedHolding.moat.radar.pendingAlertCount} 条待人工复核事件<small>{selectedHolding.moat.radar.highAlertCount} high-priority · Pending review</small></span>
+                <strong>{selectedHolding.moat.radar.latestAlertTitle}<small>{selectedHolding.moat.radar.latestAlertDate} · {selectedHolding.moat.radar.latestAlertSource}</small></strong>
+              </div>
+            ) : data.moatRadar.announcementStatus === "UNAVAILABLE" || data.moatRadar.announcementStatus === "NOT_RUN" ? (
+              <div className="moat-radar-alert unavailable" role="status">
+                <span>公告雷达未确认<small>Radar unavailable</small></span>
+                <strong>当前不能据此判断“没有风险事件”<small>Missing data is not a clean signal.</small></strong>
+              </div>
+            ) : (
+              <div className="moat-radar-alert clear" role="status">
+                <span>本次扫描未发现规则触发事件<small>No rule-triggered event</small></span>
+                <strong>这不代表护城河已经得到证明<small>Not proof that the moat is intact.</small></strong>
+              </div>
+            )}
             <div className="moat-dialog-body">
               <article className="moat-thesis">
                 <p className="kicker">MOAT THESIS</p><h3>{selectedHolding.moat.type}</h3><p>{selectedHolding.moat.thesis}</p>
