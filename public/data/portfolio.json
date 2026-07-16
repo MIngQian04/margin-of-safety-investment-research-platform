@@ -1,14 +1,14 @@
 {
-  "asOf": "2026-07-15",
-  "generatedAt": "2026-07-16T14:17:16+08:00",
+  "asOf": "2026-07-16",
+  "generatedAt": "2026-07-16T18:33:45+08:00",
   "summary": {
     "anchorWeight": 0.65,
     "futureWeight": 0.075,
     "cashWeight": 0.2749999999999999,
-    "universeScanned": 5525,
-    "financialReviewed": 204,
-    "financialComplete": 204,
-    "anchorEligible": 36
+    "universeScanned": 5524,
+    "financialReviewed": 207,
+    "financialComplete": 207,
+    "anchorEligible": 35
   },
   "holdings": [
     {
@@ -19,11 +19,11 @@
       "theme": "稳定现金流",
       "industry": "食品饮料",
       "weight": 0.0702702702702702,
-      "price": 1251.06,
-      "dailyReturn": 0.029780719083366103,
+      "price": 1258.99,
+      "dailyReturn": 0.006338624846130569,
       "distribution": {
-        "skewness": 1.3483273000896876,
-        "excessKurtosis": 7.777533621479087,
+        "skewness": 1.3444039545992406,
+        "excessKurtosis": 7.756446211398922,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
@@ -74,11 +74,11 @@
       "theme": "稳定现金流",
       "industry": "医药生物",
       "weight": 0.15,
-      "price": 146.0,
-      "dailyReturn": 0.043155187196341815,
+      "price": 150.31,
+      "dailyReturn": 0.029520547945205422,
       "distribution": {
-        "skewness": 0.536760929516482,
-        "excessKurtosis": 0.430842238220166,
+        "skewness": 0.5260608702720673,
+        "excessKurtosis": 0.3689292279809946,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "常态尾部",
         "observations": 252
@@ -116,8 +116,8 @@
         }
       },
       "metrics": {
-        "股息率": "3.2%",
-        "所有者收益率": "6.5%",
+        "股息率": "3.1%",
+        "所有者收益率": "6.3%",
         "三年ROE": "32.5%",
         "护城河代理分": "88.5"
       }
@@ -130,11 +130,11 @@
       "theme": "稳定现金流",
       "industry": "通信",
       "weight": 0.15,
-      "price": 37.49,
-      "dailyReturn": 0.10687924416888106,
+      "price": 36.8,
+      "dailyReturn": -0.01840490797546024,
       "distribution": {
-        "skewness": 0.5220952248079079,
-        "excessKurtosis": 5.0493695319147545,
+        "skewness": 0.5223602706351003,
+        "excessKurtosis": 5.027543818673109,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
@@ -172,8 +172,8 @@
         }
       },
       "metrics": {
-        "股息率": "4.8%",
-        "所有者收益率": "5.5%",
+        "股息率": "4.9%",
+        "所有者收益率": "5.6%",
         "三年ROE": "27.9%",
         "护城河代理分": "70.3"
       }
@@ -186,11 +186,11 @@
       "theme": "稳定现金流",
       "industry": "建筑材料",
       "weight": 0.15,
-      "price": 17.75,
-      "dailyReturn": 0.030778164924506468,
+      "price": 18.4,
+      "dailyReturn": 0.036619718309859106,
       "distribution": {
-        "skewness": 0.5120666141298431,
-        "excessKurtosis": 1.2789757357164389,
+        "skewness": 0.5085019681269249,
+        "excessKurtosis": 1.1907189775467248,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
@@ -228,8 +228,8 @@
         }
       },
       "metrics": {
-        "股息率": "4.8%",
-        "所有者收益率": "11.4%",
+        "股息率": "4.7%",
+        "所有者收益率": "11.0%",
         "三年ROE": "14.2%",
         "护城河代理分": "67.6"
       }
@@ -242,11 +242,11 @@
       "theme": "稳定现金流",
       "industry": "家用电器",
       "weight": 0.0648648648648648,
-      "price": 43.82,
-      "dailyReturn": 0.02025611175785791,
+      "price": 44.26,
+      "dailyReturn": 0.010041077133728926,
       "distribution": {
-        "skewness": -2.5084367393163416,
-        "excessKurtosis": 21.337452036106043,
+        "skewness": -2.516054622794716,
+        "excessKurtosis": 21.318917501254255,
         "skewLabel": "左尾风险型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
@@ -284,8 +284,8 @@
         }
       },
       "metrics": {
-        "股息率": "6.4%",
-        "所有者收益率": "6.3%",
+        "股息率": "6.3%",
+        "所有者收益率": "6.2%",
         "三年ROE": "34.4%",
         "护城河代理分": "70.5"
       }
@@ -299,10 +299,10 @@
       "industry": "家用电器",
       "weight": 0.0648648648648648,
       "price": 39.83,
-      "dailyReturn": 0.016590096988259306,
+      "dailyReturn": 0.0,
       "distribution": {
-        "skewness": -1.9455795529455353,
-        "excessKurtosis": 20.176781264326753,
+        "skewness": -1.9890356264323157,
+        "excessKurtosis": 20.70776560569075,
         "skewLabel": "左尾风险型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
@@ -355,10 +355,10 @@
       "industry": "通信",
       "weight": 0.025,
       "price": 92.8,
-      "dailyReturn": 0.01089324618736387,
+      "dailyReturn": 0.0026939655172413257,
       "distribution": {
-        "skewness": -0.025135505378000522,
-        "excessKurtosis": 2.3920670216492717,
+        "skewness": -0.03535874328270421,
+        "excessKurtosis": 2.400091229523169,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
@@ -410,10 +410,10 @@
       "industry": "电力设备",
       "weight": 0.025,
       "price": 20.0,
-      "dailyReturn": 0.007556675062972307,
+      "dailyReturn": -0.0025000000000000577,
       "distribution": {
-        "skewness": 0.05131309690395015,
-        "excessKurtosis": 2.961893367906538,
+        "skewness": 0.058212971028525025,
+        "excessKurtosis": 2.974256243328089,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
@@ -465,10 +465,10 @@
       "industry": "电力设备",
       "weight": 0.025,
       "price": 17.21,
-      "dailyReturn": -0.006924408540103677,
+      "dailyReturn": 0.007553747821034129,
       "distribution": {
-        "skewness": 0.38852846767791716,
-        "excessKurtosis": 1.6393402320504205,
+        "skewness": 0.3817204823525117,
+        "excessKurtosis": 1.6368062911076207,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
@@ -514,7 +514,7 @@
   ],
   "moatRadar": {
     "asOf": "2026-07-15",
-    "checkedAt": "2026-07-16T14:16:45+08:00",
+    "checkedAt": "2026-07-16T18:31:59+08:00",
     "announcementStatus": "UNAVAILABLE",
     "financialStatus": "OK",
     "pendingAlerts": 5,
@@ -523,13 +523,13 @@
     "note": "规则命中只生成待人工复核事件，不会自动改变护城河结论或触发交易"
   },
   "distributionSummary": {
-    "skewness": 0.2696270639718538,
-    "excessKurtosis": 1.2948640963921827,
+    "skewness": 0.2572811985296422,
+    "excessKurtosis": 1.2512880366658576,
     "skewLabel": "近对称分布",
     "kurtosisLabel": "厚尾波动型",
     "observations": 252,
-    "periodStart": "2025-07-02",
-    "periodEnd": "2026-07-15",
+    "periodStart": "2025-07-03",
+    "periodEnd": "2026-07-16",
     "method": "当前目标仓位的近252个共同交易日；偏度描述方向，峰度为超额峰度并描述极端波动频率"
   },
   "dividendSummary": {
@@ -545,6 +545,14 @@
       "nav": 1.0,
       "dailyReturn": 0.0,
       "priceCoverage": 1.0,
+      "cashDividendReturn": 0.0,
+      "stockDividendReturn": 0.0
+    },
+    {
+      "date": "2026-07-16",
+      "nav": 1.008450726567854,
+      "dailyReturn": 0.0084507265678539,
+      "priceCoverage": 0.7249999999999998,
       "cashDividendReturn": 0.0,
       "stockDividendReturn": 0.0
     }
