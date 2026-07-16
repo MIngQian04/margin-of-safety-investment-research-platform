@@ -25,6 +25,13 @@ type PortfolioData = {
   summary: { anchorWeight: number; futureWeight: number; cashWeight: number };
   holdings: Holding[];
   navHistory: NavPoint[];
+  dividendSummary: {
+    cumulativeCash: number;
+    reinvestedCash: number;
+    pendingCash: number;
+    receivableCash: number;
+    accountingBasis: string;
+  };
   distributionSummary: Holding["distribution"] & {
     periodStart: string;
     periodEnd: string;
@@ -191,7 +198,7 @@ export default function Home() {
         <header className="topbar">
           <div><p className="kicker">FORWARD BARBELL · {data.asOf}</p><h1>护城河价值策略<small>Moat Value Strategy</small></h1></div>
           <div className="top-actions">
-            <span>单位净值 {personalUnitNav.toFixed(4)}<small>Personal Unit NAV</small></span>
+            <span>单位净值 {personalUnitNav.toFixed(4)}<small>Personal Unit NAV</small><small className="dividend-meta">分红 {data.dividendSummary.cumulativeCash.toFixed(4)} · 已复投 {data.dividendSummary.reinvestedCash.toFixed(4)} · 待复投 {(data.dividendSummary.pendingCash + data.dividendSummary.receivableCash).toFixed(4)}<i>Dividends · Reinvested · Pending</i></small></span>
             <button className="start-date-button" onClick={() => { setDraftStartDate(personalStart?.date ?? latest?.date ?? data.asOf); setShowStartSettings(true); }}>
               我的起始日 {personalStart?.date ?? "—"}<small>个人累计 {signedPct(personalReturn)} · Set Start</small>
             </button>
@@ -217,7 +224,7 @@ export default function Home() {
             </div>
             <PerformanceChart history={personalHistory} range={selectedRange} />
             <div className="chart-caption">
-              <span><i className="line-key" />每日单位净值收益 · Daily unit-NAV return</span>
+              <span><i className="line-key" />含分红单位净值收益 · Total-return unit NAV</span>
               <span>自 {personalStart?.date ?? data.asOf} 按单位1记录 · Unit 1 since {personalStart?.date ?? data.asOf}</span>
             </div>
           </section>

@@ -62,6 +62,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /data\.navHistory\.filter\(\(point\) => point\.date >= personalStart\.date\)/);
   assert.match(page, /PerformanceChart history=\{personalHistory\}/);
   assert.match(page, /Personal Unit NAV/);
+  assert.match(page, /dividendSummary\.cumulativeCash/);
+  assert.match(page, /已复投/);
+  assert.match(page, /Total-return unit NAV/);
   assert.doesNotMatch(page, /正在积累该周期记录|记录积累中|Building this range|记录积累中 · Building/);
   assert.match(css, /\.confirm-dialog/);
   assert.match(css, /\.date-field input/);
@@ -93,6 +96,10 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.holdings.every((holding) => holding.distribution.kurtosisLabel));
   assert.ok(Number.isFinite(data.distributionSummary.skewness));
   assert.ok(Number.isFinite(data.distributionSummary.excessKurtosis));
+  assert.ok(Number.isFinite(data.dividendSummary.cumulativeCash));
+  assert.ok(Number.isFinite(data.dividendSummary.reinvestedCash));
+  assert.ok(Number.isFinite(data.dividendSummary.pendingCash));
+  assert.ok(Number.isFinite(data.dividendSummary.receivableCash));
   assert.ok(data.distributionSummary.observations >= 200);
   assert.ok(data.navHistory.length > 0);
   assert.equal(data.navHistory[0].nav, 1);

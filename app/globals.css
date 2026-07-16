@@ -17,6 +17,8 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .topbar { display:flex; justify-content:space-between; align-items:end; padding-bottom:11px; border-bottom:1px solid var(--line); }
 .top-actions { display:flex; align-items:center; gap:20px; color:var(--muted); font-size:12px; text-align:right; }
 .top-actions span small,.top-actions button small { display:block; margin-top:2px; font-size:8px; }
+.top-actions .dividend-meta { margin-top:4px; color:var(--sage-dark); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.top-actions .dividend-meta i { display:block; margin-top:1px; color:var(--muted); font-size:6px; font-style:normal; }
 .text-button { border:0; padding:0; background:transparent; color:var(--terra); cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
 .text-button:disabled { opacity:.5; }
 .start-date-button { border:0; padding:0; background:transparent; color:var(--sage-dark); cursor:pointer; text-align:right; }

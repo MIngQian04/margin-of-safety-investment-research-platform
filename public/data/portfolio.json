@@ -1,6 +1,6 @@
 {
   "asOf": "2026-07-15",
-  "generatedAt": "2026-07-16T09:07:30+08:00",
+  "generatedAt": "2026-07-16T13:27:20+08:00",
   "summary": {
     "anchorWeight": 0.65,
     "futureWeight": 0.075,
@@ -235,12 +235,21 @@
     "periodEnd": "2026-07-15",
     "method": "当前目标仓位的近252个共同交易日；偏度描述方向，峰度为超额峰度并描述极端波动频率"
   },
+  "dividendSummary": {
+    "cumulativeCash": 0.0,
+    "reinvestedCash": 0.0,
+    "pendingCash": 0.0,
+    "receivableCash": 0.0,
+    "accountingBasis": "Tushare cash_div after-tax proxy; ex-date entitlement, pay-date cash, next-session target-weight reinvestment"
+  },
   "navHistory": [
     {
       "date": "2026-07-15",
       "nav": 1.0,
       "dailyReturn": 0.0,
-      "priceCoverage": 1.0
+      "priceCoverage": 1.0,
+      "cashDividendReturn": 0.0,
+      "stockDividendReturn": 0.0
     }
   ],
   "pendingFinancials": [],
@@ -257,8 +266,8 @@
     },
     {
       "step": "03",
-      "title": "确认趋势才加仓",
-      "body": "需求、利润池、公司兑现三类里程碑与底部放量趋势全部确认，未来期权才允许升级为核心仓。"
+      "title": "分级确认，双向升降",
+      "body": "种子仓从2.5%开始；至少两类产业里程碑得到验证后升至5%，三类全部验证且趋势确认后升至7.5%。证据退化时按相同阶梯减仓。"
     },
     {
       "step": "04",
