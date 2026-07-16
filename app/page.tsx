@@ -71,6 +71,7 @@ function PerformanceChart({ history, range }: { history: NavPoint[]; range: Rang
   const top = 24;
   const bottom = 274;
   const base = points.at(0)?.nav ?? 1;
+  const personalBase = history.at(0)?.nav ?? 1;
   const returns = points.map((point) => point.nav / base - 1);
   const rawMin = Math.min(...returns, 0);
   const rawMax = Math.max(...returns, 0);
@@ -109,7 +110,7 @@ function PerformanceChart({ history, range }: { history: NavPoint[]; range: Rang
       </svg>
       {active && (
         <div className="chart-tooltip" style={{ left: `clamp(52px, ${active.x / width * 100}%, calc(100% - 52px))`, top: `${active.y / height * 100}%` }}>
-          <span>{active.point.date}</span><strong>{signedPct(active.value)}</strong><small>NAV {active.point.nav.toFixed(4)}</small>
+          <span>{active.point.date}</span><strong>{signedPct(active.value)}</strong><small>NAV {(active.point.nav / personalBase).toFixed(4)}</small>
         </div>
       )}
       {points.length < needed && <p className="chart-building">正在积累该周期记录 · Building this range</p>}
@@ -170,10 +171,16 @@ export default function Home() {
 
   const latest = data.navHistory.at(-1);
   const personalStart = personalStartDate ? data.navHistory.find((point) => point.date >= personalStartDate) ?? latest : latest;
+  const personalHistory = personalStart
+    ? data.navHistory.filter((point) => point.date >= personalStart.date)
+    : data.navHistory;
   const personalReturn = latest && personalStart ? latest.nav / personalStart.nav - 1 : 0;
+  const personalUnitNav = 1 + personalReturn;
   const periods = ranges.map((item) => ({
     ...item,
-    value: item.key === "TODAY" ? latest?.dailyReturn ?? 0 : trailingReturn(data.navHistory, item.days),
+    value: item.key === "TODAY"
+      ? personalHistory.length > 1 ? personalHistory.at(-1)?.dailyReturn ?? 0 : 0
+      : trailingReturn(personalHistory, item.days),
   }));
   const rankedHoldings = [...data.holdings].sort((left, right) =>
     right.dailyReturn - left.dailyReturn || right.weight - left.weight || left.code.localeCompare(right.code)
@@ -185,7 +192,7 @@ export default function Home() {
         <header className="topbar">
           <div><p className="kicker">FORWARD BARBELL · {data.asOf}</p><h1>护城河价值策略<small>Moat Value Strategy</small></h1></div>
           <div className="top-actions">
-            <span>单位净值 {latest?.nav.toFixed(4) ?? "1.0000"}<small>Portfolio Unit NAV</small></span>
+            <span>单位净值 {personalUnitNav.toFixed(4)}<small>Personal Unit NAV</small></span>
             <button className="start-date-button" onClick={() => { setDraftStartDate(personalStart?.date ?? latest?.date ?? data.asOf); setShowStartSettings(true); }}>
               我的起始日 {personalStart?.date ?? "—"}<small>个人累计 {signedPct(personalReturn)} · Set Start</small>
             </button>
@@ -209,10 +216,10 @@ export default function Home() {
               <div><p className="kicker">PORTFOLIO PERFORMANCE</p><h2 id="chart-heading">组合收益曲线<small>Portfolio Return Curve</small></h2></div>
               <p>{ranges.find((item) => item.key === selectedRange)?.cn}视图<small>{ranges.find((item) => item.key === selectedRange)?.en} view</small></p>
             </div>
-            <PerformanceChart history={data.navHistory} range={selectedRange} />
+            <PerformanceChart history={personalHistory} range={selectedRange} />
             <div className="chart-caption">
               <span><i className="line-key" />每日单位净值收益 · Daily unit-NAV return</span>
-              <span>自 {data.navHistory.at(0)?.date ?? data.asOf} 开始真实记录 · Live record since {data.navHistory.at(0)?.date ?? data.asOf}</span>
+              <span>自 {personalStart?.date ?? data.asOf} 按单位1记录 · Unit 1 since {personalStart?.date ?? data.asOf}</span>
             </div>
           </section>
 

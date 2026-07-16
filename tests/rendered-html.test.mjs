@@ -59,6 +59,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /只保存在当前浏览器，不改变公共组合历史/);
   assert.match(page, /type="date"/);
   assert.match(page, /latest\.nav \/ personalStart\.nav - 1/);
+  assert.match(page, /data\.navHistory\.filter\(\(point\) => point\.date >= personalStart\.date\)/);
+  assert.match(page, /PerformanceChart history=\{personalHistory\}/);
+  assert.match(page, /Personal Unit NAV/);
   assert.match(css, /\.confirm-dialog/);
   assert.match(css, /\.date-field input/);
   assert.match(css, /west-lake-willow-bg\.png/);
@@ -92,6 +95,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.distributionSummary.observations >= 200);
   assert.ok(data.navHistory.length > 0);
   assert.equal(data.navHistory[0].nav, 1);
+  assert.equal(data.navHistory[0].date, "2026-07-15");
+  assert.equal(data.navHistory[0].dailyReturn, 0);
   assert.ok(Number.isFinite(data.navHistory.at(-1).nav));
   assert.ok(data.navHistory.at(-1).nav > 0);
 });

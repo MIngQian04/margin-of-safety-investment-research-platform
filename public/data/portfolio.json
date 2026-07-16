@@ -1,6 +1,6 @@
 {
   "asOf": "2026-07-15",
-  "generatedAt": "2026-07-16T03:11:41+08:00",
+  "generatedAt": "2026-07-16T09:07:30+08:00",
   "summary": {
     "anchorWeight": 0.65,
     "futureWeight": 0.075,
@@ -237,16 +237,10 @@
   },
   "navHistory": [
     {
-      "date": "2026-07-14",
+      "date": "2026-07-15",
       "nav": 1.0,
       "dailyReturn": 0.0,
       "priceCoverage": 1.0
-    },
-    {
-      "date": "2026-07-15",
-      "nav": 1.0244644751780665,
-      "dailyReturn": 0.0244644751780665,
-      "priceCoverage": 0.7250000000000001
     }
   ],
   "pendingFinancials": [],
