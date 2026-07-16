@@ -17,6 +17,20 @@ type Holding = {
     kurtosisLabel: string;
     observations: number;
   };
+  moat: {
+    type: string;
+    thesis: string;
+    replicationBarrier: string;
+    monitoringSignals: string[];
+    invalidationSignals: string[];
+    status: "DRAFT" | "INTACT" | "WATCH" | "REVIEW_DUE" | "WEAKENED";
+    recommendedAction: string;
+    lastReviewDate: string;
+    nextReviewDate: string;
+    supportingEvidenceCount: number;
+    cautionEvidenceCount: number;
+    contradictoryEvidenceCount: number;
+  };
 };
 
 type NavPoint = { date: string; nav: number; dailyReturn: number; priceCoverage: number };
@@ -57,6 +71,13 @@ const distributionEnglish: Record<string, string> = {
   "近对称分布": "Near-symmetric", "高厚尾跳跃型": "High fat-tail jumps",
   "厚尾波动型": "Fat-tail volatility", "平尾均衡型": "Thin-tail balance",
   "常态尾部": "Normal tails", "数据不足": "Insufficient data",
+};
+const moatStatus: Record<Holding["moat"]["status"], { cn: string; en: string }> = {
+  DRAFT: { cn: "待原始证据核验", en: "Evidence pending" },
+  INTACT: { cn: "护城河仍然稳固", en: "Moat intact" },
+  WATCH: { cn: "重点观察", en: "Watch closely" },
+  REVIEW_DUE: { cn: "复核已经到期", en: "Review due" },
+  WEAKENED: { cn: "护城河已经削弱", en: "Moat weakened" },
 };
 
 const personalStartKey = "moat-value-personal-start-date-v1";
@@ -133,6 +154,7 @@ export default function Home() {
   const [personalStartDate, setPersonalStartDate] = useState("");
   const [draftStartDate, setDraftStartDate] = useState("");
   const [selectedRange, setSelectedRange] = useState<RangeKey>("1Y");
+  const [selectedHolding, setSelectedHolding] = useState<Holding | null>(null);
 
   const load = useCallback(async () => {
     setRefreshing(true);
@@ -151,16 +173,17 @@ export default function Home() {
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
-    if (!confirmRefresh && !showStartSettings) return;
+    if (!confirmRefresh && !showStartSettings && !selectedHolding) return;
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setConfirmRefresh(false);
         setShowStartSettings(false);
+        setSelectedHolding(null);
       }
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [confirmRefresh, showStartSettings]);
+  }, [confirmRefresh, showStartSettings, selectedHolding]);
 
   useEffect(() => {
     if (!data?.navHistory.length) return;
@@ -234,10 +257,10 @@ export default function Home() {
             <div className="holding-list" role="region" aria-label="按今日收益率排序的当前持仓，可上下滚动" tabIndex={0}>
               <div className="holding-list-head"><span>标的<small>Stock</small></span><div className="holding-values"><em>价格<small>Price</small></em><em>今日↓<small>Today</small></em><strong>仓位<small>Weight</small></strong></div></div>
               {rankedHoldings.map((holding) => (
-                <div key={holding.code}>
+                <button className="holding-row" key={holding.code} onClick={() => setSelectedHolding(holding)} aria-label={`查看${holding.name}的护城河动态档案`}>
                   <span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{holding.name}</b><small>{holding.code}</small></span></span>
                   <div className="holding-values"><em>{money(holding.price)}</em><em className={holding.dailyReturn >= 0 ? "holding-up" : "holding-down"}>{signedPct(holding.dailyReturn)}</em><strong>{pct(holding.weight)}</strong></div>
-                </div>
+                </button>
               ))}
               <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>现金</b><small>Cash</small></span></span><div className="holding-values"><em>—</em><em>0</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
             </div>
@@ -287,6 +310,31 @@ export default function Home() {
                 setShowStartSettings(false);
               }}>保存起始日<small>Save Start Date</small></button>
             </div>
+          </section>
+        </div>
+      )}
+
+      {selectedHolding && (
+        <div className="confirm-backdrop" role="presentation">
+          <section className="moat-dialog" role="dialog" aria-modal="true" aria-labelledby="moat-dialog-title">
+            <div className="moat-dialog-head">
+              <div><p className="kicker">DYNAMIC MOAT FILE · {selectedHolding.code}</p><h2 id="moat-dialog-title">{selectedHolding.name}的护城河<small>Dynamic Moat File</small></h2></div>
+              <button className="moat-close" aria-label="关闭护城河档案" onClick={() => setSelectedHolding(null)}>×</button>
+            </div>
+            <div className={`moat-status ${selectedHolding.moat.status.toLowerCase()}`}>
+              <span>{moatStatus[selectedHolding.moat.status].cn}<small>{moatStatus[selectedHolding.moat.status].en}</small></span>
+              <b>下次复核 {selectedHolding.moat.nextReviewDate}<small>Next review</small></b>
+            </div>
+            <div className="moat-dialog-body">
+              <article className="moat-thesis">
+                <p className="kicker">MOAT THESIS</p><h3>{selectedHolding.moat.type}</h3><p>{selectedHolding.moat.thesis}</p>
+              </article>
+              <article><p className="kicker">WHY HARD TO COPY</p><h3>为什么难以复制</h3><p>{selectedHolding.moat.replicationBarrier}</p></article>
+              <article><p className="kicker">WHAT TO MONITOR</p><h3>持续观察什么</h3><ul>{selectedHolding.moat.monitoringSignals.map((signal) => <li key={signal}>{signal}</li>)}</ul></article>
+              <article className="moat-risk"><p className="kicker">INVALIDATION SIGNALS</p><h3>什么变化代表削弱</h3><ul>{selectedHolding.moat.invalidationSignals.map((signal) => <li key={signal}>{signal}</li>)}</ul></article>
+            </div>
+            <div className="moat-action"><span>当前动作<small>Current action</small></span><strong>{selectedHolding.moat.recommendedAction}</strong><em>支持 {selectedHolding.moat.supportingEvidenceCount} · 警示 {selectedHolding.moat.cautionEvidenceCount} · 反证 {selectedHolding.moat.contradictoryEvidenceCount}</em></div>
+            <p className="moat-disclaimer">这是可被新证据推翻的当前假设，不是永久标签。<small>A current falsifiable thesis, not a permanent label.</small></p>
           </section>
         </div>
       )}
