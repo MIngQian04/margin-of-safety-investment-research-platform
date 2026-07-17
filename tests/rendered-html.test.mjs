@@ -37,7 +37,10 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /1 Month/);
   assert.match(page, /6 Months/);
   assert.match(page, /1 Year/);
-  assert.match(page, /Current Positions/);
+  assert.match(page, /Today's Active Positions/);
+  assert.match(page, /Next-session Target/);
+  assert.match(page, /allocation-change-ack-v1/);
+  assert.match(page, /明日仓位已更新/);
   assert.match(page, /PORTFOLIO DISTRIBUTION/);
   assert.match(page, /chart-tooltip/);
   assert.match(page, /Moat Value Strategy/);
@@ -109,6 +112,10 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /\.holding-row:hover/);
   assert.ok(background.byteLength > 100_000);
   assert.ok(data.holdings.length > 0);
+  assert.ok(data.nextHoldings.length > 0);
+  assert.equal(data.activeAsOf, "2026-07-16");
+  assert.equal(data.allocationChange.changed, true);
+  assert.ok(data.allocationChange.changes.some((change) => change.code === "603195.SH"));
   assert.ok(data.holdings.every((holding) => holding.price > 0));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.dailyReturn)));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.distribution.skewness)));
@@ -120,7 +127,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.holdings.every((holding) => holding.moat.monitoringSignals.length > 0));
   assert.ok(data.holdings.every((holding) => holding.moat.invalidationSignals.length > 0));
   assert.ok(data.holdings.every((holding) => holding.moat.nextReviewDate));
-  assert.ok(data.holdings.some((holding) => holding.code === "603195.SH" && holding.moat.thesis));
+  assert.ok(data.nextHoldings.some((holding) => holding.code === "603195.SH" && holding.moat.thesis));
   assert.ok(data.holdings.every((holding) => Number.isInteger(holding.moat.radar.pendingAlertCount)));
   assert.ok(data.moatRadar.announcementStatus);
   assert.ok(Number.isInteger(data.moatRadar.pendingAlerts));

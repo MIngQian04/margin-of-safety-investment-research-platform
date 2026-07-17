@@ -10,6 +10,7 @@ type Holding = {
   weight: number;
   price: number;
   dailyReturn: number;
+  reason?: string;
   distribution: {
     skewness: number;
     excessKurtosis: number;
@@ -44,6 +45,7 @@ type NavPoint = { date: string; nav: number; dailyReturn: number; priceCoverage:
 type ExecutionRecord = { quantity: number; averagePrice: number; fee: number; modelOpenPrice: number };
 type PortfolioData = {
   asOf: string;
+  activeAsOf: string;
   summary: { anchorWeight: number; futureWeight: number; cashWeight: number };
   moatRadar: {
     asOf: string;
@@ -56,6 +58,14 @@ type PortfolioData = {
     note: string;
   };
   holdings: Holding[];
+  nextHoldings: Holding[];
+  allocationChange: {
+    changed: boolean;
+    activeAsOf: string;
+    nextAsOf: string;
+    effectiveLabel: string;
+    changes: { code: string; name: string; oldWeight: number; newWeight: number; changeType: string; reason: string }[];
+  };
   navHistory: NavPoint[];
   dividendSummary: {
     cumulativeCash: number;
@@ -102,6 +112,7 @@ const moatStatus: Record<Holding["moat"]["status"], { cn: string; en: string }> 
 const personalStartKey = "moat-value-personal-start-date-v1";
 const languageKey = "moat-value-language-v1";
 const executionLedgerKey = "moat-value-execution-ledger-v1";
+const allocationChangeAckKey = "moat-value-allocation-change-ack-v1";
 const companyEnglish: Record<string, string> = {
   "600519.SH": "Kweichow Moutai", "300760.SZ": "Mindray", "300628.SZ": "Yealink",
   "000786.SZ": "BNBM", "002032.SZ": "Supor", "603195.SH": "Bull Group", "000651.SZ": "Gree Electric",
@@ -274,6 +285,7 @@ export default function Home() {
   const [selectedHolding, setSelectedHolding] = useState<Holding | null>(null);
   const [language, setLanguage] = useState<Language>("zh");
   const [showExecutionLedger, setShowExecutionLedger] = useState(false);
+  const [showAllocationChanges, setShowAllocationChanges] = useState(false);
   const [accountCapital, setAccountCapital] = useState(100000);
   const [executionRecords, setExecutionRecords] = useState<Record<string, ExecutionRecord>>({});
   const [executionLoaded, setExecutionLoaded] = useState(false);
@@ -318,18 +330,19 @@ export default function Home() {
   }, [language]);
 
   useEffect(() => {
-    if (!confirmRefresh && !showStartSettings && !selectedHolding && !showExecutionLedger) return;
+    if (!confirmRefresh && !showStartSettings && !selectedHolding && !showExecutionLedger && !showAllocationChanges) return;
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setConfirmRefresh(false);
         setShowStartSettings(false);
         setSelectedHolding(null);
         setShowExecutionLedger(false);
+        setShowAllocationChanges(false);
       }
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [confirmRefresh, showStartSettings, selectedHolding, showExecutionLedger]);
+  }, [confirmRefresh, showStartSettings, selectedHolding, showExecutionLedger, showAllocationChanges]);
 
   useEffect(() => {
     if (!data?.navHistory.length) return;
@@ -339,6 +352,12 @@ export default function Home() {
     const initialDate = stored && stored >= firstDate && stored <= latestDate ? stored : latestDate;
     window.localStorage.setItem(personalStartKey, initialDate);
     setPersonalStartDate(initialDate);
+  }, [data]);
+
+  useEffect(() => {
+    if (!data?.allocationChange?.changed) return;
+    const key = `${data.allocationChange.activeAsOf}:${data.allocationChange.nextAsOf}`;
+    if (window.localStorage.getItem(allocationChangeAckKey) !== key) setShowAllocationChanges(true);
   }, [data]);
 
   const t = (zh: string, en: string) => language === "zh" ? zh : en;
@@ -361,6 +380,7 @@ export default function Home() {
   const rankedHoldings = [...data.holdings].sort((left, right) =>
     right.dailyReturn - left.dailyReturn || right.weight - left.weight || left.code.localeCompare(right.code)
   );
+  const rankedNextHoldings = [...data.nextHoldings].sort((left, right) => right.weight - left.weight || left.code.localeCompare(right.code));
   const activeRange = ranges.find((item) => item.key === selectedRange)!;
   const activeMoatCopy = selectedHolding ? moatEnglish[selectedHolding.code] : null;
   const displayCompany = (holding: Holding) => language === "zh" ? holding.name : companyEnglish[holding.code] ?? holding.name;
@@ -370,6 +390,10 @@ export default function Home() {
   };
   const actualCost = Object.values(executionRecords).reduce((total, item) => total + item.quantity * item.averagePrice + item.fee, 0);
   const actualMarketValue = rankedHoldings.reduce((total, holding) => total + (executionRecords[holding.code]?.quantity ?? 0) * holding.price, 0);
+  const acknowledgeAllocationChange = () => {
+    window.localStorage.setItem(allocationChangeAckKey, `${data.allocationChange.activeAsOf}:${data.allocationChange.nextAsOf}`);
+    setShowAllocationChanges(false);
+  };
 
   return (
     <main className={`canvas language-${language}`}>
@@ -381,6 +405,7 @@ export default function Home() {
             <button className="start-date-button" onClick={() => { setDraftStartDate(personalStart?.date ?? latest?.date ?? data.asOf); setShowStartSettings(true); }}>
               {t("我的起始日", "My Start")} {personalStart?.date ?? "—"}<small>{t("个人累计", "Personal Return")} {signedPct(personalReturn)}</small>
             </button>
+            {data.allocationChange.changed && <button className="text-button" onClick={() => setShowAllocationChanges(true)}>{t("今日调仓", "Allocation change")}</button>}
             <button className="text-button" onClick={() => setShowExecutionLedger(true)}>{t("实际成交", "My Fills")}</button>
             <button className="language-toggle" onClick={() => setLanguage(language === "zh" ? "en" : "zh")} aria-label={t("切换到英文", "Switch to Chinese")}>{language === "zh" ? "EN" : "中文"}</button>
             <button className="text-button" onClick={() => setConfirmRefresh(true)} disabled={refreshing}>{refreshing ? t("读取中", "Loading") : t("刷新", "Refresh")}</button>
@@ -411,8 +436,8 @@ export default function Home() {
           </section>
 
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
-            <div><p className="kicker">CURRENT ALLOCATION</p><h2 id="positions-heading">{t("当前仓位", "Current Positions")}</h2></div>
-            <div className="holding-list" role="region" aria-label={t("按今日收益率排序的当前持仓，可上下滚动", "Current holdings ranked by daily return; scrollable")} tabIndex={0}>
+            <div className="allocation-board"><div><p className="kicker">TODAY · {data.activeAsOf}</p><h2 id="positions-heading">{t("当日生效仓位", "Today's Active Positions")}</h2><small className="allocation-note">{t("昨日已公布仓位，收益图只计这一板", "Previously published holdings; only this board feeds today's return")}</small></div>
+            <div className="holding-list" role="region" aria-label={t("当日生效仓位，可上下滚动", "Today's active holdings; scrollable")} tabIndex={0}>
               <div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values"><em>{t("价格", "Price")}</em><em>{t("今日↓", "Today↓")}</em><strong>{t("仓位", "Weight")}</strong></div></div>
               {rankedHoldings.map((holding) => (
                 <button className="holding-row" key={holding.code} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的护城河动态档案`, `View ${companyEnglish[holding.code] ?? holding.name} moat file`)}>
@@ -421,7 +446,14 @@ export default function Home() {
                 </button>
               ))}
               <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>{t("现金", "Cash")}</b></span></span><div className="holding-values"><em>—</em><em>0</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
-            </div>
+            </div></div>
+
+            <div className="allocation-board tomorrow-board"><div><p className="kicker">NEXT SESSION · {data.allocationChange.nextAsOf}</p><h2>{t("明日待执行仓位", "Next-session Target")}</h2><small className="allocation-note">{t("下一交易日开盘后生效；参考收盘价不视作成交", "Effective after next-session open; reference close is not a fill")}</small></div>
+            <div className="holding-list next-holding-list" role="region" aria-label={t("明日待执行仓位，可上下滚动", "Next-session target holdings; scrollable")} tabIndex={0}>
+              <div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values next-values"><em>{t("参考收盘", "Ref close")}</em><strong>{t("目标仓位", "Target")}</strong></div></div>
+              {rankedNextHoldings.map((holding) => <button className="holding-row" key={`next-${holding.code}`} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的明日目标仓位`, `View ${companyEnglish[holding.code] ?? holding.name} next-session target`)}><span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span><div className="holding-values next-values"><em>{money(holding.price)}</em><strong>{pct(holding.weight)}</strong></div></button>)}
+              <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>{t("现金", "Cash")}</b></span></span><div className="holding-values next-values"><em>—</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
+            </div></div>
 
             <div className="portfolio-distribution">
               <p className="kicker">PORTFOLIO DISTRIBUTION</p>
@@ -447,6 +479,17 @@ export default function Home() {
               <button className="dialog-button secondary" autoFocus onClick={() => setConfirmRefresh(false)}>{t("取消", "Cancel")}</button>
               <button className="dialog-button primary" onClick={() => { setConfirmRefresh(false); load(); }}>{t("确认刷新", "Refresh Now")}</button>
             </div>
+          </section>
+        </div>
+      )}
+
+      {showAllocationChanges && data.allocationChange.changed && (
+        <div className="confirm-backdrop" role="presentation">
+          <section className="change-dialog" role="dialog" aria-modal="true" aria-labelledby="allocation-change-title">
+            <div className="moat-dialog-head"><div><p className="kicker">T+1 ALLOCATION NOTICE · {data.allocationChange.nextAsOf}</p><h2 id="allocation-change-title">{t("明日仓位已更新", "Next-session allocation updated")}</h2></div><button className="moat-close" aria-label={t("关闭调仓提示", "Close allocation notice")} onClick={acknowledgeAllocationChange}>×</button></div>
+            <p className="dialog-note">{t(`当日收益图仍只使用 ${data.allocationChange.activeAsOf} 已生效仓位。以下变化在下一交易日开盘后才生效，不能用今天收盘价视作已成交。`, `Today's return chart still uses the ${data.allocationChange.activeAsOf} active holdings. These changes become effective after the next session opens and are not treated as fills at today's close.`)}</p>
+            <div className="allocation-change-list">{data.allocationChange.changes.map((change) => <article key={change.code}><div><strong>{change.name}</strong><small>{change.code} · {change.changeType}</small></div><b>{pct(change.oldWeight)} → {pct(change.newWeight)}</b><p>{change.reason || t("下一交易日目标仓位调整", "Next-session target adjustment")}</p></article>)}</div>
+            <button className="dialog-button primary change-confirm" onClick={acknowledgeAllocationChange}>{t("知道了，明日开盘后再执行", "Understood — execute after next open")}</button>
           </section>
         </div>
       )}
