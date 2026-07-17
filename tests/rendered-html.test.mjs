@@ -123,11 +123,13 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.nextHoldings.length > 0);
   assert.equal(data.activeAsOf, "2026-07-16");
   assert.equal(data.distributionAsOf, data.activeAsOf);
-  assert.equal(data.allocationChange.changed, true);
+  assert.equal(data.allocationChange.changed, false);
   assert.ok(data.allocationChange.marketContext.includes("没有使用宏观大环境择时信号"));
-  assert.ok(data.allocationChange.changes.some((change) => change.code === "600312.SH"));
+  assert.equal(data.allocationChange.changes.length, 0);
+  assert.equal(data.allocationChange.valuationWarnings.length, 0);
   assert.ok(data.allocationChange.changes.every((change) => change.reason && change.effect));
   assert.ok(data.nextHoldings.some((holding) => holding.code === "000651.SZ" && holding.weight > 0));
+  assert.ok(data.nextHoldings.some((holding) => holding.code === "600312.SH" && holding.weight === 0.025));
   assert.ok(!data.nextHoldings.some((holding) => holding.code === "603195.SH"));
   assert.ok(data.holdings.every((holding) => holding.price > 0));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.dailyReturn)));

@@ -68,6 +68,7 @@ type PortfolioData = {
     effectiveLabel: string;
     marketContext: string;
     changes: { code: string; name: string; oldWeight: number; newWeight: number; changeType: string; reason: string; effect: string }[];
+    valuationWarnings: { code: string; name: string; status: string; warningDate: string; consecutiveDays: number; dcfMargin: number; premiumCap: number; reason: string; effect: string }[];
   };
   navHistory: NavPoint[];
   dividendSummary: {
@@ -521,7 +522,7 @@ export default function Home() {
           <section className="change-dialog" role="dialog" aria-modal="true" aria-labelledby="allocation-change-title">
             <div className="moat-dialog-head"><div><p className="kicker">T+1 ALLOCATION NOTICE · {data.allocationChange.nextAsOf}</p><h2 id="allocation-change-title">{t("明日仓位已更新", "Next-session allocation updated")}</h2></div><button className="moat-close" aria-label={t("关闭调仓提示", "Close allocation notice")} onClick={acknowledgeAllocationChange}>×</button></div>
             <p className="dialog-note">{t(`今日收益仍只使用 ${data.allocationChange.activeAsOf} 已生效仓位。${data.allocationChange.marketContext} 以下变化仅在下一交易日开盘后生效，不能用今天收盘价视作已成交。`, `Today's return still uses the ${data.allocationChange.activeAsOf} active holdings. ${data.allocationChange.marketContext} Changes below become effective after the next session opens and are not fills at today's close.`)}</p>
-            <div className="allocation-change-list">{data.allocationChange.changes.map((change) => <article key={change.code}><div><strong>{change.name}</strong><small>{change.code} · {change.changeType}</small></div><b>{pct(change.oldWeight)} → {pct(change.newWeight)}</b><p className="change-why"><strong>{t("为什么", "Why")}</strong>{change.reason || t("下一交易日目标仓位调整", "Next-session target adjustment")}</p><p className="change-effect"><strong>{t("影响", "Effect")}</strong>{change.effect}</p></article>)}</div>
+            <div className="allocation-change-list">{data.allocationChange.changes.map((change) => <article key={change.code}><div><strong>{change.name}</strong><small>{change.code} · {change.changeType}</small></div><b>{pct(change.oldWeight)} → {pct(change.newWeight)}</b><p className="change-why"><strong>{t("为什么", "Why")}</strong>{change.reason || t("下一交易日目标仓位调整", "Next-session target adjustment")}</p><p className="change-effect"><strong>{t("影响", "Effect")}</strong>{change.effect}</p></article>)}{data.allocationChange.valuationWarnings.map((warning) => <article className="valuation-warning" key={`valuation-${warning.code}`}><div><strong>{warning.name}</strong><small>{warning.code} · {warning.status === "EXIT_DUE" ? t("估值持续偏高", "Persistent premium") : t("估值预警", "Valuation warning")}</small></div><b>{t("DCF", "DCF")} {pct(warning.dcfMargin)} · {t("溢价上限", "Premium cap")} {pct(warning.premiumCap)}</b><p className="change-why"><strong>{t("预警", "Warning")}</strong>{warning.reason}</p><p className="change-effect"><strong>{t("后续", "Next")}</strong>{warning.effect}</p></article>)}</div>
             <button className="dialog-button primary change-confirm" onClick={acknowledgeAllocationChange}>{t("知道了，明日开盘后再执行", "Understood — execute after next open")}</button>
           </section>
         </div>
