@@ -56,6 +56,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /查看模型累计收益曲线/);
   assert.match(page, /不保证你的订单能成交/);
   assert.match(page, /待补录成交价/);
+  assert.match(page, /capitalFloorForHoldings/);
+  assert.match(page, /最低账户金额/);
+  assert.match(page, /minimumAccountCapital/);
   assert.match(page, /money\(holding\.price\)/);
   assert.match(page, /holding\.dailyReturn/);
   assert.match(page, /rankedHoldings/);
