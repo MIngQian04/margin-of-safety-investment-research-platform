@@ -52,6 +52,10 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /Moat Value Strategy/);
   assert.match(page, /Today/);
   assert.match(page, /Prior-session holdings/);
+  assert.match(page, /CUMULATIVE/);
+  assert.match(page, /查看模型累计收益曲线/);
+  assert.match(page, /不保证你的订单能成交/);
+  assert.match(page, /待补录成交价/);
   assert.match(page, /money\(holding\.price\)/);
   assert.match(page, /holding\.dailyReturn/);
   assert.match(page, /rankedHoldings/);

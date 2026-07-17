@@ -85,7 +85,7 @@ type PortfolioData = {
   };
 };
 
-type RangeKey = "TODAY" | "5D" | "1M" | "6M" | "1Y";
+type RangeKey = "TODAY" | "5D" | "1M" | "6M" | "1Y" | "CUMULATIVE";
 type Language = "zh" | "en";
 const ranges: { key: RangeKey; cn: string; en: string; days: number }[] = [
   { key: "TODAY", cn: "今日", en: "Today", days: 1 },
@@ -94,6 +94,7 @@ const ranges: { key: RangeKey; cn: string; en: string; days: number }[] = [
   { key: "6M", cn: "6个月", en: "6 Months", days: 126 },
   { key: "1Y", cn: "1年", en: "1 Year", days: 252 },
 ];
+const cumulativeRange = { key: "CUMULATIVE" as const, cn: "累计", en: "Cumulative", days: 0 };
 
 const pct = (value: number, digits = 1) => `${(value * 100).toFixed(digits)}%`;
 const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value, 2)}`;
@@ -221,8 +222,8 @@ function trailingReturn(history: NavPoint[], tradingDays: number) {
 
 function PerformanceChart({ history, range, language }: { history: NavPoint[]; range: RangeKey; language: Language }) {
   const [hovered, setHovered] = useState<number | null>(null);
-  const rangeDays = ranges.find((item) => item.key === range)!.days;
-  const needed = range === "TODAY" ? 2 : rangeDays + 1;
+  const rangeDays = range === "CUMULATIVE" ? history.length - 1 : ranges.find((item) => item.key === range)!.days;
+  const needed = range === "TODAY" ? 2 : range === "CUMULATIVE" ? history.length : rangeDays + 1;
   const points = history.slice(-needed);
   const width = 900;
   const height = 330;
@@ -392,8 +393,8 @@ export default function Home() {
   );
   const rankedNextHoldings = [...data.nextHoldings].sort((left, right) => right.weight - left.weight || left.code.localeCompare(right.code));
   const holdingsDialogItems = holdingsDialogBoard === "active" ? rankedHoldings : rankedNextHoldings;
-  const activeRange = ranges.find((item) => item.key === selectedRange)!;
-  const chartHistory = selectedRange === "TODAY" ? data.navHistory : personalHistory;
+  const activeRange = selectedRange === "CUMULATIVE" ? cumulativeRange : ranges.find((item) => item.key === selectedRange)!;
+  const chartHistory = selectedRange === "TODAY" || selectedRange === "CUMULATIVE" ? data.navHistory : personalHistory;
   const activeMoatCopy = selectedHolding ? moatEnglish[selectedHolding.code] : null;
   const displayCompany = (holding: Holding) => language === "zh" ? holding.name : companyEnglish[holding.code] ?? holding.name;
   const updateExecution = (code: string, field: keyof ExecutionRecord, value: string) => {
@@ -439,11 +440,11 @@ export default function Home() {
         </header>
 
         <div className="period-summary" aria-label={t("组合周期收益", "Portfolio period returns")}>
-          <div className="period-total" aria-label={t("模型累计收益", "Model cumulative return")}>
-            <span>{t("累计", "Cumulative")}</span>
-            <strong className={modelCumulative >= 0 ? "up" : "down"}>{signedPct(modelCumulative)}</strong>
-            <em>{t("自策略重启", "Since restart")}</em>
-          </div>
+            <button className={`period-total ${selectedRange === "CUMULATIVE" ? "is-active" : ""}`} aria-label={t("查看模型累计收益曲线", "View model cumulative return curve")} aria-pressed={selectedRange === "CUMULATIVE"} onClick={() => setSelectedRange("CUMULATIVE")}>
+              <span>{t("累计", "Cumulative")}</span>
+              <strong className={modelCumulative >= 0 ? "up" : "down"}>{signedPct(modelCumulative)}</strong>
+              <em>{selectedRange === "CUMULATIVE" ? t("正在查看累计曲线", "Viewing cumulative curve") : t("点击查看累计曲线", "View cumulative curve")}</em>
+            </button>
           {periods.map((period) => (
             <button key={period.key} className={selectedRange === period.key ? "is-active" : ""} aria-pressed={selectedRange === period.key} onClick={() => setSelectedRange(period.key)}>
               <span>{language === "zh" ? period.cn : period.en}{period.key === "TODAY" && <small>{t("按昨日生效仓位", "Prior-session holdings")}</small>}</span>
@@ -553,7 +554,7 @@ export default function Home() {
         <div className="confirm-backdrop" role="presentation">
           <section className="execution-dialog" role="dialog" aria-modal="true" aria-labelledby="execution-dialog-title">
             <div className="moat-dialog-head"><div><p className="kicker">MODEL SIGNAL · PERSONAL FILLS</p><h2 id="execution-dialog-title">{t("模型信号与实际成交", "Model Signal & My Fills")}</h2></div><button className="moat-close" aria-label={t("关闭成交账本", "Close fill ledger")} onClick={() => setShowExecutionLedger(false)}>×</button></div>
-            <p className="dialog-note">{t("收盘后只发布 T+1 目标仓位，价格是参考收盘价而非成交价。模型在下一交易日开盘后以官方开盘价记为执行代理；未有开盘价前，信号保持待执行。你的记录仅保存在此浏览器，不会下单或改写模型净值。", "After close, targets are T+1 signals and the shown close is reference only. The model records the next official open as its execution proxy; until then the signal remains pending. Your records stay in this browser, never place orders, and never rewrite model NAV.")}</p>
+            <p className="dialog-note">{t("收盘后只发布 T+1 目标仓位，参考收盘价不代表成交。模型用下一交易日官方开盘价作统一执行代理，但开盘价也不保证你的订单能成交；实际均价、数量和手续费必须按账户记录填写，未成交或部分成交不会改写模型净值。", "After close, targets are T+1 signals and the shown close is not a fill. The next official open is only a reproducible model execution proxy, not a guaranteed fill for your order. Enter actual average price, quantity and fees from your account; unfilled or partial orders never rewrite model NAV.")}</p>
             <label className="date-field">{t("本期账户资金", "Capital for this execution")}<input type="number" min="0" value={accountCapital} onChange={(event) => setAccountCapital(Math.max(0, Number(event.target.value) || 0))} /></label>
             <div className="execution-summary"><span>{t("实际市值", "Market value")} <b>{money(actualMarketValue)}</b></span><span>{t("成交后现金", "Cash after fills")} <b>{money(accountCapital - actualCost)}</b></span><span>{t("实际仓位", "Actual invested")} <b>{pct(accountCapital > 0 ? actualMarketValue / accountCapital : 0)}</b></span></div>
             <div className="execution-list">
@@ -561,8 +562,8 @@ export default function Home() {
                 const record = executionRecords[holding.code] ?? { quantity: 0, averagePrice: 0, fee: 0, modelOpenPrice: 0 };
                 const proxy = record.modelOpenPrice;
                 const targetShares = accountCapital > 0 ? accountCapital * holding.weight / (proxy || holding.price) : 0;
-                const status = !proxy ? t("待开盘代理", "Awaiting open") : record.quantity === 0 ? t("未成交", "Unfilled") : record.quantity + 1e-8 < targetShares ? t("部分成交", "Partial") : t("已记录", "Recorded");
-                const slippage = proxy > 0 && record.quantity > 0 ? (record.averagePrice - proxy) * record.quantity + record.fee : null;
+                const status = !proxy ? t("待开盘代理", "Awaiting open") : record.quantity === 0 ? t("未成交", "Unfilled") : record.averagePrice <= 0 ? t("待补录成交价", "Fill price needed") : record.quantity + 1e-8 < targetShares ? t("部分成交", "Partial") : t("已记录", "Recorded");
+                const slippage = proxy > 0 && record.averagePrice > 0 && record.quantity > 0 ? (record.averagePrice - proxy) * record.quantity + record.fee : null;
                 return <article key={holding.code}><div><strong>{displayCompany(holding)}</strong><small>{holding.code} · {t("目标", "Target")} {pct(holding.weight)} · {t("参考收盘", "Ref close")} {money(holding.price)} · {status}</small></div><div className="execution-fields"><label>{t("模型开盘代理", "Model open proxy")}<input type="number" min="0" step="0.01" value={record.modelOpenPrice || ""} onChange={(event) => updateExecution(holding.code, "modelOpenPrice", event.target.value)} /></label><label>{t("实际均价", "Average fill")}<input type="number" min="0" step="0.01" value={record.averagePrice || ""} onChange={(event) => updateExecution(holding.code, "averagePrice", event.target.value)} /></label><label>{t("数量", "Shares")}<input type="number" min="0" step="1" value={record.quantity || ""} onChange={(event) => updateExecution(holding.code, "quantity", event.target.value)} /></label><label>{t("手续费", "Fee")}<input type="number" min="0" step="0.01" value={record.fee || ""} onChange={(event) => updateExecution(holding.code, "fee", event.target.value)} /></label></div><small className="execution-result">{proxy > 0 ? `${t("目标数量", "Target shares")} ${targetShares.toFixed(0)} · ${t("实际权重", "Actual weight")} ${pct(accountCapital > 0 ? record.quantity * holding.price / accountCapital : 0)} · ${t("相对模型滑点", "Slippage vs model")} ${money(slippage ?? 0)}` : t("开盘价未确认：不计算滑点，也不把参考收盘价当作成交。", "Open proxy is not confirmed: no slippage is calculated and reference close is not treated as a fill.")}</small></article>;
               })}
             </div>

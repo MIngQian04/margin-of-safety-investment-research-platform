@@ -36,7 +36,7 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .period-summary span small { margin-top:2px; font-family:Arial,sans-serif; font-size:9px; letter-spacing:.05em; text-transform:uppercase; }
 .period-summary strong { display:block; margin:5px 0 4px; font-family:"Songti SC",serif; font-size:34px; font-weight:500; line-height:1; }
 .period-summary em { display:block; color:#6d6961; font-size:12px; font-style:normal; }
-.period-total { background:rgba(225,233,222,.24)!important; }
+.period-total { background:rgba(225,233,222,.24)!important; }.period-total.is-active { background:rgba(220,229,216,.48)!important; }
 .up { color:var(--sage)!important; }.down { color:var(--terra)!important; }.pending { color:var(--muted)!important; }
 
 .main-grid { flex:1; display:grid; grid-template-columns:minmax(0,2.4fr) minmax(360px,1.6fr); gap:18px; padding:14px 0 10px; min-height:0; overflow:hidden; }
