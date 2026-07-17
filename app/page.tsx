@@ -11,6 +11,7 @@ type Holding = {
   price: number;
   dailyReturn: number;
   reason?: string;
+  valuation?: Record<string, { discountRate: number; valuePerShare: number; marginOfSafety: number }> | null;
   distribution: {
     skewness: number;
     excessKurtosis: number;
@@ -112,6 +113,13 @@ const moatStatus: Record<Holding["moat"]["status"], { cn: string; en: string }> 
   WATCH: { cn: "重点观察", en: "Watch closely" },
   REVIEW_DUE: { cn: "复核已经到期", en: "Review due" },
   WEAKENED: { cn: "护城河已经削弱", en: "Moat weakened" },
+};
+const dcfCaseLabels: Record<string, { cn: string; en: string }> = {
+  very_optimistic: { cn: "非常乐观", en: "Very optimistic" },
+  optimistic: { cn: "乐观", en: "Optimistic" },
+  base: { cn: "基准", en: "Base" },
+  cautious: { cn: "谨慎", en: "Cautious" },
+  very_pessimistic: { cn: "非常悲观", en: "Very pessimistic" },
 };
 
 const personalStartKey = "moat-value-personal-start-date-v1";
@@ -634,6 +642,12 @@ export default function Home() {
                 <span>{t("本次扫描未发现规则触发事件", "No rule-triggered event in this scan")}</span>
                 <strong>{t("这不代表护城河已经得到证明", "This is not proof that the moat is intact.")}</strong>
               </div>
+            )}
+            {selectedHolding.valuation && (
+              <article className="dcf-sensitivity" aria-label={t("DCF五档折现率敏感性", "Five-level DCF discount-rate sensitivity")}>
+                <div className="dcf-sensitivity-head"><div><p className="kicker">DCF SENSITIVITY</p><h3>{t("五档折现率敏感性", "Five discount-rate cases")}</h3></div><small>{t("基准门槛仍使用中性档；这里只展示估值区间", "The base gate remains neutral; this shows the valuation range")}</small></div>
+                <div className="dcf-sensitivity-grid">{Object.entries(selectedHolding.valuation).map(([key, value]) => <div key={key} className={key === "base" ? "is-base" : ""}><span>{dcfCaseLabels[key]?.[language === "zh" ? "cn" : "en"] ?? key}</span><b>{pct(value.discountRate)}</b><strong>{money(value.valuePerShare)}</strong><em>{signedPct(value.marginOfSafety)}</em></div>)}</div>
+              </article>
             )}
             <div className="moat-dialog-body">
               <article className="moat-thesis">
