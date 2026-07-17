@@ -382,7 +382,7 @@ export default function Home() {
   const periods = ranges.map((item) => ({
     ...item,
     value: item.key === "TODAY"
-      ? personalHistory.length > 1 ? personalHistory.at(-1)?.dailyReturn ?? 0 : 0
+      ? latest?.dailyReturn ?? null
       : trailingReturn(personalHistory, item.days),
   }));
   const rankedHoldings = [...data.holdings].sort((left, right) =>
@@ -391,6 +391,7 @@ export default function Home() {
   const rankedNextHoldings = [...data.nextHoldings].sort((left, right) => right.weight - left.weight || left.code.localeCompare(right.code));
   const holdingsDialogItems = holdingsDialogBoard === "active" ? rankedHoldings : rankedNextHoldings;
   const activeRange = ranges.find((item) => item.key === selectedRange)!;
+  const chartHistory = selectedRange === "TODAY" ? data.navHistory : personalHistory;
   const activeMoatCopy = selectedHolding ? moatEnglish[selectedHolding.code] : null;
   const displayCompany = (holding: Holding) => language === "zh" ? holding.name : companyEnglish[holding.code] ?? holding.name;
   const updateExecution = (code: string, field: keyof ExecutionRecord, value: string) => {
@@ -443,7 +444,7 @@ export default function Home() {
           </div>
           {periods.map((period) => (
             <button key={period.key} className={selectedRange === period.key ? "is-active" : ""} aria-pressed={selectedRange === period.key} onClick={() => setSelectedRange(period.key)}>
-              <span>{language === "zh" ? period.cn : period.en}</span>
+              <span>{language === "zh" ? period.cn : period.en}{period.key === "TODAY" && <small>{t("按昨日生效仓位", "Prior-session holdings")}</small>}</span>
               <strong className={period.value == null ? "pending" : period.value >= 0 ? "up" : "down"}>{period.value == null ? "—" : signedPct(period.value)}</strong>
               {period.value != null && <em>{t("点击查看曲线", "View chart")}</em>}
             </button>
@@ -456,7 +457,7 @@ export default function Home() {
               <div><p className="kicker">PORTFOLIO PERFORMANCE</p><h2 id="chart-heading">{t("组合收益曲线", "Portfolio Return Curve")}</h2></div>
               <p>{language === "zh" ? `${activeRange.cn}视图` : `${activeRange.en} View`}</p>
             </div>
-            <PerformanceChart history={personalHistory} range={selectedRange} language={language} />
+            <PerformanceChart history={chartHistory} range={selectedRange} language={language} />
             <div className="chart-caption">
               <span><i className="line-key" />{t("含分红单位净值收益", "Total-return unit NAV")}</span>
               <span>{t(`自 ${personalStart?.date ?? data.asOf} 按单位1记录`, `Unit 1 since ${personalStart?.date ?? data.asOf}`)}</span>

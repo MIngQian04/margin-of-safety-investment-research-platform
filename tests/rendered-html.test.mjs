@@ -48,6 +48,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /chart-tooltip/);
   assert.match(page, /Moat Value Strategy/);
   assert.match(page, /Today/);
+  assert.match(page, /Prior-session holdings/);
   assert.match(page, /money\(holding\.price\)/);
   assert.match(page, /holding\.dailyReturn/);
   assert.match(page, /rankedHoldings/);
@@ -71,7 +72,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /type="date"/);
   assert.match(page, /latest\.nav \/ personalStart\.nav - 1/);
   assert.match(page, /data\.navHistory\.filter\(\(point\) => point\.date >= personalStart\.date\)/);
-  assert.match(page, /PerformanceChart history=\{personalHistory\}/);
+  assert.match(page, /PerformanceChart history=\{chartHistory\}/);
   assert.match(page, /t\("单位净值", "Unit NAV"\)/);
   assert.match(page, /dividendSummary\.cumulativeCash/);
   assert.match(page, /已复投/);
