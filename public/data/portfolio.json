@@ -1,7 +1,7 @@
 {
   "asOf": "2026-07-17",
   "returnDate": "2026-07-17",
-  "generatedAt": "2026-07-17T19:46:42+08:00",
+  "generatedAt": "2026-07-17T20:00:44+08:00",
   "summary": {
     "anchorWeight": 0.65,
     "futureWeight": 0.075,
@@ -15,39 +15,39 @@
   "distributionAsOf": "2026-07-16",
   "holdings": [
     {
-      "code": "300760.SZ",
-      "name": "迈瑞医疗",
+      "code": "300628.SZ",
+      "name": "亿联网络",
       "bucket": "ANCHOR",
       "state": "ANCHOR",
       "theme": "稳定现金流",
-      "industry": "医药生物",
+      "industry": "通信",
       "weight": 0.15,
-      "price": 149.43,
-      "dailyReturn": -0.005854567227729368,
+      "price": 36.71,
+      "dailyReturn": -0.0024456521739129045,
       "reason": "上一交易日已公布仓位",
       "distribution": {
-        "skewness": 0.5258654997395126,
-        "excessKurtosis": 0.3895095819416645,
+        "skewness": 0.5348423944562393,
+        "excessKurtosis": 5.1783556734424625,
         "skewLabel": "右尾机会型",
-        "kurtosisLabel": "常态尾部",
+        "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
       },
       "moat": {
-        "type": "装机基础与医疗平台协同",
-        "thesis": "医院装机基础；产品平台覆盖和本地服务网络可能形成工作流黏性及交叉销售优势",
-        "replicationBarrier": "医疗设备验证周期；售后服务网络；多产品研发和医院使用习惯需要长期建设",
+        "type": "专业渠道与产品研发效率",
+        "thesis": "企业通信和协作终端的专业渠道；产品迭代与研发效率可能形成细分市场优势",
+        "replicationBarrier": "全球渠道关系；协议兼容；产品稳定性和企业客户认证需要时间积累",
         "monitoringSignals": [
-          "高端产品渗透率",
-          "海外收入质量",
-          "装机与续购",
-          "研发效率",
+          "渠道覆盖",
+          "新品收入",
+          "海外份额",
+          "研发投入产出",
           "毛利率"
         ],
         "invalidationSignals": [
-          "医院客户显著转向竞争者",
-          "高端突破停滞",
-          "价格竞争持续侵蚀毛利",
-          "海外合规受阻"
+          "渠道流失",
+          "平台厂商替代终端",
+          "新品连续失败",
+          "价格竞争显著加剧"
         ],
         "status": "DRAFT",
         "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
@@ -57,18 +57,18 @@
         "cautionEvidenceCount": 0,
         "contradictoryEvidenceCount": 0,
         "radar": {
-          "pendingAlertCount": 0,
+          "pendingAlertCount": 1,
           "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
+          "latestAlertDate": "2026-04-22",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-42.7%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
         }
       },
       "metrics": {
-        "股息率": "3.1%",
-        "所有者收益率": "6.3%",
-        "三年ROE": "32.5%",
-        "护城河代理分": "88.5"
+        "股息率": "4.9%",
+        "所有者收益率": "5.7%",
+        "三年ROE": "27.9%",
+        "护城河代理分": "70.3"
       }
     },
     {
@@ -125,6 +125,63 @@
         "所有者收益率": "5.2%",
         "三年ROE": "34.7%",
         "护城河代理分": "93.4"
+      }
+    },
+    {
+      "code": "002032.SZ",
+      "name": "苏泊尔",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "家用电器",
+      "weight": 0.0648648648648648,
+      "price": 43.85,
+      "dailyReturn": -0.009263443289652007,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": -2.5030078075480615,
+        "excessKurtosis": 21.208981723759738,
+        "skewLabel": "左尾风险型",
+        "kurtosisLabel": "高厚尾跳跃型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "品牌渠道与产品体系",
+        "thesis": "炊具和小家电品牌认知；渠道覆盖及与SEB协同的产品体系可能支持稳定份额",
+        "replicationBarrier": "品牌信任；线下线上渠道；供应链规模和产品开发体系需要持续投入",
+        "monitoringSignals": [
+          "品类份额",
+          "新品成功率",
+          "渠道效率",
+          "关联交易质量",
+          "毛利率"
+        ],
+        "invalidationSignals": [
+          "品牌老化",
+          "核心品类份额下降",
+          "新品长期乏力",
+          "渠道费用侵蚀利润"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 1,
+          "highAlertCount": 0,
+          "latestAlertDate": "2026-04-24",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
+        }
+      },
+      "metrics": {
+        "股息率": "6.4%",
+        "所有者收益率": "6.3%",
+        "三年ROE": "34.4%",
+        "护城河代理分": "70.5"
       }
     },
     {
@@ -298,39 +355,39 @@
       }
     },
     {
-      "code": "002032.SZ",
-      "name": "苏泊尔",
+      "code": "300760.SZ",
+      "name": "迈瑞医疗",
       "bucket": "ANCHOR",
       "state": "ANCHOR",
       "theme": "稳定现金流",
-      "industry": "家用电器",
-      "weight": 0.0648648648648648,
-      "price": 43.85,
-      "dailyReturn": -0.009263443289652007,
+      "industry": "医药生物",
+      "weight": 0.15,
+      "price": 149.43,
+      "dailyReturn": -0.005854567227729368,
       "reason": "上一交易日已公布仓位",
       "distribution": {
-        "skewness": -2.5030078075480615,
-        "excessKurtosis": 21.208981723759738,
-        "skewLabel": "左尾风险型",
-        "kurtosisLabel": "高厚尾跳跃型",
+        "skewness": 0.5258654997395126,
+        "excessKurtosis": 0.3895095819416645,
+        "skewLabel": "右尾机会型",
+        "kurtosisLabel": "常态尾部",
         "observations": 252
       },
       "moat": {
-        "type": "品牌渠道与产品体系",
-        "thesis": "炊具和小家电品牌认知；渠道覆盖及与SEB协同的产品体系可能支持稳定份额",
-        "replicationBarrier": "品牌信任；线下线上渠道；供应链规模和产品开发体系需要持续投入",
+        "type": "装机基础与医疗平台协同",
+        "thesis": "医院装机基础；产品平台覆盖和本地服务网络可能形成工作流黏性及交叉销售优势",
+        "replicationBarrier": "医疗设备验证周期；售后服务网络；多产品研发和医院使用习惯需要长期建设",
         "monitoringSignals": [
-          "品类份额",
-          "新品成功率",
-          "渠道效率",
-          "关联交易质量",
+          "高端产品渗透率",
+          "海外收入质量",
+          "装机与续购",
+          "研发效率",
           "毛利率"
         ],
         "invalidationSignals": [
-          "品牌老化",
-          "核心品类份额下降",
-          "新品长期乏力",
-          "渠道费用侵蚀利润"
+          "医院客户显著转向竞争者",
+          "高端突破停滞",
+          "价格竞争持续侵蚀毛利",
+          "海外合规受阻"
         ],
         "status": "DRAFT",
         "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
@@ -340,18 +397,18 @@
         "cautionEvidenceCount": 0,
         "contradictoryEvidenceCount": 0,
         "radar": {
-          "pendingAlertCount": 1,
+          "pendingAlertCount": 0,
           "highAlertCount": 0,
-          "latestAlertDate": "2026-04-24",
-          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
-          "latestAlertSource": "QUARTERLY_FINANCIAL"
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
         }
       },
       "metrics": {
-        "股息率": "6.4%",
+        "股息率": "3.1%",
         "所有者收益率": "6.3%",
-        "三年ROE": "34.4%",
-        "护城河代理分": "70.5"
+        "三年ROE": "32.5%",
+        "护城河代理分": "88.5"
       }
     },
     {
@@ -464,63 +521,6 @@
         "未来逻辑分": "88.8",
         "DCF安全边际": "23.6%",
         "当前状态": "BOTTOM_HOLD_NO_ADD"
-      }
-    },
-    {
-      "code": "300628.SZ",
-      "name": "亿联网络",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "通信",
-      "weight": 0.15,
-      "price": 36.71,
-      "dailyReturn": -0.0024456521739129045,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": 0.5348423944562393,
-        "excessKurtosis": 5.1783556734424625,
-        "skewLabel": "右尾机会型",
-        "kurtosisLabel": "高厚尾跳跃型",
-        "observations": 252
-      },
-      "moat": {
-        "type": "专业渠道与产品研发效率",
-        "thesis": "企业通信和协作终端的专业渠道；产品迭代与研发效率可能形成细分市场优势",
-        "replicationBarrier": "全球渠道关系；协议兼容；产品稳定性和企业客户认证需要时间积累",
-        "monitoringSignals": [
-          "渠道覆盖",
-          "新品收入",
-          "海外份额",
-          "研发投入产出",
-          "毛利率"
-        ],
-        "invalidationSignals": [
-          "渠道流失",
-          "平台厂商替代终端",
-          "新品连续失败",
-          "价格竞争显著加剧"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 1,
-          "highAlertCount": 0,
-          "latestAlertDate": "2026-04-22",
-          "latestAlertTitle": "2026-03-31 经营现金流同比-42.7%，达到复核阈值",
-          "latestAlertSource": "QUARTERLY_FINANCIAL"
-        }
-      },
-      "metrics": {
-        "股息率": "4.9%",
-        "所有者收益率": "5.7%",
-        "三年ROE": "27.9%",
-        "护城河代理分": "70.3"
       }
     }
   ],
@@ -1047,7 +1047,8 @@
         "oldWeight": 0.0648648648648648,
         "newWeight": 0.0,
         "changeType": "退出",
-        "reason": "本次自动筛选后不再进入目标组合；请复核估值、分散化与护城河代理门槛"
+        "reason": "本轮稳定锚重筛选与经济因子分散后不再占用目标名额，目标权重归零；这是组合门槛结果，不等于自动判定护城河失效。",
+        "effect": "仅作为下一交易日目标信号；不会回溯修改今日收益，也不会自动下单。"
       },
       {
         "code": "002032.SZ",
@@ -1055,7 +1056,8 @@
         "oldWeight": 0.0648648648648648,
         "newWeight": 0.0666666666666666,
         "changeType": "增仓",
-        "reason": "industry-position + pricing/scale moat proxy and financial quality gates passed"
+        "reason": "通过门槛的标的按总锚仓、现金比例和经济因子分散约束重新归一化，因此目标权重被上调或下调；不是按当日价格追涨杀跌。",
+        "effect": "仅作为下一交易日目标信号；不会回溯修改今日收益，也不会自动下单。"
       },
       {
         "code": "600519.SH",
@@ -1063,7 +1065,8 @@
         "oldWeight": 0.0702702702702702,
         "newWeight": 0.0666666666666666,
         "changeType": "减仓",
-        "reason": "industry-position + pricing/scale moat proxy and financial quality gates passed"
+        "reason": "通过门槛的标的按总锚仓、现金比例和经济因子分散约束重新归一化，因此目标权重被上调或下调；不是按当日价格追涨杀跌。",
+        "effect": "仅作为下一交易日目标信号；不会回溯修改今日收益，也不会自动下单。"
       },
       {
         "code": "603195.SH",
@@ -1071,7 +1074,8 @@
         "oldWeight": 0.0,
         "newWeight": 0.0666666666666666,
         "changeType": "新增",
-        "reason": "industry-position + pricing/scale moat proxy and financial quality gates passed"
+        "reason": "本轮稳定锚重筛选中通过细分行业地位、护城河代理和现金收益质量等机械门槛，因此进入目标组合；护城河原始证据仍需人工核验。",
+        "effect": "仅作为下一交易日目标信号；不会回溯修改今日收益，也不会自动下单。"
       }
     ]
   },

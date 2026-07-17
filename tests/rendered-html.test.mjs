@@ -44,6 +44,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /distributionAsOf/);
   assert.match(page, /allocation-change-ack-v1/);
   assert.match(page, /明日仓位已更新/);
+  assert.match(page, /为什么/);
+  assert.match(page, /影响/);
+  assert.match(page, /change-effect/);
   assert.match(page, /PORTFOLIO DISTRIBUTION/);
   assert.match(page, /chart-tooltip/);
   assert.match(page, /Moat Value Strategy/);
@@ -122,6 +125,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.equal(data.distributionAsOf, data.activeAsOf);
   assert.equal(data.allocationChange.changed, true);
   assert.ok(data.allocationChange.changes.some((change) => change.code === "603195.SH"));
+  assert.ok(data.allocationChange.changes.every((change) => change.reason && change.effect));
   assert.ok(data.holdings.every((holding) => holding.price > 0));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.dailyReturn)));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.distribution.skewness)));
