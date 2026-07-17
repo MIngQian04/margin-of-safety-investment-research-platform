@@ -100,7 +100,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /width:min\(1180px,100%\)/);
   assert.match(css, /height:min\(780px,calc\(100svh - 36px\)\)/);
-  assert.match(css, /grid-template-columns:minmax\(0,3fr\) minmax\(0,1fr\)/);
+  assert.match(css, /grid-template-columns:minmax\(0,2\.7fr\) minmax\(320px,1\.3fr\)/);
+  assert.match(css, /\.allocation-card-head/);
   assert.match(css, /\.period-summary strong \{[^}]*font-size:34px/);
   assert.match(css, /\.axis-label \{[^}]*font-size:14px/);
   assert.doesNotMatch(css, /\.chart-building/);
