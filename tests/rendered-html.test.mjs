@@ -59,6 +59,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /capitalFloorForHoldings/);
   assert.match(page, /最低账户金额/);
   assert.match(page, /minimumAccountCapital/);
+  assert.match(page, /A_SHARE_LOT_SIZE = 100/);
+  assert.match(page, /至少买 100 股/);
   assert.match(page, /money\(holding\.price\)/);
   assert.match(page, /holding\.dailyReturn/);
   assert.match(page, /rankedHoldings/);

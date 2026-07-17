@@ -220,8 +220,9 @@ function trailingReturn(history: NavPoint[], tradingDays: number) {
   return history.at(-1)!.nav / history.at(-1 - tradingDays)!.nav - 1;
 }
 
+const A_SHARE_LOT_SIZE = 100;
 function capitalFloorForHoldings(holdings: Holding[]) {
-  return Math.ceil(Math.max(0, ...holdings.filter((holding) => holding.weight > 0 && holding.price > 0).map((holding) => holding.price / holding.weight)));
+  return Math.ceil(Math.max(0, ...holdings.filter((holding) => holding.weight > 0 && holding.price > 0).map((holding) => holding.price * A_SHARE_LOT_SIZE / holding.weight)));
 }
 
 function PerformanceChart({ history, range, language }: { history: NavPoint[]; range: RangeKey; language: Language }) {
@@ -567,7 +568,7 @@ export default function Home() {
           <section className="execution-dialog" role="dialog" aria-modal="true" aria-labelledby="execution-dialog-title">
             <div className="moat-dialog-head"><div><p className="kicker">MODEL SIGNAL · PERSONAL FILLS</p><h2 id="execution-dialog-title">{t("模型信号与实际成交", "Model Signal & My Fills")}</h2></div><button className="moat-close" aria-label={t("关闭成交账本", "Close fill ledger")} onClick={() => setShowExecutionLedger(false)}>×</button></div>
             <p className="dialog-note">{t("收盘后只发布 T+1 目标仓位，参考收盘价不代表成交。模型用下一交易日官方开盘价作统一执行代理，但开盘价也不保证你的订单能成交；实际均价、数量和手续费必须按账户记录填写，未成交或部分成交不会改写模型净值。", "After close, targets are T+1 signals and the shown close is not a fill. The next official open is only a reproducible model execution proxy, not a guaranteed fill for your order. Enter actual average price, quantity and fees from your account; unfilled or partial orders never rewrite model NAV.")}</p>
-            <label className="date-field">{t("本期账户资金", "Capital for this execution")}<input type="number" min={minimumAccountCapital} value={accountCapital} onChange={(event) => setAccountCapital(Math.max(minimumAccountCapital, Number(event.target.value) || 0))} /><small className="capital-floor-note">{t(`最低账户金额 ${money(minimumAccountCapital)}：按 ${capitalFloorHolding?.name ?? "最贵目标股"} 目标仓位至少买 1 股；未含手续费、滑点和开盘跳空缓冲。`, `Minimum account capital ${money(minimumAccountCapital)}: enough to buy one share of ${capitalFloorHolding ? companyEnglish[capitalFloorHolding.code] ?? capitalFloorHolding.name : "the most capital-intensive target"} at its target weight; excludes fees, slippage and gap buffer.`)}</small></label>
+            <label className="date-field">{t("本期账户资金", "Capital for this execution")}<input type="number" min={minimumAccountCapital} value={accountCapital} onChange={(event) => setAccountCapital(Math.max(minimumAccountCapital, Number(event.target.value) || 0))} /><small className="capital-floor-note">{t(`最低账户金额 ${money(minimumAccountCapital)}：按 ${capitalFloorHolding?.name ?? "最贵目标股"} 目标仓位至少买 100 股；未含手续费、滑点和开盘跳空缓冲。`, `Minimum account capital ${money(minimumAccountCapital)}: enough to buy one A-share board lot (100 shares) of ${capitalFloorHolding ? companyEnglish[capitalFloorHolding.code] ?? capitalFloorHolding.name : "the most capital-intensive target"} at its target weight; excludes fees, slippage and gap buffer.`)}</small></label>
             <div className="execution-summary"><span>{t("实际市值", "Market value")} <b>{money(actualMarketValue)}</b></span><span>{t("成交后现金", "Cash after fills")} <b>{money(accountCapital - actualCost)}</b></span><span>{t("实际仓位", "Actual invested")} <b>{pct(accountCapital > 0 ? actualMarketValue / accountCapital : 0)}</b></span></div>
             <div className="execution-list">
               {rankedHoldings.map((holding) => {
