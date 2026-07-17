@@ -39,7 +39,7 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .period-total { background:rgba(225,233,222,.24)!important; }
 .up { color:var(--sage)!important; }.down { color:var(--terra)!important; }.pending { color:var(--muted)!important; }
 
-.main-grid { flex:1; display:grid; grid-template-columns:minmax(0,2.7fr) minmax(320px,1.3fr); gap:18px; padding:14px 0 10px; min-height:0; overflow:hidden; }
+.main-grid { flex:1; display:grid; grid-template-columns:minmax(0,2.4fr) minmax(360px,1.6fr); gap:18px; padding:14px 0 10px; min-height:0; overflow:hidden; }
 .chart-section { min-width:0; display:flex; flex-direction:column; }
 .section-heading { display:flex; justify-content:space-between; align-items:end; margin-bottom:10px; }
 .section-heading>p { margin:0; color:var(--sage-dark); font-family:"Songti SC",serif; font-size:20px; text-align:right; }
