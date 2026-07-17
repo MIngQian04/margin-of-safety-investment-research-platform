@@ -124,8 +124,11 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.equal(data.activeAsOf, "2026-07-16");
   assert.equal(data.distributionAsOf, data.activeAsOf);
   assert.equal(data.allocationChange.changed, true);
-  assert.ok(data.allocationChange.changes.some((change) => change.code === "603195.SH"));
+  assert.ok(data.allocationChange.marketContext.includes("没有使用宏观大环境择时信号"));
+  assert.ok(data.allocationChange.changes.some((change) => change.code === "600312.SH"));
   assert.ok(data.allocationChange.changes.every((change) => change.reason && change.effect));
+  assert.ok(data.nextHoldings.some((holding) => holding.code === "000651.SZ" && holding.weight > 0));
+  assert.ok(!data.nextHoldings.some((holding) => holding.code === "603195.SH"));
   assert.ok(data.holdings.every((holding) => holding.price > 0));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.dailyReturn)));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.distribution.skewness)));
@@ -137,7 +140,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.holdings.every((holding) => holding.moat.monitoringSignals.length > 0));
   assert.ok(data.holdings.every((holding) => holding.moat.invalidationSignals.length > 0));
   assert.ok(data.holdings.every((holding) => holding.moat.nextReviewDate));
-  assert.ok(data.nextHoldings.some((holding) => holding.code === "603195.SH" && holding.moat.thesis));
+  assert.ok(data.nextHoldings.some((holding) => holding.code === "000651.SZ" && holding.moat.thesis));
   assert.ok(data.holdings.every((holding) => Number.isInteger(holding.moat.radar.pendingAlertCount)));
   assert.ok(data.moatRadar.announcementStatus);
   assert.ok(Number.isInteger(data.moatRadar.pendingAlerts));
