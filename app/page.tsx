@@ -46,6 +46,7 @@ type ExecutionRecord = { quantity: number; averagePrice: number; fee: number; mo
 type PortfolioData = {
   asOf: string;
   activeAsOf: string;
+  distributionAsOf: string;
   returnDate: string;
   summary: { anchorWeight: number; futureWeight: number; cashWeight: number };
   moatRadar: {
@@ -467,7 +468,7 @@ export default function Home() {
             <div className="allocation-carousel" ref={allocationCarouselRef} onScroll={(event) => { const target = event.currentTarget; setAllocationBoard(Math.round(target.scrollLeft / Math.max(target.clientWidth - 24, 1))); }}>
             <section className="allocation-board allocation-card"><div><p className="kicker">RETURN {data.returnDate} · POSITION {data.activeAsOf}</p><h2 id="positions-heading">{t("当日收益用仓位", "Today's Return Basis")}</h2><small className="allocation-note">{t("收益属于当日，但仓位来自上一交易日已公布组合", "Today's return, based on the prior session's published holdings")}</small></div>
             <div className="holding-list" role="region" aria-label={t("当日生效仓位，可上下滚动", "Today's active holdings; scrollable")} tabIndex={0}>
-              <div className="holding-list-tools"><div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values"><em>{t("价格", "Price")}</em><em>{t("今日↓", "Today↓")}</em><strong>{t("仓位", "Weight")}</strong></div></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("active")}>{t("查看全部持仓", "View all holdings")}</button></div>
+              <div className="holding-list-tools"><div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values"><em>{t("价格", "Price")}</em><em>{t("今日↓", "Today↓")}</em><strong>{t("仓位", "Weight")}</strong></div></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("active")}>{t("查看持仓报告", "Open holdings report")}</button></div>
               {rankedHoldings.map((holding) => (
                 <button className="holding-row" key={holding.code} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的护城河动态档案`, `View ${companyEnglish[holding.code] ?? holding.name} moat file`)}>
                   <span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span>
@@ -479,14 +480,14 @@ export default function Home() {
 
             <section className="allocation-board allocation-card tomorrow-board"><div><p className="kicker">NEXT SESSION · {data.allocationChange.nextAsOf}</p><h2>{t("明日待执行仓位", "Next-session Target")}</h2><small className="allocation-note">{t("下一交易日开盘后生效；参考收盘价不视作成交", "Effective after next-session open; reference close is not a fill")}</small></div>
             <div className="holding-list next-holding-list" role="region" aria-label={t("明日待执行仓位，可上下滚动", "Next-session target holdings; scrollable")} tabIndex={0}>
-              <div className="holding-list-tools"><div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values next-values"><em>{t("参考收盘", "Ref close")}</em><strong>{t("目标仓位", "Target")}</strong></div></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("next")}>{t("查看全部目标", "View all targets")}</button></div>
+              <div className="holding-list-tools"><div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values next-values"><em>{t("参考收盘", "Ref close")}</em><strong>{t("目标仓位", "Target")}</strong></div></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("next")}>{t("查看持仓报告", "Open holdings report")}</button></div>
               {rankedNextHoldings.map((holding) => <button className="holding-row" key={`next-${holding.code}`} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的明日目标仓位`, `View ${companyEnglish[holding.code] ?? holding.name} next-session target`)}><span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span><div className="holding-values next-values"><em>{money(holding.price)}</em><strong>{pct(holding.weight)}</strong></div></button>)}
               <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>{t("现金", "Cash")}</b></span></span><div className="holding-values next-values"><em>—</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
             </div></section>
             </div>
 
             <div className="portfolio-distribution">
-              <p className="kicker">PORTFOLIO DISTRIBUTION</p>
+              <p className="kicker">PORTFOLIO DISTRIBUTION <small>{t(`按 ${data.distributionAsOf} 生效仓位`, `Based on ${data.distributionAsOf} active holdings`)}</small></p>
               <div><span>{t("偏度判断", "Skewness")}</span><strong>{language === "zh" ? data.distributionSummary.skewLabel : distributionEnglish[data.distributionSummary.skewLabel]}</strong><b>{decimal(data.distributionSummary.skewness)}</b></div>
               <div><span>{t("峰度判断", "Kurtosis")}</span><strong>{language === "zh" ? data.distributionSummary.kurtosisLabel : distributionEnglish[data.distributionSummary.kurtosisLabel]}</strong><b>{decimal(data.distributionSummary.excessKurtosis)}</b></div>
             </div>
@@ -570,24 +571,22 @@ export default function Home() {
         <div className="confirm-backdrop" role="presentation">
           <section className="holdings-dialog" role="dialog" aria-modal="true" aria-labelledby="holdings-dialog-title">
             <div className="moat-dialog-head">
-              <div><p className="kicker">FULL HOLDINGS · {holdingsDialogBoard === "active" ? data.activeAsOf : data.allocationChange.nextAsOf}</p><h2 id="holdings-dialog-title">{holdingsDialogBoard === "active" ? t("全部当日持仓", "All active holdings") : t("全部明日目标", "All next-session targets")}</h2></div>
+              <div><p className="kicker">HOLDINGS REPORT · {holdingsDialogBoard === "active" ? data.activeAsOf : data.allocationChange.nextAsOf}</p><h2 id="holdings-dialog-title">{t("持仓报告", "Holdings report")}</h2></div>
               <button className="moat-close" aria-label={t("关闭全部持仓", "Close full holdings")} onClick={() => setShowHoldingsDialog(false)}>×</button>
             </div>
             <div className="holdings-dialog-tabs" role="tablist" aria-label={t("持仓日期切换", "Holdings date switcher")}>
               <button role="tab" aria-selected={holdingsDialogBoard === "active"} className={holdingsDialogBoard === "active" ? "is-active" : ""} onClick={() => setHoldingsDialogBoard("active")}>{t("当日收益用仓位", "Return basis")}<small>{data.activeAsOf}</small></button>
               <button role="tab" aria-selected={holdingsDialogBoard === "next"} className={holdingsDialogBoard === "next" ? "is-active" : ""} onClick={() => setHoldingsDialogBoard("next")}>{t("明日待执行仓位", "Next target")}<small>{data.allocationChange.nextAsOf}</small></button>
             </div>
-            <p className="dialog-note">{holdingsDialogBoard === "active" ? t("这里完整展示计入今日收益的上一交易日已公布仓位。点开任一标的，可继续查看护城河动态档案。", "This is the complete prior-session portfolio used for today's return. Select any holding to open its dynamic moat file.") : t("这里完整展示下一交易日开盘后才生效的目标仓位；参考收盘价不代表成交。点开任一标的，可继续查看护城河动态档案。", "This is the complete target portfolio that becomes effective after the next session opens; reference closes are not fills. Select any holding to open its dynamic moat file.")}</p>
             <div className="holdings-dialog-list">
               {holdingsDialogItems.map((holding) => (
                 <button className="holding-dialog-row" key={`dialog-${holdingsDialogBoard}-${holding.code}`} onClick={() => openHoldingMoat(holding)} aria-label={t(`查看${holding.name}的护城河信息`, `View ${companyEnglish[holding.code] ?? holding.name} moat information`)}>
-                  <span className="holding-dialog-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span><b>{displayCompany(holding)}</b><small>{holding.code} · {holding.industry}</small></span></span>
-                  <span className="holding-dialog-values"><em>{money(holding.price)}</em>{holdingsDialogBoard === "active" && <em className={holding.dailyReturn >= 0 ? "holding-up" : "holding-down"}>{signedPct(holding.dailyReturn)}</em>}<strong>{pct(holding.weight)}</strong></span>
+                  <span className="holding-dialog-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span>
+                  <span className="holding-dialog-values"><strong>{pct(holding.weight)}</strong><em>{t("查看护城河", "View moat")} →</em></span>
                 </button>
               ))}
               <div className="holding-dialog-cash"><span><i className="cash-dot" /><b>{t("现金", "Cash")}</b></span><strong>{pct(data.summary.cashWeight)}</strong></div>
             </div>
-            <button className="dialog-button secondary holdings-close-button" onClick={() => setShowHoldingsDialog(false)}>{t("返回组合卡片", "Back to portfolio card")}</button>
           </section>
         </div>
       )}

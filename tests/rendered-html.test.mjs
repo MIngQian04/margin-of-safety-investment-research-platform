@@ -39,6 +39,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /1 Year/);
   assert.match(page, /Today's Return Basis/);
   assert.match(page, /Next-session Target/);
+  assert.match(page, /HOLDINGS REPORT/);
+  assert.match(page, /查看持仓报告/);
+  assert.match(page, /distributionAsOf/);
   assert.match(page, /allocation-change-ack-v1/);
   assert.match(page, /明日仓位已更新/);
   assert.match(page, /PORTFOLIO DISTRIBUTION/);
@@ -110,10 +113,12 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /\.moat-radar-alert/);
   assert.match(css, /\.language-toggle/);
   assert.match(css, /\.holding-row:hover/);
+  assert.match(css, /\.holdings-dialog/);
   assert.ok(background.byteLength > 100_000);
   assert.ok(data.holdings.length > 0);
   assert.ok(data.nextHoldings.length > 0);
   assert.equal(data.activeAsOf, "2026-07-16");
+  assert.equal(data.distributionAsOf, data.activeAsOf);
   assert.equal(data.allocationChange.changed, true);
   assert.ok(data.allocationChange.changes.some((change) => change.code === "603195.SH"));
   assert.ok(data.holdings.every((holding) => holding.price > 0));
@@ -144,4 +149,5 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.equal(data.navHistory[0].dailyReturn, 0);
   assert.ok(Number.isFinite(data.navHistory.at(-1).nav));
   assert.ok(data.navHistory.at(-1).nav > 0);
+  assert.equal(data.navHistory.at(-1).dailyReturn, 0.0012316281699509);
 });
