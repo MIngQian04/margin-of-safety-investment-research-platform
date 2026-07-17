@@ -1,6 +1,6 @@
 {
   "asOf": "2026-07-17",
-  "generatedAt": "2026-07-17T18:33:48+08:00",
+  "generatedAt": "2026-07-17T18:54:59+08:00",
   "summary": {
     "anchorWeight": 0.65,
     "futureWeight": 0.075,
@@ -306,6 +306,38 @@
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
+      },
+      "moat": {
+        "type": "品牌心智与渠道网络",
+        "thesis": "民用电工和照明等高频低客单价品类的品牌认知；广泛渠道覆盖及产品质量口碑可能共同支撑消费者选择和稳定份额",
+        "replicationBarrier": "消费者对安全与可靠性的长期信任；终端渠道覆盖和陈列关系；产品认证与质量控制体系需要持续投入和时间积累",
+        "monitoringSignals": [
+          "核心品类份额",
+          "终端渠道覆盖与效率",
+          "新品类扩张质量",
+          "毛利率",
+          "经营现金流与存货周转"
+        ],
+        "invalidationSignals": [
+          "品牌溢价持续收窄",
+          "渠道效率或覆盖显著下降",
+          "新品类长期亏损或侵蚀现金流",
+          "质量或安全事件损害信任"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-17",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
       },
       "metrics": {
         "股息率": "4.6%",

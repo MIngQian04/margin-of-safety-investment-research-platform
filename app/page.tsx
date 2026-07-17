@@ -41,6 +41,7 @@ type Holding = {
 };
 
 type NavPoint = { date: string; nav: number; dailyReturn: number; priceCoverage: number };
+type ExecutionRecord = { quantity: number; averagePrice: number; fee: number; modelOpenPrice: number };
 type PortfolioData = {
   asOf: string;
   summary: { anchorWeight: number; futureWeight: number; cashWeight: number };
@@ -100,9 +101,10 @@ const moatStatus: Record<Holding["moat"]["status"], { cn: string; en: string }> 
 
 const personalStartKey = "moat-value-personal-start-date-v1";
 const languageKey = "moat-value-language-v1";
+const executionLedgerKey = "moat-value-execution-ledger-v1";
 const companyEnglish: Record<string, string> = {
   "600519.SH": "Kweichow Moutai", "300760.SZ": "Mindray", "300628.SZ": "Yealink",
-  "000786.SZ": "BNBM", "002032.SZ": "Supor", "000651.SZ": "Gree Electric",
+  "000786.SZ": "BNBM", "002032.SZ": "Supor", "603195.SH": "Bull Group", "000651.SZ": "Gree Electric",
   "600941.SH": "China Mobile", "000400.SZ": "Xuji Electric", "600312.SH": "Pinggao Electric",
 };
 type MoatCopy = { type: string; thesis: string; barrier: string; monitor: string[]; invalidate: string[]; action: string };
@@ -146,6 +148,14 @@ const moatEnglish: Record<string, MoatCopy> = {
     monitor: ["Category share", "New-product success", "Channel efficiency", "Related-party transaction quality", "Gross margin"],
     invalidate: ["Brand ageing", "Core-category share declines", "New products stay weak", "Channel expense erodes profit"],
     action: "Hold while brand and channel evidence persists; stop adding and reduce if mindshare or channel efficiency keeps declining.",
+  },
+  "603195.SH": {
+    type: "Brand mindshare and channel network",
+    thesis: "Brand recognition in consumer electrical products, broad distribution and a quality reputation may support repeat choice and stable category share.",
+    barrier: "Trust in safety and reliability, retail-channel coverage, product certification and quality systems take sustained investment and time to build.",
+    monitor: ["Core-category share", "Channel coverage and efficiency", "New-category expansion quality", "Gross margin", "Operating cash flow and inventory turns"],
+    invalidate: ["Brand premium keeps narrowing", "Channel coverage or efficiency falls materially", "New categories stay loss-making or drain cash", "Quality or safety events damage trust"],
+    action: "Hold only after primary evidence verifies brand and channel advantages; stop adding and reduce in stages if either is disproved.",
   },
   "000651.SZ": {
     type: "Air-conditioner brand and supply-chain scale",
@@ -263,6 +273,10 @@ export default function Home() {
   const [selectedRange, setSelectedRange] = useState<RangeKey>("1Y");
   const [selectedHolding, setSelectedHolding] = useState<Holding | null>(null);
   const [language, setLanguage] = useState<Language>("zh");
+  const [showExecutionLedger, setShowExecutionLedger] = useState(false);
+  const [accountCapital, setAccountCapital] = useState(100000);
+  const [executionRecords, setExecutionRecords] = useState<Record<string, ExecutionRecord>>({});
+  const [executionLoaded, setExecutionLoaded] = useState(false);
 
   const load = useCallback(async () => {
     setRefreshing(true);
@@ -286,22 +300,36 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    try {
+      const stored = JSON.parse(window.localStorage.getItem(executionLedgerKey) ?? "{}");
+      if (Number.isFinite(stored.capital) && stored.capital > 0) setAccountCapital(stored.capital);
+      if (stored.records && typeof stored.records === "object") setExecutionRecords(stored.records);
+    } catch { /* Start with an empty browser-local execution ledger. */ }
+    setExecutionLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (executionLoaded) window.localStorage.setItem(executionLedgerKey, JSON.stringify({ capital: accountCapital, records: executionRecords }));
+  }, [accountCapital, executionLoaded, executionRecords]);
+
+  useEffect(() => {
     window.localStorage.setItem(languageKey, language);
     document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
   }, [language]);
 
   useEffect(() => {
-    if (!confirmRefresh && !showStartSettings && !selectedHolding) return;
+    if (!confirmRefresh && !showStartSettings && !selectedHolding && !showExecutionLedger) return;
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setConfirmRefresh(false);
         setShowStartSettings(false);
         setSelectedHolding(null);
+        setShowExecutionLedger(false);
       }
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [confirmRefresh, showStartSettings, selectedHolding]);
+  }, [confirmRefresh, showStartSettings, selectedHolding, showExecutionLedger]);
 
   useEffect(() => {
     if (!data?.navHistory.length) return;
@@ -336,6 +364,12 @@ export default function Home() {
   const activeRange = ranges.find((item) => item.key === selectedRange)!;
   const activeMoatCopy = selectedHolding ? moatEnglish[selectedHolding.code] : null;
   const displayCompany = (holding: Holding) => language === "zh" ? holding.name : companyEnglish[holding.code] ?? holding.name;
+  const updateExecution = (code: string, field: keyof ExecutionRecord, value: string) => {
+    const number = Math.max(0, Number(value) || 0);
+    setExecutionRecords((current) => ({ ...current, [code]: { quantity: 0, averagePrice: 0, fee: 0, modelOpenPrice: 0, ...current[code], [field]: number } }));
+  };
+  const actualCost = Object.values(executionRecords).reduce((total, item) => total + item.quantity * item.averagePrice + item.fee, 0);
+  const actualMarketValue = rankedHoldings.reduce((total, holding) => total + (executionRecords[holding.code]?.quantity ?? 0) * holding.price, 0);
 
   return (
     <main className={`canvas language-${language}`}>
@@ -347,6 +381,7 @@ export default function Home() {
             <button className="start-date-button" onClick={() => { setDraftStartDate(personalStart?.date ?? latest?.date ?? data.asOf); setShowStartSettings(true); }}>
               {t("我的起始日", "My Start")} {personalStart?.date ?? "—"}<small>{t("个人累计", "Personal Return")} {signedPct(personalReturn)}</small>
             </button>
+            <button className="text-button" onClick={() => setShowExecutionLedger(true)}>{t("实际成交", "My Fills")}</button>
             <button className="language-toggle" onClick={() => setLanguage(language === "zh" ? "en" : "zh")} aria-label={t("切换到英文", "Switch to Chinese")}>{language === "zh" ? "EN" : "中文"}</button>
             <button className="text-button" onClick={() => setConfirmRefresh(true)} disabled={refreshing}>{refreshing ? t("读取中", "Loading") : t("刷新", "Refresh")}</button>
           </div>
@@ -432,6 +467,27 @@ export default function Home() {
                 setPersonalStartDate(resolvedDate);
                 setShowStartSettings(false);
               }}>{t("保存起始日", "Save Start Date")}</button>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {showExecutionLedger && (
+        <div className="confirm-backdrop" role="presentation">
+          <section className="execution-dialog" role="dialog" aria-modal="true" aria-labelledby="execution-dialog-title">
+            <div className="moat-dialog-head"><div><p className="kicker">MODEL SIGNAL · PERSONAL FILLS</p><h2 id="execution-dialog-title">{t("模型信号与实际成交", "Model Signal & My Fills")}</h2></div><button className="moat-close" aria-label={t("关闭成交账本", "Close fill ledger")} onClick={() => setShowExecutionLedger(false)}>×</button></div>
+            <p className="dialog-note">{t("收盘后只发布 T+1 目标仓位，价格是参考收盘价而非成交价。模型在下一交易日开盘后以官方开盘价记为执行代理；未有开盘价前，信号保持待执行。你的记录仅保存在此浏览器，不会下单或改写模型净值。", "After close, targets are T+1 signals and the shown close is reference only. The model records the next official open as its execution proxy; until then the signal remains pending. Your records stay in this browser, never place orders, and never rewrite model NAV.")}</p>
+            <label className="date-field">{t("本期账户资金", "Capital for this execution")}<input type="number" min="0" value={accountCapital} onChange={(event) => setAccountCapital(Math.max(0, Number(event.target.value) || 0))} /></label>
+            <div className="execution-summary"><span>{t("实际市值", "Market value")} <b>{money(actualMarketValue)}</b></span><span>{t("成交后现金", "Cash after fills")} <b>{money(accountCapital - actualCost)}</b></span><span>{t("实际仓位", "Actual invested")} <b>{pct(accountCapital > 0 ? actualMarketValue / accountCapital : 0)}</b></span></div>
+            <div className="execution-list">
+              {rankedHoldings.map((holding) => {
+                const record = executionRecords[holding.code] ?? { quantity: 0, averagePrice: 0, fee: 0, modelOpenPrice: 0 };
+                const proxy = record.modelOpenPrice;
+                const targetShares = accountCapital > 0 ? accountCapital * holding.weight / (proxy || holding.price) : 0;
+                const status = !proxy ? t("待开盘代理", "Awaiting open") : record.quantity === 0 ? t("未成交", "Unfilled") : record.quantity + 1e-8 < targetShares ? t("部分成交", "Partial") : t("已记录", "Recorded");
+                const slippage = proxy > 0 && record.quantity > 0 ? (record.averagePrice - proxy) * record.quantity + record.fee : null;
+                return <article key={holding.code}><div><strong>{displayCompany(holding)}</strong><small>{holding.code} · {t("目标", "Target")} {pct(holding.weight)} · {t("参考收盘", "Ref close")} {money(holding.price)} · {status}</small></div><div className="execution-fields"><label>{t("模型开盘代理", "Model open proxy")}<input type="number" min="0" step="0.01" value={record.modelOpenPrice || ""} onChange={(event) => updateExecution(holding.code, "modelOpenPrice", event.target.value)} /></label><label>{t("实际均价", "Average fill")}<input type="number" min="0" step="0.01" value={record.averagePrice || ""} onChange={(event) => updateExecution(holding.code, "averagePrice", event.target.value)} /></label><label>{t("数量", "Shares")}<input type="number" min="0" step="1" value={record.quantity || ""} onChange={(event) => updateExecution(holding.code, "quantity", event.target.value)} /></label><label>{t("手续费", "Fee")}<input type="number" min="0" step="0.01" value={record.fee || ""} onChange={(event) => updateExecution(holding.code, "fee", event.target.value)} /></label></div><small className="execution-result">{proxy > 0 ? `${t("目标数量", "Target shares")} ${targetShares.toFixed(0)} · ${t("实际权重", "Actual weight")} ${pct(accountCapital > 0 ? record.quantity * holding.price / accountCapital : 0)} · ${t("相对模型滑点", "Slippage vs model")} ${money(slippage ?? 0)}` : t("开盘价未确认：不计算滑点，也不把参考收盘价当作成交。", "Open proxy is not confirmed: no slippage is calculated and reference close is not treated as a fill.")}</small></article>;
+              })}
             </div>
           </section>
         </div>

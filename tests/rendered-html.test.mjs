@@ -74,6 +74,11 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /查看\$\{holding\.name\}的护城河动态档案/);
   assert.match(page, /什么变化代表削弱/);
   assert.match(page, /A current falsifiable thesis, not a permanent label/);
+  assert.match(page, /MODEL SIGNAL · PERSONAL FILLS/);
+  assert.match(page, /moat-value-execution-ledger-v1/);
+  assert.match(page, /模型开盘代理/);
+  assert.match(page, /开盘价未确认：不计算滑点/);
+  assert.match(page, /"603195\.SH": "Bull Group"/);
   assert.match(page, /待人工复核事件/);
   assert.match(page, /公告雷达未确认/);
   assert.match(page, /这不代表护城河已经得到证明/);
@@ -115,6 +120,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.holdings.every((holding) => holding.moat.monitoringSignals.length > 0));
   assert.ok(data.holdings.every((holding) => holding.moat.invalidationSignals.length > 0));
   assert.ok(data.holdings.every((holding) => holding.moat.nextReviewDate));
+  assert.ok(data.holdings.some((holding) => holding.code === "603195.SH" && holding.moat.thesis));
   assert.ok(data.holdings.every((holding) => Number.isInteger(holding.moat.radar.pendingAlertCount)));
   assert.ok(data.moatRadar.announcementStatus);
   assert.ok(Number.isInteger(data.moatRadar.pendingAlerts));
