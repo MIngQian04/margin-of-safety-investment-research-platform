@@ -37,7 +37,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /1 Month/);
   assert.match(page, /6 Months/);
   assert.match(page, /1 Year/);
-  assert.match(page, /Today's Active Positions/);
+  assert.match(page, /Today's Return Basis/);
   assert.match(page, /Next-session Target/);
   assert.match(page, /allocation-change-ack-v1/);
   assert.match(page, /明日仓位已更新/);

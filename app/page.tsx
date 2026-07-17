@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Holding = {
   code: string;
@@ -46,6 +46,7 @@ type ExecutionRecord = { quantity: number; averagePrice: number; fee: number; mo
 type PortfolioData = {
   asOf: string;
   activeAsOf: string;
+  returnDate: string;
   summary: { anchorWeight: number; futureWeight: number; cashWeight: number };
   moatRadar: {
     asOf: string;
@@ -286,6 +287,8 @@ export default function Home() {
   const [language, setLanguage] = useState<Language>("zh");
   const [showExecutionLedger, setShowExecutionLedger] = useState(false);
   const [showAllocationChanges, setShowAllocationChanges] = useState(false);
+  const [allocationBoard, setAllocationBoard] = useState(0);
+  const allocationCarouselRef = useRef<HTMLDivElement>(null);
   const [accountCapital, setAccountCapital] = useState(100000);
   const [executionRecords, setExecutionRecords] = useState<Record<string, ExecutionRecord>>({});
   const [executionLoaded, setExecutionLoaded] = useState(false);
@@ -394,12 +397,18 @@ export default function Home() {
     window.localStorage.setItem(allocationChangeAckKey, `${data.allocationChange.activeAsOf}:${data.allocationChange.nextAsOf}`);
     setShowAllocationChanges(false);
   };
+  const jumpAllocationBoard = (index: number) => {
+    const carousel = allocationCarouselRef.current;
+    const card = carousel?.children[index] as HTMLElement | undefined;
+    card?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    setAllocationBoard(index);
+  };
 
   return (
     <main className={`canvas language-${language}`}>
       <section className="sheet" aria-label={t("护城河价值策略总览", "Moat Value Strategy overview")}>
         <header className="topbar">
-          <div><p className="kicker">FORWARD BARBELL · {data.asOf}</p><h1>{t("护城河价值策略", "Moat Value Strategy")}</h1></div>
+          <div><p className="kicker">FORWARD BARBELL · RETURN {data.returnDate}</p><h1>{t("护城河价值策略", "Moat Value Strategy")}</h1></div>
           <div className="top-actions">
             <span>{t("单位净值", "Unit NAV")} {personalUnitNav.toFixed(4)}<small className="dividend-meta">{t("分红", "Dividends")} {data.dividendSummary.cumulativeCash.toFixed(4)} · {t("已复投", "Reinvested")} {data.dividendSummary.reinvestedCash.toFixed(4)} · {t("待复投", "Pending")} {(data.dividendSummary.pendingCash + data.dividendSummary.receivableCash).toFixed(4)}</small></span>
             <button className="start-date-button" onClick={() => { setDraftStartDate(personalStart?.date ?? latest?.date ?? data.asOf); setShowStartSettings(true); }}>
@@ -436,7 +445,9 @@ export default function Home() {
           </section>
 
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
-            <div className="allocation-board"><div><p className="kicker">TODAY · {data.activeAsOf}</p><h2 id="positions-heading">{t("当日生效仓位", "Today's Active Positions")}</h2><small className="allocation-note">{t("昨日已公布仓位，收益图只计这一板", "Previously published holdings; only this board feeds today's return")}</small></div>
+            <div className="allocation-switcher" role="tablist" aria-label={t("当日与明日仓位切换", "Active and next allocation boards")}><button role="tab" aria-selected={allocationBoard === 0} className={allocationBoard === 0 ? "is-active" : ""} onClick={() => jumpAllocationBoard(0)}>{t("当日收益", "Today's return")}<small>{data.returnDate}</small></button><button role="tab" aria-selected={allocationBoard === 1} className={allocationBoard === 1 ? "is-active" : ""} onClick={() => jumpAllocationBoard(1)}>{t("明日执行", "Next execution")}<small>{data.allocationChange.nextAsOf}</small></button></div>
+            <div className="allocation-carousel" ref={allocationCarouselRef} onScroll={(event) => { const target = event.currentTarget; setAllocationBoard(Math.round(target.scrollLeft / Math.max(target.clientWidth - 24, 1))); }}>
+            <section className="allocation-board allocation-card"><div><p className="kicker">RETURN {data.returnDate} · POSITION {data.activeAsOf}</p><h2 id="positions-heading">{t("当日收益用仓位", "Today's Return Basis")}</h2><small className="allocation-note">{t("收益属于当日，但仓位来自上一交易日已公布组合", "Today's return, based on the prior session's published holdings")}</small></div>
             <div className="holding-list" role="region" aria-label={t("当日生效仓位，可上下滚动", "Today's active holdings; scrollable")} tabIndex={0}>
               <div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values"><em>{t("价格", "Price")}</em><em>{t("今日↓", "Today↓")}</em><strong>{t("仓位", "Weight")}</strong></div></div>
               {rankedHoldings.map((holding) => (
@@ -446,14 +457,15 @@ export default function Home() {
                 </button>
               ))}
               <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>{t("现金", "Cash")}</b></span></span><div className="holding-values"><em>—</em><em>0</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
-            </div></div>
+            </div></section>
 
-            <div className="allocation-board tomorrow-board"><div><p className="kicker">NEXT SESSION · {data.allocationChange.nextAsOf}</p><h2>{t("明日待执行仓位", "Next-session Target")}</h2><small className="allocation-note">{t("下一交易日开盘后生效；参考收盘价不视作成交", "Effective after next-session open; reference close is not a fill")}</small></div>
+            <section className="allocation-board allocation-card tomorrow-board"><div><p className="kicker">NEXT SESSION · {data.allocationChange.nextAsOf}</p><h2>{t("明日待执行仓位", "Next-session Target")}</h2><small className="allocation-note">{t("下一交易日开盘后生效；参考收盘价不视作成交", "Effective after next-session open; reference close is not a fill")}</small></div>
             <div className="holding-list next-holding-list" role="region" aria-label={t("明日待执行仓位，可上下滚动", "Next-session target holdings; scrollable")} tabIndex={0}>
               <div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values next-values"><em>{t("参考收盘", "Ref close")}</em><strong>{t("目标仓位", "Target")}</strong></div></div>
               {rankedNextHoldings.map((holding) => <button className="holding-row" key={`next-${holding.code}`} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的明日目标仓位`, `View ${companyEnglish[holding.code] ?? holding.name} next-session target`)}><span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span><div className="holding-values next-values"><em>{money(holding.price)}</em><strong>{pct(holding.weight)}</strong></div></button>)}
               <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>{t("现金", "Cash")}</b></span></span><div className="holding-values next-values"><em>—</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
-            </div></div>
+            </div></section>
+            </div>
 
             <div className="portfolio-distribution">
               <p className="kicker">PORTFOLIO DISTRIBUTION</p>

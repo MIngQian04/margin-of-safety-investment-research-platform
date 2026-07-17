@@ -1,6 +1,7 @@
 {
   "asOf": "2026-07-17",
-  "generatedAt": "2026-07-17T19:14:41+08:00",
+  "returnDate": "2026-07-17",
+  "generatedAt": "2026-07-17T19:22:01+08:00",
   "summary": {
     "anchorWeight": 0.65,
     "futureWeight": 0.075,
@@ -70,62 +71,6 @@
       }
     },
     {
-      "code": "600312.SH",
-      "name": "平高电气",
-      "bucket": "FUTURE",
-      "state": "OPTION_SEED",
-      "theme": "电力系统扩容",
-      "industry": "电力设备",
-      "weight": 0.025,
-      "price": 17.34,
-      "dailyReturn": 0.04671280276816603,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": 0.37225152078824036,
-        "excessKurtosis": 1.5522931673033504,
-        "skewLabel": "近对称分布",
-        "kurtosisLabel": "厚尾波动型",
-        "observations": 252
-      },
-      "moat": {
-        "type": "高压设备认证与工程可靠性",
-        "thesis": "高压开关设备认证；运行可靠性记录和特高压工程经验可能构成项目准入优势",
-        "replicationBarrier": "高压设备长期运行验证；电网客户认证；大型工程交付记录难以快速建立",
-        "monitoringSignals": [
-          "高压业务收入",
-          "中标与合同负债",
-          "毛利率",
-          "经营现金流",
-          "应收周转"
-        ],
-        "invalidationSignals": [
-          "订单未兑现为现金",
-          "经营现金流继续下滑",
-          "中标份额下降",
-          "替代技术改变需求"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 0,
-          "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
-        }
-      },
-      "metrics": {
-        "未来逻辑分": "79.5",
-        "DCF安全边际": "1.6%",
-        "当前状态": "BOTTOM_HOLD_NO_ADD"
-      }
-    },
-    {
       "code": "000786.SZ",
       "name": "北新建材",
       "bucket": "ANCHOR",
@@ -180,232 +125,6 @@
         "所有者收益率": "10.9%",
         "三年ROE": "14.2%",
         "护城河代理分": "67.6"
-      }
-    },
-    {
-      "code": "600941.SH",
-      "name": "中国移动",
-      "bucket": "FUTURE",
-      "state": "OPTION_SEED",
-      "theme": "十五五六网",
-      "industry": "通信",
-      "weight": 0.025,
-      "price": 93.05,
-      "dailyReturn": 0.0037614185921548415,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": -0.04688538520832563,
-        "excessKurtosis": 2.405773641690077,
-        "skewLabel": "近对称分布",
-        "kurtosisLabel": "厚尾波动型",
-        "observations": 252
-      },
-      "moat": {
-        "type": "牌照网络与规模效应",
-        "thesis": "稀缺频谱和全国网络；客户规模及云网协同可能形成高固定成本行业的进入壁垒",
-        "replicationBarrier": "监管牌照；频谱资源；网络资本投入和客户覆盖无法由新进入者快速复制",
-        "monitoringSignals": [
-          "移动客户质量",
-          "ARPU",
-          "云业务现金回报",
-          "资本开支效率",
-          "自由现金流"
-        ],
-        "invalidationSignals": [
-          "监管改变回报机制",
-          "ARPU持续下降",
-          "云业务只增收不增利",
-          "资本开支长期失控"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 0,
-          "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
-        }
-      },
-      "metrics": {
-        "未来逻辑分": "88.8",
-        "DCF安全边际": "23.6%",
-        "当前状态": "BOTTOM_HOLD_NO_ADD"
-      }
-    },
-    {
-      "code": "600519.SH",
-      "name": "贵州茅台",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "食品饮料",
-      "weight": 0.0702702702702702,
-      "price": 1253.0,
-      "dailyReturn": -0.004757782031628577,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": 1.352437730497741,
-        "excessKurtosis": 7.772565724840469,
-        "skewLabel": "右尾机会型",
-        "kurtosisLabel": "高厚尾跳跃型",
-        "observations": 252
-      },
-      "moat": {
-        "type": "产地稀缺与品牌心智",
-        "thesis": "特定产区和酿造生态形成难复制的供给约束；长期品牌认同和社交消费心理支持定价权",
-        "replicationBarrier": "产区生态与长期基酒时间无法快速复制；消费者心智和高端社交共识需要数十年积累",
-        "monitoringSignals": [
-          "直营与批价稳定",
-          "高端市场份额",
-          "吨价与毛利率",
-          "年轻消费群体认知"
-        ],
-        "invalidationSignals": [
-          "批价长期倒挂",
-          "品牌溢价持续收窄",
-          "核心消费群体迁移",
-          "渠道库存连续恶化"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 0,
-          "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
-        }
-      },
-      "metrics": {
-        "股息率": "4.1%",
-        "所有者收益率": "5.2%",
-        "三年ROE": "34.7%",
-        "护城河代理分": "93.4"
-      }
-    },
-    {
-      "code": "002032.SZ",
-      "name": "苏泊尔",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "家用电器",
-      "weight": 0.0648648648648648,
-      "price": 43.85,
-      "dailyReturn": -0.009263443289652007,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": -2.5030078075480615,
-        "excessKurtosis": 21.208981723759738,
-        "skewLabel": "左尾风险型",
-        "kurtosisLabel": "高厚尾跳跃型",
-        "observations": 252
-      },
-      "moat": {
-        "type": "品牌渠道与产品体系",
-        "thesis": "炊具和小家电品牌认知；渠道覆盖及与SEB协同的产品体系可能支持稳定份额",
-        "replicationBarrier": "品牌信任；线下线上渠道；供应链规模和产品开发体系需要持续投入",
-        "monitoringSignals": [
-          "品类份额",
-          "新品成功率",
-          "渠道效率",
-          "关联交易质量",
-          "毛利率"
-        ],
-        "invalidationSignals": [
-          "品牌老化",
-          "核心品类份额下降",
-          "新品长期乏力",
-          "渠道费用侵蚀利润"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 1,
-          "highAlertCount": 0,
-          "latestAlertDate": "2026-04-24",
-          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
-          "latestAlertSource": "QUARTERLY_FINANCIAL"
-        }
-      },
-      "metrics": {
-        "股息率": "6.4%",
-        "所有者收益率": "6.3%",
-        "三年ROE": "34.4%",
-        "护城河代理分": "70.5"
-      }
-    },
-    {
-      "code": "000651.SZ",
-      "name": "格力电器",
-      "bucket": "ANCHOR",
-      "state": "",
-      "theme": "稳定现金流",
-      "industry": "未分类",
-      "weight": 0.0648648648648648,
-      "price": 39.95,
-      "dailyReturn": 0.0,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": 0.0,
-        "excessKurtosis": 0.0,
-        "skewLabel": "数据不足",
-        "kurtosisLabel": "数据不足",
-        "observations": 0
-      },
-      "moat": {
-        "type": "空调品牌与供应链规模",
-        "thesis": "空调品牌认知；制造供应链和售后服务体系可能支持成本与质量优势",
-        "replicationBarrier": "核心零部件能力；经销服务网络；质量口碑和规模采购需要长期积累",
-        "monitoringSignals": [
-          "空调份额",
-          "渠道库存",
-          "安装服务质量",
-          "多元化回报",
-          "现金转化"
-        ],
-        "invalidationSignals": [
-          "渠道改革失效",
-          "份额持续下降",
-          "品牌心智老化",
-          "多元化持续消耗资本"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 1,
-          "highAlertCount": 0,
-          "latestAlertDate": "2026-04-29",
-          "latestAlertTitle": "2026-03-31 经营现金流同比-29.1%，达到复核阈值",
-          "latestAlertSource": "QUARTERLY_FINANCIAL"
-        }
-      },
-      "metrics": {
-        "股息率": "7.5%",
-        "所有者收益率": "14.5%",
-        "三年ROE": "23.4%",
-        "护城河代理分": "52.5"
       }
     },
     {
@@ -466,6 +185,62 @@
       }
     },
     {
+      "code": "600941.SH",
+      "name": "中国移动",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "十五五六网",
+      "industry": "通信",
+      "weight": 0.025,
+      "price": 93.05,
+      "dailyReturn": 0.0037614185921548415,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": -0.04688538520832563,
+        "excessKurtosis": 2.405773641690077,
+        "skewLabel": "近对称分布",
+        "kurtosisLabel": "厚尾波动型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "牌照网络与规模效应",
+        "thesis": "稀缺频谱和全国网络；客户规模及云网协同可能形成高固定成本行业的进入壁垒",
+        "replicationBarrier": "监管牌照；频谱资源；网络资本投入和客户覆盖无法由新进入者快速复制",
+        "monitoringSignals": [
+          "移动客户质量",
+          "ARPU",
+          "云业务现金回报",
+          "资本开支效率",
+          "自由现金流"
+        ],
+        "invalidationSignals": [
+          "监管改变回报机制",
+          "ARPU持续下降",
+          "云业务只增收不增利",
+          "资本开支长期失控"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "metrics": {
+        "未来逻辑分": "88.8",
+        "DCF安全边际": "23.6%",
+        "当前状态": "BOTTOM_HOLD_NO_ADD"
+      }
+    },
+    {
       "code": "000400.SZ",
       "name": "许继电气",
       "bucket": "FUTURE",
@@ -519,6 +294,232 @@
         "未来逻辑分": "82.5",
         "DCF安全边际": "10.5%",
         "当前状态": "BOTTOM_HOLD_NO_ADD"
+      }
+    },
+    {
+      "code": "600519.SH",
+      "name": "贵州茅台",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "食品饮料",
+      "weight": 0.0702702702702702,
+      "price": 1253.0,
+      "dailyReturn": -0.004757782031628577,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": 1.352437730497741,
+        "excessKurtosis": 7.772565724840469,
+        "skewLabel": "右尾机会型",
+        "kurtosisLabel": "高厚尾跳跃型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "产地稀缺与品牌心智",
+        "thesis": "特定产区和酿造生态形成难复制的供给约束；长期品牌认同和社交消费心理支持定价权",
+        "replicationBarrier": "产区生态与长期基酒时间无法快速复制；消费者心智和高端社交共识需要数十年积累",
+        "monitoringSignals": [
+          "直营与批价稳定",
+          "高端市场份额",
+          "吨价与毛利率",
+          "年轻消费群体认知"
+        ],
+        "invalidationSignals": [
+          "批价长期倒挂",
+          "品牌溢价持续收窄",
+          "核心消费群体迁移",
+          "渠道库存连续恶化"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "metrics": {
+        "股息率": "4.1%",
+        "所有者收益率": "5.2%",
+        "三年ROE": "34.7%",
+        "护城河代理分": "93.4"
+      }
+    },
+    {
+      "code": "600312.SH",
+      "name": "平高电气",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "电力系统扩容",
+      "industry": "电力设备",
+      "weight": 0.025,
+      "price": 17.34,
+      "dailyReturn": 0.04671280276816603,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": 0.37225152078824036,
+        "excessKurtosis": 1.5522931673033504,
+        "skewLabel": "近对称分布",
+        "kurtosisLabel": "厚尾波动型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "高压设备认证与工程可靠性",
+        "thesis": "高压开关设备认证；运行可靠性记录和特高压工程经验可能构成项目准入优势",
+        "replicationBarrier": "高压设备长期运行验证；电网客户认证；大型工程交付记录难以快速建立",
+        "monitoringSignals": [
+          "高压业务收入",
+          "中标与合同负债",
+          "毛利率",
+          "经营现金流",
+          "应收周转"
+        ],
+        "invalidationSignals": [
+          "订单未兑现为现金",
+          "经营现金流继续下滑",
+          "中标份额下降",
+          "替代技术改变需求"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "metrics": {
+        "未来逻辑分": "79.5",
+        "DCF安全边际": "1.6%",
+        "当前状态": "BOTTOM_HOLD_NO_ADD"
+      }
+    },
+    {
+      "code": "000651.SZ",
+      "name": "格力电器",
+      "bucket": "ANCHOR",
+      "state": "",
+      "theme": "稳定现金流",
+      "industry": "未分类",
+      "weight": 0.0648648648648648,
+      "price": 39.95,
+      "dailyReturn": 0.0,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": 0.0,
+        "excessKurtosis": 0.0,
+        "skewLabel": "数据不足",
+        "kurtosisLabel": "数据不足",
+        "observations": 0
+      },
+      "moat": {
+        "type": "空调品牌与供应链规模",
+        "thesis": "空调品牌认知；制造供应链和售后服务体系可能支持成本与质量优势",
+        "replicationBarrier": "核心零部件能力；经销服务网络；质量口碑和规模采购需要长期积累",
+        "monitoringSignals": [
+          "空调份额",
+          "渠道库存",
+          "安装服务质量",
+          "多元化回报",
+          "现金转化"
+        ],
+        "invalidationSignals": [
+          "渠道改革失效",
+          "份额持续下降",
+          "品牌心智老化",
+          "多元化持续消耗资本"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 1,
+          "highAlertCount": 0,
+          "latestAlertDate": "2026-04-29",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-29.1%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
+        }
+      },
+      "metrics": {
+        "股息率": "7.5%",
+        "所有者收益率": "14.5%",
+        "三年ROE": "23.4%",
+        "护城河代理分": "52.5"
+      }
+    },
+    {
+      "code": "002032.SZ",
+      "name": "苏泊尔",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "家用电器",
+      "weight": 0.0648648648648648,
+      "price": 43.85,
+      "dailyReturn": -0.009263443289652007,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": -2.5030078075480615,
+        "excessKurtosis": 21.208981723759738,
+        "skewLabel": "左尾风险型",
+        "kurtosisLabel": "高厚尾跳跃型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "品牌渠道与产品体系",
+        "thesis": "炊具和小家电品牌认知；渠道覆盖及与SEB协同的产品体系可能支持稳定份额",
+        "replicationBarrier": "品牌信任；线下线上渠道；供应链规模和产品开发体系需要持续投入",
+        "monitoringSignals": [
+          "品类份额",
+          "新品成功率",
+          "渠道效率",
+          "关联交易质量",
+          "毛利率"
+        ],
+        "invalidationSignals": [
+          "品牌老化",
+          "核心品类份额下降",
+          "新品长期乏力",
+          "渠道费用侵蚀利润"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 1,
+          "highAlertCount": 0,
+          "latestAlertDate": "2026-04-24",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
+        }
+      },
+      "metrics": {
+        "股息率": "6.4%",
+        "所有者收益率": "6.3%",
+        "三年ROE": "34.4%",
+        "护城河代理分": "70.5"
       }
     }
   ],
