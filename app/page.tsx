@@ -12,6 +12,18 @@ type Holding = {
   dailyReturn: number;
   reason?: string;
   humanMoatConfirmed: boolean;
+  valuationRepair?: {
+    asOf: string;
+    generatedBy: string;
+    currentPrice: number;
+    baseDcfValuePerShare: number | null;
+    baseDcfMargin: number | null;
+    undervaluationReasons: string[];
+    repairConditions: string[];
+    failureSignals: string[];
+    institutionReferences: { institution: string; rating: string; market: string; targetPrice: number; currency: string; publishedDate: string; sourceUrl: string; note: string }[];
+    disclaimer: string;
+  };
   valuation?: Record<string, { discountRate: number; valuePerShare: number; marginOfSafety: number }> | null;
   distribution: {
     skewness: number;
@@ -311,6 +323,7 @@ export default function Home() {
   const [draftStartDate, setDraftStartDate] = useState("");
   const [selectedRange, setSelectedRange] = useState<RangeKey>("1Y");
   const [selectedHolding, setSelectedHolding] = useState<Holding | null>(null);
+  const [showValuationResearch, setShowValuationResearch] = useState(false);
   const [showHoldingsDialog, setShowHoldingsDialog] = useState(false);
   const [holdingsDialogBoard, setHoldingsDialogBoard] = useState<"active" | "next">("active");
   const [language, setLanguage] = useState<Language>("zh");
@@ -362,7 +375,7 @@ export default function Home() {
   }, [language]);
 
   useEffect(() => {
-    if (!confirmRefresh && !showStartSettings && !selectedHolding && !showHoldingsDialog && !showExecutionLedger && !showAllocationChanges) return;
+    if (!confirmRefresh && !showStartSettings && !selectedHolding && !showHoldingsDialog && !showExecutionLedger && !showAllocationChanges && !showValuationResearch) return;
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setConfirmRefresh(false);
@@ -371,11 +384,12 @@ export default function Home() {
         setShowHoldingsDialog(false);
         setShowExecutionLedger(false);
         setShowAllocationChanges(false);
+        setShowValuationResearch(false);
       }
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [confirmRefresh, showStartSettings, selectedHolding, showHoldingsDialog, showExecutionLedger, showAllocationChanges]);
+  }, [confirmRefresh, showStartSettings, selectedHolding, showHoldingsDialog, showExecutionLedger, showAllocationChanges, showValuationResearch]);
 
   useEffect(() => {
     if (!data?.navHistory.length) return;
@@ -453,6 +467,7 @@ export default function Home() {
   };
   const openHoldingMoat = (holding: Holding) => {
     setShowHoldingsDialog(false);
+    setShowValuationResearch(false);
     setSelectedHolding(holding);
   };
 
@@ -641,7 +656,19 @@ export default function Home() {
               <span>{moatStatus[selectedHolding.moat.status][language === "zh" ? "cn" : "en"]}</span>
               <b>{t("下次复核", "Next review")} {selectedHolding.moat.nextReviewDate}</b>
             </div>
-            <div className={`human-review-status ${selectedHolding.humanMoatConfirmed ? "confirmed" : "gray"}`} role="status"><span>{t("人工护城河判断", "Human moat judgment")}</span><strong>{humanReviewLabel(selectedHolding)}</strong><small>{selectedHolding.humanMoatConfirmed ? t("已确认符合AI研究，可按正常持仓收益观察。", "Confirmed as consistent with the AI thesis; normal holding return applies.") : t("尚未判断是否符合AI研究；保留AI计算仓位，但暂不视为人工确认收益仓位。", "Not yet judged against the AI thesis; the AI target weight remains, but it is not treated as a human-confirmed return position.")}</small></div>
+            <button type="button" className={`human-review-status ${selectedHolding.humanMoatConfirmed ? "confirmed" : "gray"}`} onClick={() => setShowValuationResearch((current) => !current)} aria-expanded={showValuationResearch}><span>{t("人工护城河判断", "Human moat judgment")}</span><strong>{humanReviewLabel(selectedHolding)}</strong><small>{selectedHolding.humanMoatConfirmed ? t("已确认符合AI研究，可按正常持仓收益观察。点击查看估值复核。", "Confirmed as consistent with the AI thesis; normal holding return applies. Click for valuation review.") : t("尚未判断是否符合AI研究；点击查看低估原因、修复条件和机构估值参考。", "Not yet judged against the AI thesis; click to review undervaluation reasons, repair conditions and institution references.")}</small></button>
+            {showValuationResearch && selectedHolding.valuationRepair && (
+              <section className="valuation-repair" aria-label={t("估值修复辅助研究", "Valuation repair research aid")}>
+                <div className="valuation-repair-head"><div><p className="kicker">AI VALUATION REVIEW</p><h3>{t("低估原因与估值修复条件", "Why it is discounted and what could repair value")}</h3></div><small>{selectedHolding.valuationRepair.asOf || data.asOf} · {selectedHolding.valuationRepair.generatedBy}</small></div>
+                <div className="valuation-repair-grid">
+                  <article><p className="kicker">WHY DISCOUNTED</p><h4>{t("当前为什么便宜", "Why the market discounts it")}</h4><ul>{selectedHolding.valuationRepair.undervaluationReasons.map((reason) => <li key={reason}>{reason}</li>)}</ul></article>
+                  <article><p className="kicker">REPAIR CONDITIONS</p><h4>{t("估值修复需要什么", "Conditions for re-rating")}</h4><ul>{selectedHolding.valuationRepair.repairConditions.map((condition) => <li key={condition}>{condition}</li>)}</ul></article>
+                  <article className="valuation-repair-risk"><p className="kicker">INVALIDATION</p><h4>{t("哪些信号说明判断错了", "What would invalidate the view")}</h4><ul>{selectedHolding.valuationRepair.failureSignals.map((signal) => <li key={signal}>{signal}</li>)}</ul></article>
+                </div>
+                <div className="institution-reference"><div className="valuation-repair-head"><div><p className="kicker">PUBLIC INSTITUTION REFERENCES</p><h4>{t("公开机构估值参考", "Public institution valuation references")}</h4></div><small>{t("仅作参考，不代表模型采纳", "Reference only; not adopted by the model")}</small></div><div className="institution-reference-list">{selectedHolding.valuationRepair.institutionReferences.map((reference) => <article key={`${reference.institution}-${reference.publishedDate}`}><div><strong>{reference.institution}</strong><small>{reference.rating} · {reference.market} · {reference.publishedDate}</small></div><b>{reference.targetPrice.toFixed(2)} {reference.currency}</b><p>{reference.note}</p><a href={reference.sourceUrl} target="_blank" rel="noreferrer">{t("查看原文", "Open source")} ↗</a></article>)}</div></div>
+                <p className="valuation-repair-disclaimer">{selectedHolding.valuationRepair.disclaimer}</p>
+              </section>
+            )}
             {selectedHolding.moat.radar.pendingAlertCount > 0 ? (
               <div className="moat-radar-alert" role="status">
                 <span>{t(`发现 ${selectedHolding.moat.radar.pendingAlertCount} 条待人工复核事件`, `${selectedHolding.moat.radar.pendingAlertCount} events pending human review`)}<small>{selectedHolding.moat.radar.highAlertCount} {t("条高优先级", "high priority")}</small></span>
