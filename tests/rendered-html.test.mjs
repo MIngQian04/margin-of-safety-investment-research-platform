@@ -98,6 +98,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /dividendSummary\.cumulativeCash/);
   assert.match(page, /已复投/);
   assert.match(page, /Total-return unit NAV/);
+  assert.match(page, /benchmarkHistory/);
+  assert.match(page, /相对大盘/);
+  assert.match(page, /unit proxy/);
   assert.match(page, /DYNAMIC MOAT FILE/);
   assert.match(page, /查看\$\{holding\.name\}的护城河动态档案/);
   assert.match(page, /什么变化代表削弱/);
@@ -124,6 +127,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /\.axis-label \{[^}]*font-size:14px/);
   assert.doesNotMatch(css, /\.chart-building/);
   assert.match(css, /\.portfolio-distribution \{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(css, /\.benchmark-line/);
+  assert.match(css, /\.benchmark-strip/);
   assert.match(css, /\.holding-list b \{[^}]*font-size:17px/);
   assert.match(css, /\.holding-list>div,\.holding-row \{[^}]*min-height:39px/);
   assert.match(css, /\.holding-identity b,\.holding-identity small \{[^}]*white-space:nowrap/);
@@ -185,6 +190,11 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(Number.isFinite(data.dividendSummary.reinvestedCash));
   assert.ok(Number.isFinite(data.dividendSummary.pendingCash));
   assert.ok(Number.isFinite(data.dividendSummary.receivableCash));
+  assert.equal(data.benchmark.code, "000300.SH");
+  assert.equal(data.benchmark.status, "OK");
+  assert.equal(data.benchmark.history[0].date, data.navHistory[0].date);
+  assert.equal(data.benchmark.history[0].nav, 1);
+  assert.equal(data.benchmark.history.at(-1).date, data.navHistory.at(-1).date);
   assert.ok(data.distributionSummary.observations >= 200);
   assert.ok(data.navHistory.length > 0);
   assert.equal(data.navHistory[0].nav, 1);

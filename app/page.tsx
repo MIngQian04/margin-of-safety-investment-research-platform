@@ -65,6 +65,19 @@ type Holding = {
 };
 
 type NavPoint = { date: string; nav: number; dailyReturn: number; priceCoverage: number };
+type BenchmarkPoint = { date: string; nav: number; dailyReturn: number };
+type BenchmarkData = {
+  code: string;
+  name: string;
+  nameEn: string;
+  basis: string;
+  basisEn: string;
+  status: "OK" | "PARTIAL" | "UNAVAILABLE";
+  startDate: string;
+  endDate: string;
+  history: BenchmarkPoint[];
+  missingDates?: string[];
+};
 type ExecutionRecord = { quantity: number; averagePrice: number; fee: number; modelOpenPrice: number };
 type PortfolioData = {
   asOf: string;
@@ -104,6 +117,7 @@ type PortfolioData = {
     valuationWarnings: { code: string; name: string; status: string; warningDate: string; consecutiveDays: number; dcfMargin: number; premiumCap: number; reason: string; effect: string }[];
   };
   navHistory: NavPoint[];
+  benchmark: BenchmarkData;
   dividendSummary: {
     cumulativeCash: number;
     reinvestedCash: number;
@@ -266,7 +280,7 @@ function capitalFloorForHoldings(holdings: Holding[]) {
   return Math.ceil(Math.max(0, ...holdings.filter((holding) => holding.weight > 0 && holding.price > 0).map((holding) => holding.price * A_SHARE_LOT_SIZE / holding.weight)));
 }
 
-function PerformanceChart({ history, range, language }: { history: NavPoint[]; range: RangeKey; language: Language }) {
+function PerformanceChart({ history, benchmarkHistory = [], range, language }: { history: NavPoint[]; benchmarkHistory?: BenchmarkPoint[]; range: RangeKey; language: Language }) {
   const [hovered, setHovered] = useState<number | null>(null);
   const rangeDays = range === "CUMULATIVE" ? history.length - 1 : ranges.find((item) => item.key === range)!.days;
   const needed = range === "TODAY" ? 2 : range === "CUMULATIVE" ? history.length : rangeDays + 1;
@@ -280,8 +294,18 @@ function PerformanceChart({ history, range, language }: { history: NavPoint[]; r
   const base = points.at(0)?.nav ?? 1;
   const personalBase = history.at(0)?.nav ?? 1;
   const returns = points.map((point) => point.nav / base - 1);
-  const rawMin = Math.min(...returns, 0);
-  const rawMax = Math.max(...returns, 0);
+  const showBenchmark = range === "CUMULATIVE" && benchmarkHistory.length > 1;
+  const benchmarkByDate = new Map(benchmarkHistory.map((point) => [point.date, point]));
+  const benchmarkBase = benchmarkHistory.at(0)?.nav ?? 1;
+  const benchmarkReturns = showBenchmark
+    ? points.map((point) => {
+      const benchmarkPoint = benchmarkByDate.get(point.date);
+      return benchmarkPoint ? benchmarkPoint.nav / benchmarkBase - 1 : null;
+    })
+    : [];
+  const visibleReturns = [...returns, ...benchmarkReturns.filter((value): value is number => value != null)];
+  const rawMin = Math.min(...visibleReturns, 0);
+  const rawMax = Math.max(...visibleReturns, 0);
   const pad = Math.max((rawMax - rawMin) * 0.16, 0.0015);
   const min = rawMin - pad;
   const max = rawMax + pad;
@@ -290,6 +314,11 @@ function PerformanceChart({ history, range, language }: { history: NavPoint[]; r
   const coordinates = points.map((point, index) => ({ x: x(index), y: y(returns[index]), point, value: returns[index] }));
   const line = coordinates.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ");
   const area = coordinates.length > 1 ? `${line} L${coordinates.at(-1)!.x.toFixed(1)},${y(0).toFixed(1)} L${coordinates[0].x.toFixed(1)},${y(0).toFixed(1)} Z` : "";
+  const benchmarkCoordinates = points.map((point, index) => {
+    const value = benchmarkReturns[index];
+    return value == null ? null : { x: x(index), y: y(value), point: benchmarkByDate.get(point.date)!, value };
+  }).filter((point): point is { x: number; y: number; point: BenchmarkPoint; value: number } => point != null);
+  const benchmarkLine = benchmarkCoordinates.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ");
   const activeIndex = hovered ?? Math.max(coordinates.length - 1, 0);
   const active = coordinates[activeIndex];
   const yTicks = [max, (max + min) / 2, min];
@@ -298,7 +327,7 @@ function PerformanceChart({ history, range, language }: { history: NavPoint[]; r
     <div className="performance-chart" onMouseLeave={() => setHovered(null)}>
       <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby="performance-chart-title performance-chart-desc">
         <title id="performance-chart-title">{language === "zh" ? "组合收益曲线" : "Portfolio return curve"}</title>
-        <desc id="performance-chart-desc">{language === "zh" ? "根据已记录的每日组合单位净值绘制，可用上方周期按钮切换观察区间。" : "Recorded daily portfolio NAV; use the period controls above to change the visible range."}</desc>
+        <desc id="performance-chart-desc">{language === "zh" ? "根据已记录的每日组合单位净值绘制；累计视图同时显示沪深300单位指数代理。" : "Recorded daily portfolio NAV; the cumulative view also shows the CSI 300 unit-index proxy."}</desc>
         {yTicks.map((tick) => (
           <g key={tick}>
             <line className="chart-grid" x1={left} x2={width - right} y1={y(tick)} y2={y(tick)} />
@@ -308,6 +337,7 @@ function PerformanceChart({ history, range, language }: { history: NavPoint[]; r
         <line className="chart-zero" x1={left} x2={width - right} y1={y(0)} y2={y(0)} />
         {area && <path className="chart-area" d={area} />}
         {line && <path className="chart-line" d={line} />}
+        {benchmarkLine && <path className="chart-line benchmark-line" d={benchmarkLine} />}
         {coordinates.map((point, index) => (
           <circle key={point.point.date} className="chart-hit" cx={point.x} cy={point.y} r="13" onMouseEnter={() => setHovered(index)} onTouchStart={() => setHovered(index)} />
         ))}
@@ -317,7 +347,7 @@ function PerformanceChart({ history, range, language }: { history: NavPoint[]; r
       </svg>
       {active && (
         <div className="chart-tooltip" style={{ left: `clamp(52px, ${active.x / width * 100}%, calc(100% - 52px))`, top: `${active.y / height * 100}%` }}>
-          <span>{active.point.date}</span><strong>{signedPct(active.value)}</strong><small>NAV {(active.point.nav / personalBase).toFixed(4)}</small>
+          <span>{active.point.date}</span><strong>{signedPct(active.value)}</strong><small>NAV {(active.point.nav / personalBase).toFixed(4)}{showBenchmark && benchmarkByDate.get(active.point.date) ? ` · ${language === "zh" ? "大盘" : "Market"} ${signedPct(benchmarkByDate.get(active.point.date)!.nav / benchmarkBase - 1)}` : ""}</small>
         </div>
       )}
     </div>
@@ -440,6 +470,10 @@ export default function Home() {
   const personalReturn = latest && personalStart ? latest.nav / personalStart.nav - 1 : 0;
   const personalUnitNav = 1 + personalReturn;
   const modelCumulative = latest && data.navHistory[0] ? latest.nav / data.navHistory[0].nav - 1 : 0;
+  const benchmarkFirst = data.benchmark.history[0];
+  const benchmarkLatest = data.benchmark.history.at(-1);
+  const benchmarkCumulative = benchmarkFirst && benchmarkLatest ? benchmarkLatest.nav / benchmarkFirst.nav - 1 : null;
+  const benchmarkExcess = benchmarkCumulative == null ? null : modelCumulative - benchmarkCumulative;
   const minimumAccountCapital = Math.max(capitalFloorForHoldings(data.holdings), capitalFloorForHoldings(data.nextHoldings));
   const capitalFloorHolding = [...data.holdings, ...data.nextHoldings].filter((holding) => holding.weight > 0 && holding.price > 0).sort((left, right) => right.price / right.weight - left.price / left.weight)[0];
   const periods = ranges.map((item) => ({
@@ -530,11 +564,17 @@ export default function Home() {
               <div><p className="kicker">PORTFOLIO PERFORMANCE</p><h2 id="chart-heading">{t("组合收益曲线", "Portfolio Return Curve")}</h2></div>
               <p>{language === "zh" ? `${activeRange.cn}视图` : `${activeRange.en} View`}</p>
             </div>
-            <PerformanceChart history={chartHistory} range={selectedRange} language={language} />
+            <PerformanceChart history={chartHistory} benchmarkHistory={data.benchmark.history} range={selectedRange} language={language} />
             <div className="chart-caption">
               <span><i className="line-key" />{t("含分红单位净值收益", "Total-return unit NAV")}</span>
+              {selectedRange === "CUMULATIVE" && data.benchmark.status === "OK" && <span><i className="line-key benchmark-key" />{t(`${data.benchmark.name}单位指数代理`, `${data.benchmark.nameEn} unit proxy`)}</span>}
               <span>{t(`自 ${personalStart?.date ?? data.asOf} 按单位1记录`, `Unit 1 since ${personalStart?.date ?? data.asOf}`)}</span>
             </div>
+            {selectedRange === "CUMULATIVE" && <div className="benchmark-strip" aria-label={t("策略与大盘累计表现", "Strategy versus market cumulative performance")}>
+              <div><span>{t("策略", "Strategy")}</span><strong className={modelCumulative >= 0 ? "up" : "down"}>{signedPct(modelCumulative)}</strong><small>{t("从组合起始日单位1", "Unit 1 from portfolio start")}</small></div>
+              <div><span>{data.benchmark.status === "OK" ? t(data.benchmark.name, data.benchmark.nameEn) : t("大盘基准", "Market benchmark")}</span><strong className={benchmarkCumulative == null ? "pending" : benchmarkCumulative >= 0 ? "up" : "down"}>{benchmarkCumulative == null ? "—" : signedPct(benchmarkCumulative)}</strong><small>{data.benchmark.status === "OK" ? t("原始收盘价代理，不含分红", "Raw close proxy, excl. dividends") : t("数据尚未完整", "Data not complete")}</small></div>
+              <div><span>{t("相对大盘", "Excess vs market")}</span><strong className={benchmarkExcess == null ? "pending" : benchmarkExcess >= 0 ? "up" : "down"}>{benchmarkExcess == null ? "—" : signedPct(benchmarkExcess)}</strong><small>{data.benchmark.status === "OK" ? t("策略累计收益减基准", "Strategy cumulative return minus benchmark") : t("不推断超额收益", "No excess-return inference")}</small></div>
+            </div>}
           </section>
 
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
