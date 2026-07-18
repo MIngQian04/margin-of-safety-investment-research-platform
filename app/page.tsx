@@ -15,14 +15,19 @@ type Holding = {
   valuationRepair?: {
     asOf: string;
     generatedBy: string;
+    generatedByEn?: string;
     currentPrice: number;
     baseDcfValuePerShare: number | null;
     baseDcfMargin: number | null;
     undervaluationReasons: string[];
+    undervaluationReasonsEn?: string[];
     repairConditions: string[];
+    repairConditionsEn?: string[];
     failureSignals: string[];
-    institutionReferences: { institution: string; rating: string; market: string; targetPrice: number; currency: string; publishedDate: string; sourceUrl: string; note: string }[];
+    failureSignalsEn?: string[];
+    institutionReferences: { institution: string; institutionEn?: string; rating: string; ratingEn?: string; market: string; marketEn?: string; targetPrice: number; currency: string; publishedDate: string; sourceUrl: string; note: string; noteEn?: string }[];
     disclaimer: string;
+    disclaimerEn?: string;
   };
   valuation?: Record<string, { discountRate: number; valuePerShare: number; marginOfSafety: number }> | null;
   distribution: {
@@ -659,14 +664,14 @@ export default function Home() {
             <button type="button" className={`human-review-status ${selectedHolding.humanMoatConfirmed ? "confirmed" : "gray"}`} onClick={() => setShowValuationResearch((current) => !current)} aria-expanded={showValuationResearch}><span>{t("人工护城河判断", "Human moat judgment")}</span><strong>{humanReviewLabel(selectedHolding)}</strong><small>{selectedHolding.humanMoatConfirmed ? t("已确认符合AI研究，可按正常持仓收益观察。点击查看估值复核。", "Confirmed as consistent with the AI thesis; normal holding return applies. Click for valuation review.") : t("尚未判断是否符合AI研究；点击查看低估原因、修复条件和机构估值参考。", "Not yet judged against the AI thesis; click to review undervaluation reasons, repair conditions and institution references.")}</small></button>
             {showValuationResearch && selectedHolding.valuationRepair && (
               <section className="valuation-repair" aria-label={t("估值修复辅助研究", "Valuation repair research aid")}>
-                <div className="valuation-repair-head"><div><p className="kicker">AI VALUATION REVIEW</p><h3>{t("低估原因与估值修复条件", "Why it is discounted and what could repair value")}</h3></div><small>{selectedHolding.valuationRepair.asOf || data.asOf} · {selectedHolding.valuationRepair.generatedBy}</small></div>
+                <div className="valuation-repair-head"><div><p className="kicker">AI VALUATION REVIEW</p><h3>{t("低估原因与估值修复条件", "Why it is discounted and what could repair value")}</h3></div><small>{selectedHolding.valuationRepair.asOf || data.asOf} · {language === "zh" ? selectedHolding.valuationRepair.generatedBy : selectedHolding.valuationRepair.generatedByEn ?? selectedHolding.valuationRepair.generatedBy}</small></div>
                 <div className="valuation-repair-grid">
-                  <article><p className="kicker">WHY DISCOUNTED</p><h4>{t("当前为什么便宜", "Why the market discounts it")}</h4><ul>{selectedHolding.valuationRepair.undervaluationReasons.map((reason) => <li key={reason}>{reason}</li>)}</ul></article>
-                  <article><p className="kicker">REPAIR CONDITIONS</p><h4>{t("估值修复需要什么", "Conditions for re-rating")}</h4><ul>{selectedHolding.valuationRepair.repairConditions.map((condition) => <li key={condition}>{condition}</li>)}</ul></article>
-                  <article className="valuation-repair-risk"><p className="kicker">INVALIDATION</p><h4>{t("哪些信号说明判断错了", "What would invalidate the view")}</h4><ul>{selectedHolding.valuationRepair.failureSignals.map((signal) => <li key={signal}>{signal}</li>)}</ul></article>
+                  <article><p className="kicker">WHY DISCOUNTED</p><h4>{t("当前为什么便宜", "Why the market discounts it")}</h4><ul>{(language === "zh" ? selectedHolding.valuationRepair.undervaluationReasons : selectedHolding.valuationRepair.undervaluationReasonsEn ?? selectedHolding.valuationRepair.undervaluationReasons).map((reason) => <li key={reason}>{reason}</li>)}</ul></article>
+                  <article><p className="kicker">REPAIR CONDITIONS</p><h4>{t("估值修复需要什么", "Conditions for re-rating")}</h4><ul>{(language === "zh" ? selectedHolding.valuationRepair.repairConditions : selectedHolding.valuationRepair.repairConditionsEn ?? selectedHolding.valuationRepair.repairConditions).map((condition) => <li key={condition}>{condition}</li>)}</ul></article>
+                  <article className="valuation-repair-risk"><p className="kicker">INVALIDATION</p><h4>{t("哪些信号说明判断错了", "What would invalidate the view")}</h4><ul>{(language === "zh" ? selectedHolding.valuationRepair.failureSignals : selectedHolding.valuationRepair.failureSignalsEn ?? selectedHolding.valuationRepair.failureSignals).map((signal) => <li key={signal}>{signal}</li>)}</ul></article>
                 </div>
-                <div className="institution-reference"><div className="valuation-repair-head"><div><p className="kicker">PUBLIC INSTITUTION REFERENCES</p><h4>{t("公开机构估值参考", "Public institution valuation references")}</h4></div><small>{t("仅作参考，不代表模型采纳", "Reference only; not adopted by the model")}</small></div><div className="institution-reference-list">{selectedHolding.valuationRepair.institutionReferences.map((reference) => <article key={`${reference.institution}-${reference.publishedDate}`}><div><strong>{reference.institution}</strong><small>{reference.rating} · {reference.market} · {reference.publishedDate}</small></div><b>{reference.targetPrice.toFixed(2)} {reference.currency}</b><p>{reference.note}</p><a href={reference.sourceUrl} target="_blank" rel="noreferrer">{t("查看原文", "Open source")} ↗</a></article>)}</div></div>
-                <p className="valuation-repair-disclaimer">{selectedHolding.valuationRepair.disclaimer}</p>
+                <div className="institution-reference"><div className="valuation-repair-head"><div><p className="kicker">PUBLIC INSTITUTION REFERENCES</p><h4>{t("公开机构估值参考", "Public institution valuation references")}</h4></div><small>{t("仅作参考，不代表模型采纳", "Reference only; not adopted by the model")}</small></div><div className="institution-reference-list">{selectedHolding.valuationRepair.institutionReferences.map((reference) => <article key={`${reference.institution}-${reference.publishedDate}`}><div><strong>{language === "zh" ? reference.institution : reference.institutionEn ?? reference.institution}</strong><small>{language === "zh" ? reference.rating : reference.ratingEn ?? reference.rating} · {language === "zh" ? reference.market : reference.marketEn ?? reference.market} · {reference.publishedDate}</small></div><b>{reference.targetPrice.toFixed(2)} {reference.currency}</b><p>{language === "zh" ? reference.note : reference.noteEn ?? reference.note}</p><a href={reference.sourceUrl} target="_blank" rel="noreferrer">{t("查看原文", "Open source")} ↗</a></article>)}</div></div>
+                <p className="valuation-repair-disclaimer">{language === "zh" ? selectedHolding.valuationRepair.disclaimer : selectedHolding.valuationRepair.disclaimerEn ?? selectedHolding.valuationRepair.disclaimer}</p>
               </section>
             )}
             {selectedHolding.moat.radar.pendingAlertCount > 0 ? (
