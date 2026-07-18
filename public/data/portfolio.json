@@ -1,11 +1,11 @@
 {
   "asOf": "2026-07-17",
   "returnDate": "2026-07-17",
-  "generatedAt": "2026-07-17T23:50:12+08:00",
+  "generatedAt": "2026-07-18T10:27:52+08:00",
   "summary": {
     "anchorWeight": 0.5999999999999996,
-    "futureWeight": 0.125,
-    "cashWeight": 0.2750000000000003,
+    "futureWeight": 0.075,
+    "cashWeight": 0.3250000000000003,
     "universeScanned": 5522,
     "financialReviewed": 202,
     "financialComplete": 202,
@@ -14,424 +14,6 @@
   "activeAsOf": "2026-07-16",
   "distributionAsOf": "2026-07-16",
   "holdings": [
-    {
-      "code": "002032.SZ",
-      "name": "苏泊尔",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "家用电器",
-      "weight": 0.0648648648648648,
-      "price": 43.85,
-      "dailyReturn": -0.009263443289652007,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": -2.5030078075480615,
-        "excessKurtosis": 21.208981723759738,
-        "skewLabel": "左尾风险型",
-        "kurtosisLabel": "高厚尾跳跃型",
-        "observations": 252
-      },
-      "moat": {
-        "type": "品牌渠道与产品体系",
-        "thesis": "炊具和小家电品牌认知；渠道覆盖及与SEB协同的产品体系可能支持稳定份额",
-        "replicationBarrier": "品牌信任；线下线上渠道；供应链规模和产品开发体系需要持续投入",
-        "monitoringSignals": [
-          "品类份额",
-          "新品成功率",
-          "渠道效率",
-          "关联交易质量",
-          "毛利率"
-        ],
-        "invalidationSignals": [
-          "品牌老化",
-          "核心品类份额下降",
-          "新品长期乏力",
-          "渠道费用侵蚀利润"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 1,
-          "highAlertCount": 0,
-          "latestAlertDate": "2026-04-24",
-          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
-          "latestAlertSource": "QUARTERLY_FINANCIAL"
-        }
-      },
-      "valuation": {
-        "very_optimistic": {
-          "discountRate": 0.08,
-          "valuePerShare": 54.83135238324875,
-          "marginOfSafety": 0.2504299289224343
-        },
-        "optimistic": {
-          "discountRate": 0.09,
-          "valuePerShare": 46.74526930153332,
-          "marginOfSafety": 0.0660266659414667
-        },
-        "base": {
-          "discountRate": 0.1,
-          "valuePerShare": 40.81598991352249,
-          "marginOfSafety": -0.0691906519151085
-        },
-        "cautious": {
-          "discountRate": 0.11,
-          "valuePerShare": 36.2822683118504,
-          "marginOfSafety": -0.1725822505849396
-        },
-        "very_pessimistic": {
-          "discountRate": 0.12,
-          "valuePerShare": 32.70338424065606,
-          "marginOfSafety": -0.2541987630409109
-        }
-      },
-      "metrics": {
-        "股息率": "6.4%",
-        "所有者收益率": "6.3%",
-        "三年ROE": "34.4%",
-        "护城河代理分": "70.5"
-      }
-    },
-    {
-      "code": "600312.SH",
-      "name": "平高电气",
-      "bucket": "FUTURE",
-      "state": "OPTION_SEED",
-      "theme": "电力系统扩容",
-      "industry": "电力设备",
-      "weight": 0.025,
-      "price": 18.15,
-      "dailyReturn": 0.04671280276816603,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": 0.37225152078824036,
-        "excessKurtosis": 1.5522931673033504,
-        "skewLabel": "近对称分布",
-        "kurtosisLabel": "厚尾波动型",
-        "observations": 252
-      },
-      "moat": {
-        "type": "高压设备认证与工程可靠性",
-        "thesis": "高压开关设备认证；运行可靠性记录和特高压工程经验可能构成项目准入优势",
-        "replicationBarrier": "高压设备长期运行验证；电网客户认证；大型工程交付记录难以快速建立",
-        "monitoringSignals": [
-          "高压业务收入",
-          "中标与合同负债",
-          "毛利率",
-          "经营现金流",
-          "应收周转"
-        ],
-        "invalidationSignals": [
-          "订单未兑现为现金",
-          "经营现金流继续下滑",
-          "中标份额下降",
-          "替代技术改变需求"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 0,
-          "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
-        }
-      },
-      "valuation": {
-        "very_optimistic": {
-          "discountRate": 0.08,
-          "valuePerShare": 22.12880152055544,
-          "marginOfSafety": 0.2192177146311538
-        },
-        "optimistic": {
-          "discountRate": 0.09,
-          "valuePerShare": 19.524559646759982,
-          "marginOfSafety": 0.0757333138710736
-        },
-        "base": {
-          "discountRate": 0.1,
-          "valuePerShare": 17.614948094708716,
-          "marginOfSafety": -0.0294794438177015
-        },
-        "cautious": {
-          "discountRate": 0.11,
-          "valuePerShare": 16.154796434147162,
-          "marginOfSafety": -0.1099285711213684
-        },
-        "very_pessimistic": {
-          "discountRate": 0.12,
-          "valuePerShare": 15.00216423070873,
-          "marginOfSafety": -0.1734344776469017
-        }
-      },
-      "metrics": {
-        "未来逻辑分": "79.5",
-        "DCF安全边际": "-2.9%",
-        "当前状态": "BOTTOM_HOLD_NO_ADD"
-      }
-    },
-    {
-      "code": "300760.SZ",
-      "name": "迈瑞医疗",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "医药生物",
-      "weight": 0.15,
-      "price": 149.43,
-      "dailyReturn": -0.005854567227729368,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": 0.5258654997395126,
-        "excessKurtosis": 0.3895095819416645,
-        "skewLabel": "右尾机会型",
-        "kurtosisLabel": "常态尾部",
-        "observations": 252
-      },
-      "moat": {
-        "type": "装机基础与医疗平台协同",
-        "thesis": "医院装机基础；产品平台覆盖和本地服务网络可能形成工作流黏性及交叉销售优势",
-        "replicationBarrier": "医疗设备验证周期；售后服务网络；多产品研发和医院使用习惯需要长期建设",
-        "monitoringSignals": [
-          "高端产品渗透率",
-          "海外收入质量",
-          "装机与续购",
-          "研发效率",
-          "毛利率"
-        ],
-        "invalidationSignals": [
-          "医院客户显著转向竞争者",
-          "高端突破停滞",
-          "价格竞争持续侵蚀毛利",
-          "海外合规受阻"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 0,
-          "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
-        }
-      },
-      "valuation": {
-        "very_optimistic": {
-          "discountRate": 0.08,
-          "valuePerShare": 195.01937631149656,
-          "marginOfSafety": 0.3050885117546447
-        },
-        "optimistic": {
-          "discountRate": 0.09,
-          "valuePerShare": 167.1873115124679,
-          "marginOfSafety": 0.118833644599263
-        },
-        "base": {
-          "discountRate": 0.1,
-          "valuePerShare": 146.77890283412756,
-          "marginOfSafety": -0.0177413984198115
-        },
-        "cautious": {
-          "discountRate": 0.11,
-          "valuePerShare": 131.17396381441563,
-          "marginOfSafety": -0.1221711583054565
-        },
-        "very_pessimistic": {
-          "discountRate": 0.12,
-          "valuePerShare": 118.85554804115588,
-          "marginOfSafety": -0.2046071870363657
-        }
-      },
-      "metrics": {
-        "股息率": "3.1%",
-        "所有者收益率": "6.3%",
-        "三年ROE": "32.5%",
-        "护城河代理分": "88.5"
-      }
-    },
-    {
-      "code": "300628.SZ",
-      "name": "亿联网络",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "通信",
-      "weight": 0.15,
-      "price": 36.71,
-      "dailyReturn": -0.0024456521739129045,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": 0.5348423944562393,
-        "excessKurtosis": 5.1783556734424625,
-        "skewLabel": "右尾机会型",
-        "kurtosisLabel": "高厚尾跳跃型",
-        "observations": 252
-      },
-      "moat": {
-        "type": "专业渠道与产品研发效率",
-        "thesis": "企业通信和协作终端的专业渠道；产品迭代与研发效率可能形成细分市场优势",
-        "replicationBarrier": "全球渠道关系；协议兼容；产品稳定性和企业客户认证需要时间积累",
-        "monitoringSignals": [
-          "渠道覆盖",
-          "新品收入",
-          "海外份额",
-          "研发投入产出",
-          "毛利率"
-        ],
-        "invalidationSignals": [
-          "渠道流失",
-          "平台厂商替代终端",
-          "新品连续失败",
-          "价格竞争显著加剧"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 1,
-          "highAlertCount": 0,
-          "latestAlertDate": "2026-04-22",
-          "latestAlertTitle": "2026-03-31 经营现金流同比-42.7%，达到复核阈值",
-          "latestAlertSource": "QUARTERLY_FINANCIAL"
-        }
-      },
-      "valuation": {
-        "very_optimistic": {
-          "discountRate": 0.08,
-          "valuePerShare": 40.25886760327161,
-          "marginOfSafety": 0.0966730483048654
-        },
-        "optimistic": {
-          "discountRate": 0.09,
-          "valuePerShare": 34.159735474457975,
-          "marginOfSafety": -0.0694705672988839
-        },
-        "base": {
-          "discountRate": 0.1,
-          "valuePerShare": 29.68742693512284,
-          "marginOfSafety": -0.1912986397405928
-        },
-        "cautious": {
-          "discountRate": 0.11,
-          "valuePerShare": 26.26775305786798,
-          "marginOfSafety": -0.2844523819703628
-        },
-        "very_pessimistic": {
-          "discountRate": 0.12,
-          "valuePerShare": 23.568289472924207,
-          "marginOfSafety": -0.3579872113068862
-        }
-      },
-      "metrics": {
-        "股息率": "4.9%",
-        "所有者收益率": "5.7%",
-        "三年ROE": "27.9%",
-        "护城河代理分": "70.3"
-      }
-    },
-    {
-      "code": "600941.SH",
-      "name": "中国移动",
-      "bucket": "FUTURE",
-      "state": "PROMOTED_CORE",
-      "theme": "十五五六网",
-      "industry": "通信",
-      "weight": 0.025,
-      "price": 93.4,
-      "dailyReturn": 0.0037614185921548415,
-      "reason": "上一交易日已公布仓位",
-      "distribution": {
-        "skewness": -0.04688538520832563,
-        "excessKurtosis": 2.405773641690077,
-        "skewLabel": "近对称分布",
-        "kurtosisLabel": "厚尾波动型",
-        "observations": 252
-      },
-      "moat": {
-        "type": "牌照网络与规模效应",
-        "thesis": "稀缺频谱和全国网络；客户规模及云网协同可能形成高固定成本行业的进入壁垒",
-        "replicationBarrier": "监管牌照；频谱资源；网络资本投入和客户覆盖无法由新进入者快速复制",
-        "monitoringSignals": [
-          "移动客户质量",
-          "ARPU",
-          "云业务现金回报",
-          "资本开支效率",
-          "自由现金流"
-        ],
-        "invalidationSignals": [
-          "监管改变回报机制",
-          "ARPU持续下降",
-          "云业务只增收不增利",
-          "资本开支长期失控"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 0,
-          "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
-        }
-      },
-      "valuation": {
-        "very_optimistic": {
-          "discountRate": 0.08,
-          "valuePerShare": 154.96373472568675,
-          "marginOfSafety": 0.6591406287546759
-        },
-        "optimistic": {
-          "discountRate": 0.09,
-          "valuePerShare": 131.918664509414,
-          "marginOfSafety": 0.4124054015997214
-        },
-        "base": {
-          "discountRate": 0.1,
-          "valuePerShare": 115.02041371879504,
-          "marginOfSafety": 0.2314819455973773
-        },
-        "cautious": {
-          "discountRate": 0.11,
-          "valuePerShare": 102.09945661314516,
-          "marginOfSafety": 0.0931419337595842
-        },
-        "very_pessimistic": {
-          "discountRate": 0.12,
-          "valuePerShare": 91.89975499208823,
-          "marginOfSafety": -0.0160625803844941
-        }
-      },
-      "metrics": {
-        "未来逻辑分": "88.8",
-        "DCF安全边际": "23.1%",
-        "当前状态": "BOTTOM_HOLD_NO_ADD"
-      }
-    },
     {
       "code": "000786.SZ",
       "name": "北新建材",
@@ -517,38 +99,39 @@
       }
     },
     {
-      "code": "600519.SH",
-      "name": "贵州茅台",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "食品饮料",
-      "weight": 0.0702702702702702,
-      "price": 1253.0,
-      "dailyReturn": -0.004757782031628577,
+      "code": "000400.SZ",
+      "name": "许继电气",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "电力系统扩容",
+      "industry": "电力设备",
+      "weight": 0.025,
+      "price": 20.82,
+      "dailyReturn": 0.043609022556390986,
       "reason": "上一交易日已公布仓位",
       "distribution": {
-        "skewness": 1.352437730497741,
-        "excessKurtosis": 7.772565724840469,
-        "skewLabel": "右尾机会型",
-        "kurtosisLabel": "高厚尾跳跃型",
+        "skewness": 0.05417687863699994,
+        "excessKurtosis": 2.8695059069612343,
+        "skewLabel": "近对称分布",
+        "kurtosisLabel": "厚尾波动型",
         "observations": 252
       },
       "moat": {
-        "type": "产地稀缺与品牌心智",
-        "thesis": "特定产区和酿造生态形成难复制的供给约束；长期品牌认同和社交消费心理支持定价权",
-        "replicationBarrier": "产区生态与长期基酒时间无法快速复制；消费者心智和高端社交共识需要数十年积累",
+        "type": "电网认证与工程经验",
+        "thesis": "电网核心设备的资质认证；长期工程记录和系统适配经验可能形成项目准入壁垒",
+        "replicationBarrier": "安全可靠性验证；电网客户认证；工程交付经验和存量系统适配周期较长",
         "monitoringSignals": [
-          "直营与批价稳定",
-          "高端市场份额",
-          "吨价与毛利率",
-          "年轻消费群体认知"
+          "电网相关收入",
+          "中标份额",
+          "合同负债",
+          "毛利率",
+          "经营现金流"
         ],
         "invalidationSignals": [
-          "批价长期倒挂",
-          "品牌溢价持续收窄",
-          "核心消费群体迁移",
-          "渠道库存连续恶化"
+          "电网收入持续下降",
+          "中标份额丢失",
+          "应收和现金流恶化",
+          "技术路线被替代"
         ],
         "status": "DRAFT",
         "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
@@ -558,45 +141,44 @@
         "cautionEvidenceCount": 0,
         "contradictoryEvidenceCount": 0,
         "radar": {
-          "pendingAlertCount": 0,
-          "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
+          "pendingAlertCount": 2,
+          "highAlertCount": 2,
+          "latestAlertDate": "2026-04-11",
+          "latestAlertTitle": "2026-03-31 归母净利润同比-46.5%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
         }
       },
       "valuation": {
         "very_optimistic": {
           "discountRate": 0.08,
-          "valuePerShare": 1292.4799429784314,
-          "marginOfSafety": 0.0315083343802324
+          "valuePerShare": 27.52885499729675,
+          "marginOfSafety": 0.3222312678816885
         },
         "optimistic": {
           "discountRate": 0.09,
-          "valuePerShare": 1099.5940277740078,
-          "marginOfSafety": -0.1224309435163545
+          "valuePerShare": 24.364152108589277,
+          "marginOfSafety": 0.1702282472905512
         },
         "base": {
           "discountRate": 0.1,
-          "valuePerShare": 958.1566384098896,
-          "marginOfSafety": -0.2353099454031207
+          "valuePerShare": 22.04357149897095,
+          "marginOfSafety": 0.0587690441388546
         },
         "cautious": {
           "discountRate": 0.11,
-          "valuePerShare": 850.0089689408458,
-          "marginOfSafety": -0.3216209346042731
+          "valuePerShare": 20.269179410191754,
+          "marginOfSafety": -0.0264563203558235
         },
         "very_pessimistic": {
           "discountRate": 0.12,
-          "valuePerShare": 764.6380517109912,
-          "marginOfSafety": -0.3897541486743885
+          "valuePerShare": 18.86848829138926,
+          "marginOfSafety": -0.0937325508458569
         }
       },
       "metrics": {
-        "股息率": "4.1%",
-        "所有者收益率": "5.2%",
-        "三年ROE": "34.7%",
-        "护城河代理分": "93.4"
+        "未来逻辑分": "82.5",
+        "DCF安全边际": "5.9%",
+        "当前状态": "BOTTOM_HOLD_NO_ADD"
       }
     },
     {
@@ -684,39 +266,39 @@
       }
     },
     {
-      "code": "000400.SZ",
-      "name": "许继电气",
+      "code": "600941.SH",
+      "name": "中国移动",
       "bucket": "FUTURE",
       "state": "OPTION_SEED",
-      "theme": "电力系统扩容",
-      "industry": "电力设备",
+      "theme": "十五五六网",
+      "industry": "通信",
       "weight": 0.025,
-      "price": 20.82,
-      "dailyReturn": 0.043609022556390986,
+      "price": 93.4,
+      "dailyReturn": 0.0037614185921548415,
       "reason": "上一交易日已公布仓位",
       "distribution": {
-        "skewness": 0.05417687863699994,
-        "excessKurtosis": 2.8695059069612343,
+        "skewness": -0.04688538520832563,
+        "excessKurtosis": 2.405773641690077,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
       },
       "moat": {
-        "type": "电网认证与工程经验",
-        "thesis": "电网核心设备的资质认证；长期工程记录和系统适配经验可能形成项目准入壁垒",
-        "replicationBarrier": "安全可靠性验证；电网客户认证；工程交付经验和存量系统适配周期较长",
+        "type": "牌照网络与规模效应",
+        "thesis": "稀缺频谱和全国网络；客户规模及云网协同可能形成高固定成本行业的进入壁垒",
+        "replicationBarrier": "监管牌照；频谱资源；网络资本投入和客户覆盖无法由新进入者快速复制",
         "monitoringSignals": [
-          "电网相关收入",
-          "中标份额",
-          "合同负债",
-          "毛利率",
-          "经营现金流"
+          "移动客户质量",
+          "ARPU",
+          "云业务现金回报",
+          "资本开支效率",
+          "自由现金流"
         ],
         "invalidationSignals": [
-          "电网收入持续下降",
-          "中标份额丢失",
-          "应收和现金流恶化",
-          "技术路线被替代"
+          "监管改变回报机制",
+          "ARPU持续下降",
+          "云业务只增收不增利",
+          "资本开支长期失控"
         ],
         "status": "DRAFT",
         "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
@@ -726,43 +308,461 @@
         "cautionEvidenceCount": 0,
         "contradictoryEvidenceCount": 0,
         "radar": {
-          "pendingAlertCount": 2,
-          "highAlertCount": 2,
-          "latestAlertDate": "2026-04-11",
-          "latestAlertTitle": "2026-03-31 归母净利润同比-46.5%，达到复核阈值",
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 154.96373472568675,
+          "marginOfSafety": 0.6591406287546759
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 131.918664509414,
+          "marginOfSafety": 0.4124054015997214
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 115.02041371879504,
+          "marginOfSafety": 0.2314819455973773
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 102.09945661314516,
+          "marginOfSafety": 0.0931419337595842
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 91.89975499208823,
+          "marginOfSafety": -0.0160625803844941
+        }
+      },
+      "metrics": {
+        "未来逻辑分": "88.8",
+        "DCF安全边际": "23.1%",
+        "当前状态": "BOTTOM_HOLD_NO_ADD"
+      }
+    },
+    {
+      "code": "002032.SZ",
+      "name": "苏泊尔",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "家用电器",
+      "weight": 0.0648648648648648,
+      "price": 43.85,
+      "dailyReturn": -0.009263443289652007,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": -2.5030078075480615,
+        "excessKurtosis": 21.208981723759738,
+        "skewLabel": "左尾风险型",
+        "kurtosisLabel": "高厚尾跳跃型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "品牌渠道与产品体系",
+        "thesis": "炊具和小家电品牌认知；渠道覆盖及与SEB协同的产品体系可能支持稳定份额",
+        "replicationBarrier": "品牌信任；线下线上渠道；供应链规模和产品开发体系需要持续投入",
+        "monitoringSignals": [
+          "品类份额",
+          "新品成功率",
+          "渠道效率",
+          "关联交易质量",
+          "毛利率"
+        ],
+        "invalidationSignals": [
+          "品牌老化",
+          "核心品类份额下降",
+          "新品长期乏力",
+          "渠道费用侵蚀利润"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 1,
+          "highAlertCount": 0,
+          "latestAlertDate": "2026-04-24",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
           "latestAlertSource": "QUARTERLY_FINANCIAL"
         }
       },
       "valuation": {
         "very_optimistic": {
           "discountRate": 0.08,
-          "valuePerShare": 27.52885499729675,
-          "marginOfSafety": 0.3222312678816885
+          "valuePerShare": 54.83135238324875,
+          "marginOfSafety": 0.2504299289224343
         },
         "optimistic": {
           "discountRate": 0.09,
-          "valuePerShare": 24.364152108589277,
-          "marginOfSafety": 0.1702282472905512
+          "valuePerShare": 46.74526930153332,
+          "marginOfSafety": 0.0660266659414667
         },
         "base": {
           "discountRate": 0.1,
-          "valuePerShare": 22.04357149897095,
-          "marginOfSafety": 0.0587690441388546
+          "valuePerShare": 40.81598991352249,
+          "marginOfSafety": -0.0691906519151085
         },
         "cautious": {
           "discountRate": 0.11,
-          "valuePerShare": 20.269179410191754,
-          "marginOfSafety": -0.0264563203558235
+          "valuePerShare": 36.2822683118504,
+          "marginOfSafety": -0.1725822505849396
         },
         "very_pessimistic": {
           "discountRate": 0.12,
-          "valuePerShare": 18.86848829138926,
-          "marginOfSafety": -0.0937325508458569
+          "valuePerShare": 32.70338424065606,
+          "marginOfSafety": -0.2541987630409109
         }
       },
       "metrics": {
-        "未来逻辑分": "82.5",
-        "DCF安全边际": "5.9%",
+        "股息率": "6.4%",
+        "所有者收益率": "6.3%",
+        "三年ROE": "34.4%",
+        "护城河代理分": "70.5"
+      }
+    },
+    {
+      "code": "600519.SH",
+      "name": "贵州茅台",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "食品饮料",
+      "weight": 0.0702702702702702,
+      "price": 1253.0,
+      "dailyReturn": -0.004757782031628577,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": 1.352437730497741,
+        "excessKurtosis": 7.772565724840469,
+        "skewLabel": "右尾机会型",
+        "kurtosisLabel": "高厚尾跳跃型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "产地稀缺与品牌心智",
+        "thesis": "特定产区和酿造生态形成难复制的供给约束；长期品牌认同和社交消费心理支持定价权",
+        "replicationBarrier": "产区生态与长期基酒时间无法快速复制；消费者心智和高端社交共识需要数十年积累",
+        "monitoringSignals": [
+          "直营与批价稳定",
+          "高端市场份额",
+          "吨价与毛利率",
+          "年轻消费群体认知"
+        ],
+        "invalidationSignals": [
+          "批价长期倒挂",
+          "品牌溢价持续收窄",
+          "核心消费群体迁移",
+          "渠道库存连续恶化"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 1292.4799429784314,
+          "marginOfSafety": 0.0315083343802324
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 1099.5940277740078,
+          "marginOfSafety": -0.1224309435163545
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 958.1566384098896,
+          "marginOfSafety": -0.2353099454031207
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 850.0089689408458,
+          "marginOfSafety": -0.3216209346042731
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 764.6380517109912,
+          "marginOfSafety": -0.3897541486743885
+        }
+      },
+      "metrics": {
+        "股息率": "4.1%",
+        "所有者收益率": "5.2%",
+        "三年ROE": "34.7%",
+        "护城河代理分": "93.4"
+      }
+    },
+    {
+      "code": "300628.SZ",
+      "name": "亿联网络",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "通信",
+      "weight": 0.15,
+      "price": 36.71,
+      "dailyReturn": -0.0024456521739129045,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": 0.5348423944562393,
+        "excessKurtosis": 5.1783556734424625,
+        "skewLabel": "右尾机会型",
+        "kurtosisLabel": "高厚尾跳跃型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "专业渠道与产品研发效率",
+        "thesis": "企业通信和协作终端的专业渠道；产品迭代与研发效率可能形成细分市场优势",
+        "replicationBarrier": "全球渠道关系；协议兼容；产品稳定性和企业客户认证需要时间积累",
+        "monitoringSignals": [
+          "渠道覆盖",
+          "新品收入",
+          "海外份额",
+          "研发投入产出",
+          "毛利率"
+        ],
+        "invalidationSignals": [
+          "渠道流失",
+          "平台厂商替代终端",
+          "新品连续失败",
+          "价格竞争显著加剧"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 1,
+          "highAlertCount": 0,
+          "latestAlertDate": "2026-04-22",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-42.7%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
+        }
+      },
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 40.25886760327161,
+          "marginOfSafety": 0.0966730483048654
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 34.159735474457975,
+          "marginOfSafety": -0.0694705672988839
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 29.68742693512284,
+          "marginOfSafety": -0.1912986397405928
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 26.26775305786798,
+          "marginOfSafety": -0.2844523819703628
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 23.568289472924207,
+          "marginOfSafety": -0.3579872113068862
+        }
+      },
+      "metrics": {
+        "股息率": "4.9%",
+        "所有者收益率": "5.7%",
+        "三年ROE": "27.9%",
+        "护城河代理分": "70.3"
+      }
+    },
+    {
+      "code": "300760.SZ",
+      "name": "迈瑞医疗",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "医药生物",
+      "weight": 0.15,
+      "price": 149.43,
+      "dailyReturn": -0.005854567227729368,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": 0.5258654997395126,
+        "excessKurtosis": 0.3895095819416645,
+        "skewLabel": "右尾机会型",
+        "kurtosisLabel": "常态尾部",
+        "observations": 252
+      },
+      "moat": {
+        "type": "装机基础与医疗平台协同",
+        "thesis": "医院装机基础；产品平台覆盖和本地服务网络可能形成工作流黏性及交叉销售优势",
+        "replicationBarrier": "医疗设备验证周期；售后服务网络；多产品研发和医院使用习惯需要长期建设",
+        "monitoringSignals": [
+          "高端产品渗透率",
+          "海外收入质量",
+          "装机与续购",
+          "研发效率",
+          "毛利率"
+        ],
+        "invalidationSignals": [
+          "医院客户显著转向竞争者",
+          "高端突破停滞",
+          "价格竞争持续侵蚀毛利",
+          "海外合规受阻"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 195.01937631149656,
+          "marginOfSafety": 0.3050885117546447
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 167.1873115124679,
+          "marginOfSafety": 0.118833644599263
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 146.77890283412756,
+          "marginOfSafety": -0.0177413984198115
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 131.17396381441563,
+          "marginOfSafety": -0.1221711583054565
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 118.85554804115588,
+          "marginOfSafety": -0.2046071870363657
+        }
+      },
+      "metrics": {
+        "股息率": "3.1%",
+        "所有者收益率": "6.3%",
+        "三年ROE": "32.5%",
+        "护城河代理分": "88.5"
+      }
+    },
+    {
+      "code": "600312.SH",
+      "name": "平高电气",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "电力系统扩容",
+      "industry": "电力设备",
+      "weight": 0.025,
+      "price": 18.15,
+      "dailyReturn": 0.04671280276816603,
+      "reason": "上一交易日已公布仓位",
+      "distribution": {
+        "skewness": 0.37225152078824036,
+        "excessKurtosis": 1.5522931673033504,
+        "skewLabel": "近对称分布",
+        "kurtosisLabel": "厚尾波动型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "高压设备认证与工程可靠性",
+        "thesis": "高压开关设备认证；运行可靠性记录和特高压工程经验可能构成项目准入优势",
+        "replicationBarrier": "高压设备长期运行验证；电网客户认证；大型工程交付记录难以快速建立",
+        "monitoringSignals": [
+          "高压业务收入",
+          "中标与合同负债",
+          "毛利率",
+          "经营现金流",
+          "应收周转"
+        ],
+        "invalidationSignals": [
+          "订单未兑现为现金",
+          "经营现金流继续下滑",
+          "中标份额下降",
+          "替代技术改变需求"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 22.12880152055544,
+          "marginOfSafety": 0.2192177146311538
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 19.524559646759982,
+          "marginOfSafety": 0.0757333138710736
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 17.614948094708716,
+          "marginOfSafety": -0.0294794438177015
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 16.154796434147162,
+          "marginOfSafety": -0.1099285711213684
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 15.00216423070873,
+          "marginOfSafety": -0.1734344776469017
+        }
+      },
+      "metrics": {
+        "未来逻辑分": "79.5",
+        "DCF安全边际": "-2.9%",
         "当前状态": "BOTTOM_HOLD_NO_ADD"
       }
     }
@@ -1275,13 +1275,13 @@
       "code": "600941.SH",
       "name": "中国移动",
       "bucket": "FUTURE",
-      "state": "PROMOTED_CORE",
+      "state": "OPTION_SEED",
       "theme": "十五五六网",
       "industry": "通信",
-      "weight": 0.075,
+      "weight": 0.025,
       "price": 93.4,
       "dailyReturn": 0.0037614185921548415,
-      "reason": "人工研究确认：牌照、频谱、全国网络、用户规模与稳定现金流构成深护城河；2025年营运收入超过万亿元，三类未来证据已按公司一手披露人工确认。该晋级覆盖当前等待趋势条件，后续仍复核算力利润池与资本回报。",
+      "reason": "national policy + thesis + value + cash earnings + auditable seed evidence + bottom/trend position; promotion gates not complete",
       "distribution": {
         "skewness": -0.04688538520832563,
         "excessKurtosis": 2.405773641690077,
@@ -1535,15 +1535,6 @@
         "newWeight": 0.1,
         "changeType": "减仓",
         "reason": "人工研究决定：房地产下行暴露尚未充分缓解，主动将北新建材由15%降至10%，释放的5%保留为现金；这不是护城河失效或自动清仓。",
-        "effect": "仅作为下一交易日目标信号；不会回溯修改今日收益，也不会自动下单。"
-      },
-      {
-        "code": "600941.SH",
-        "name": "中国移动",
-        "oldWeight": 0.025,
-        "newWeight": 0.075,
-        "changeType": "增仓",
-        "reason": "人工研究确认：牌照、频谱、全国网络、用户规模与稳定现金流构成深护城河；2025年营运收入超过万亿元，三类未来证据已按公司一手披露人工确认。该晋级覆盖当前等待趋势条件，后续仍复核算力利润池与资本回报。",
         "effect": "仅作为下一交易日目标信号；不会回溯修改今日收益，也不会自动下单。"
       }
     ],
