@@ -346,7 +346,7 @@ function PerformanceChart({ history, benchmarkHistory = [], range, language }: {
         <text className="axis-label axis-end" x={width - right} y={height - 18}>{points.at(-1)?.date ?? "—"}</text>
       </svg>
       {active && (
-        <div className="chart-tooltip" style={{ left: `clamp(52px, ${active.x / width * 100}%, calc(100% - 52px))`, top: `${active.y / height * 100}%` }}>
+        <div className="chart-tooltip" aria-live="polite">
           <span>{active.point.date}</span><strong>{signedPct(active.value)}</strong><small>NAV {(active.point.nav / personalBase).toFixed(4)}{showBenchmark && benchmarkByDate.get(active.point.date) ? ` · ${language === "zh" ? "大盘" : "Market"} ${signedPct(benchmarkByDate.get(active.point.date)!.nav / benchmarkBase - 1)}` : ""}</small>
         </div>
       )}
