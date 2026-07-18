@@ -72,6 +72,8 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .holding-list .holding-row { min-height:43px; }
 .holding-row { width:100%; padding:0; background:transparent; color:inherit; text-align:left; cursor:pointer; transition:background-color .18s ease; }
 .holding-row:hover { background:rgba(255,255,255,.28); }
+.holding-row.human-review-card-gray { background:rgba(154,151,143,.16); border:1px solid rgba(126,123,115,.46); border-radius:8px; }
+.holding-row.human-review-card-gray:hover { background:rgba(154,151,143,.25); }
 .holding-list-tools { display:block!important; min-height:0!important; border-bottom:0!important; }
 .holding-list-tools .holding-list-head { display:flex; justify-content:space-between; align-items:center; }
 .holdings-open-button { margin:3px 0 4px; padding:0; border:0; background:transparent; color:var(--terra); font-size:11px; cursor:pointer; text-decoration:underline; text-underline-offset:3px; }
@@ -134,6 +136,8 @@ footer { display:flex; justify-content:space-between; gap:20px; padding-top:8px;
 .holding-dialog-row,.holding-dialog-cash { display:flex; justify-content:space-between; align-items:center; gap:14px; min-height:58px; padding:9px 11px; border:1px solid rgba(183,199,178,.7); border-radius:10px; background:rgba(255,255,255,.38); color:inherit; text-align:left; }
 .holding-dialog-row { width:100%; cursor:pointer; transition:background-color .18s ease,transform .18s ease; }
 .holding-dialog-row:hover { background:rgba(225,233,222,.48); transform:translateX(2px); }
+.holding-dialog-row.human-review-card-gray { background:rgba(154,151,143,.19); border-color:rgba(126,123,115,.52); }
+.holding-dialog-row.human-review-card-gray:hover { background:rgba(154,151,143,.29); }
 .holding-dialog-stock { min-width:0; display:grid; grid-template-columns:10px minmax(0,1fr); align-items:center; gap:8px; }
 .holding-dialog-stock span { min-width:0; }
 .holding-dialog-stock b { display:block; font-family:"Songti SC",serif; font-size:19px; font-weight:600; white-space:nowrap; }
