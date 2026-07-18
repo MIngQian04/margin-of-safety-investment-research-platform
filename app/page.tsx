@@ -19,6 +19,10 @@ type Holding = {
     currentPrice: number;
     baseDcfValuePerShare: number | null;
     baseDcfMargin: number | null;
+    optimisticDcfValuePerShare?: number | null;
+    institutionReferencePrice?: number | null;
+    institutionReferenceAboveOptimistic?: boolean;
+    valuationRule?: "HOLD" | "REVIEW";
     undervaluationReasons: string[];
     undervaluationReasonsEn?: string[];
     repairConditions: string[];
@@ -665,6 +669,9 @@ export default function Home() {
               {!selectedHolding.humanMoatConfirmed && <span className="human-review-alert" aria-hidden="true" title={t("待人工判断", "Human review pending")}>!</span>}
               <button type="button" className={`human-review-status ${selectedHolding.humanMoatConfirmed ? "confirmed" : "gray"}`} onClick={() => setShowValuationResearch((current) => !current)} aria-expanded={showValuationResearch}><span>{t("人工护城河判断", "Human moat judgment")}</span><strong>{humanReviewLabel(selectedHolding)}</strong><small>{selectedHolding.humanMoatConfirmed ? t("已确认符合AI研究，可按正常持仓收益观察。点击查看估值复核。", "Confirmed as consistent with the AI thesis; normal holding return applies. Click for valuation review.") : t("尚未判断是否符合AI研究；点击查看低估原因、修复条件和机构估值参考。", "Not yet judged against the AI thesis; click to review undervaluation reasons, repair conditions and institution references.")}</small></button>
             </div>
+            {!selectedHolding.humanMoatConfirmed && selectedHolding.valuationRepair?.institutionReferenceAboveOptimistic && (
+              <div className="valuation-rule-hold" role="status"><span>{t("估值规则动作", "Valuation rule")}</span><strong>{t("自动持有", "Auto-hold")}</strong><small>{t(`最低机构参考价 ${money(selectedHolding.valuationRepair.institutionReferencePrice ?? 0)} 高于乐观DCF ${money(selectedHolding.valuationRepair.optimisticDcfValuePerShare ?? 0)}；允许持有，但护城河仍待人工确认。`, `The lowest linked institution reference ${money(selectedHolding.valuationRepair.institutionReferencePrice ?? 0)} is above the optimistic DCF ${money(selectedHolding.valuationRepair.optimisticDcfValuePerShare ?? 0)}; auto-hold is allowed, but the moat remains unconfirmed.`)}</small></div>
+            )}
             {showValuationResearch && selectedHolding.valuationRepair && (
               <section className="valuation-repair" aria-label={t("估值修复辅助研究", "Valuation repair research aid")}>
                 <div className="valuation-repair-head"><div><p className="kicker">AI VALUATION REVIEW</p><h3>{t("低估原因与估值修复条件", "Why it is discounted and what could repair value")}</h3></div><small>{selectedHolding.valuationRepair.asOf || data.asOf} · {language === "zh" ? selectedHolding.valuationRepair.generatedBy : selectedHolding.valuationRepair.generatedByEn ?? selectedHolding.valuationRepair.generatedBy}</small></div>
