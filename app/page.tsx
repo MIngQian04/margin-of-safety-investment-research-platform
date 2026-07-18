@@ -158,6 +158,7 @@ const personalStartKey = "moat-value-personal-start-date-v1";
 const languageKey = "moat-value-language-v1";
 const executionLedgerKey = "moat-value-execution-ledger-v1";
 const allocationChangeAckKey = "moat-value-allocation-change-ack-v1";
+const helpSeenKey = "moat-value-help-seen-v1";
 const companyEnglish: Record<string, string> = {
   "600519.SH": "Kweichow Moutai", "300760.SZ": "Mindray", "300628.SZ": "Yealink",
   "000786.SZ": "BNBM", "002032.SZ": "Supor", "603195.SH": "Bull Group", "000651.SZ": "Gree Electric",
@@ -339,6 +340,7 @@ export default function Home() {
   const [language, setLanguage] = useState<Language>("zh");
   const [showExecutionLedger, setShowExecutionLedger] = useState(false);
   const [showAllocationChanges, setShowAllocationChanges] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
   const [allocationBoard, setAllocationBoard] = useState(0);
   const allocationCarouselRef = useRef<HTMLDivElement>(null);
   const [accountCapital, setAccountCapital] = useState(100000);
@@ -385,7 +387,7 @@ export default function Home() {
   }, [language]);
 
   useEffect(() => {
-    if (!confirmRefresh && !showStartSettings && !selectedHolding && !showHoldingsDialog && !showExecutionLedger && !showAllocationChanges && !showValuationResearch) return;
+    if (!confirmRefresh && !showStartSettings && !selectedHolding && !showHoldingsDialog && !showExecutionLedger && !showAllocationChanges && !showValuationResearch && !showHelp) return;
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setConfirmRefresh(false);
@@ -395,11 +397,12 @@ export default function Home() {
         setShowExecutionLedger(false);
         setShowAllocationChanges(false);
         setShowValuationResearch(false);
+        setShowHelp(false);
       }
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [confirmRefresh, showStartSettings, selectedHolding, showHoldingsDialog, showExecutionLedger, showAllocationChanges, showValuationResearch]);
+  }, [confirmRefresh, showStartSettings, selectedHolding, showHoldingsDialog, showExecutionLedger, showAllocationChanges, showValuationResearch, showHelp]);
 
   useEffect(() => {
     if (!data?.navHistory.length) return;
@@ -412,9 +415,11 @@ export default function Home() {
   }, [data]);
 
   useEffect(() => {
-    if (!data?.allocationChange?.changed) return;
+    if (!data) return;
     const key = `${data.allocationChange.activeAsOf}:${data.allocationChange.nextAsOf}`;
-    if (window.localStorage.getItem(allocationChangeAckKey) !== key) setShowAllocationChanges(true);
+    const needsAllocationNotice = data.allocationChange.changed && window.localStorage.getItem(allocationChangeAckKey) !== key;
+    if (needsAllocationNotice) setShowAllocationChanges(true);
+    else if (window.localStorage.getItem(helpSeenKey) !== "1") setShowHelp(true);
   }, [data]);
 
   useEffect(() => {
@@ -464,6 +469,11 @@ export default function Home() {
   const acknowledgeAllocationChange = () => {
     window.localStorage.setItem(allocationChangeAckKey, `${data.allocationChange.activeAsOf}:${data.allocationChange.nextAsOf}`);
     setShowAllocationChanges(false);
+    if (window.localStorage.getItem(helpSeenKey) !== "1") setShowHelp(true);
+  };
+  const closeHelp = () => {
+    window.localStorage.setItem(helpSeenKey, "1");
+    setShowHelp(false);
   };
   const jumpAllocationBoard = (index: number) => {
     const carousel = allocationCarouselRef.current;
@@ -493,6 +503,7 @@ export default function Home() {
             </button>
             {data.allocationChange.changed && <button className="text-button" onClick={() => setShowAllocationChanges(true)}>{t("今日调仓", "Allocation change")}</button>}
             <button className="text-button" onClick={() => setShowExecutionLedger(true)}>{t("实际成交", "My Fills")}</button>
+            <button className="help-button" onClick={() => setShowHelp(true)} aria-label={t("打开使用说明", "Open user guide")}>? <span>{t("使用说明", "Guide")}</span></button>
             <button className="language-toggle" onClick={() => setLanguage(language === "zh" ? "en" : "zh")} aria-label={t("切换到英文", "Switch to Chinese")}>{language === "zh" ? "EN" : "中文"}</button>
             <button className="text-button" onClick={() => setConfirmRefresh(true)} disabled={refreshing}>{refreshing ? t("读取中", "Loading") : t("刷新", "Refresh")}</button>
           </div>
@@ -563,6 +574,29 @@ export default function Home() {
           <span>{t("研究用途，不构成投资建议", "Research only, not investment advice")}</span>
         </footer>
       </section>
+
+      {showHelp && (
+        <div className="confirm-backdrop" role="presentation">
+          <section className="help-dialog" role="dialog" aria-modal="true" aria-labelledby="help-dialog-title" aria-describedby="help-dialog-description">
+            <div className="moat-dialog-head">
+              <div><p className="kicker">MOAT VALUE STRATEGY · USER GUIDE</p><h2 id="help-dialog-title">{t("网站使用说明", "How to use this site")}</h2></div>
+              <button className="moat-close" aria-label={t("关闭使用说明", "Close user guide")} onClick={closeHelp}>×</button>
+            </div>
+            <p id="help-dialog-description" className="help-lead">{t("这里把模型信号、当日收益、明日执行和你的真实成交分开。先看模型，再决定是否需要人工调整；网站不会替你下单。", "This guide separates model signals, today's return, next-session execution and your actual fills. Read the model first, then decide whether to fine-tune it; the site never places orders for you.")}</p>
+            <div className="help-grid">
+              <article><p className="kicker">01 · START HERE</p><h3>{t("先看顶部收益", "Start with the returns")}</h3><ul><li>{t("累计：模型从公开净值历史计算的累计收益曲线。", "Cumulative: model return from the public NAV history.")}</li><li>{t("今日收益：严格使用上一交易日已经生效的仓位。", "Today's return: strictly uses the holdings active in the prior session.")}</li><li>{t("个人累计：只根据当前浏览器设置的起始日显示。", "Personal return: only reflects the start date saved in this browser.")}</li></ul></article>
+              <article><p className="kicker">02 · TWO BOARDS</p><h3>{t("当日与明日不是一回事", "Today's board vs next board")}</h3><ul><li>{t("当日收益仓位：用于解释已经发生的收益。", "Today's return basis: explains the return that already happened.")}</li><li>{t("明日执行：收盘后发布的 T+1 目标，参考收盘价不是成交价。", "Next execution: the post-close T+1 target; the reference close is not a fill.")}</li><li>{t("明日目标要到下一交易日开盘后才生效。", "The next target becomes effective only after the next session opens.")}</li></ul></article>
+              <article><p className="kicker">03 · PORTFOLIO LOGIC</p><h3>{t("模型为什么这样配", "Why the model allocates this way")}</h3><ul><li>{t("锚仓：当前现金流、估值和行业位置较稳定的候选。", "Anchors: candidates with steadier current cash economics, valuation and industry position.")}</li><li>{t("种子仓：未来产业的小额期权仓，按证据里程碑逐级调整。", "Seeds: small future-industry options adjusted through evidence milestones.")}</li><li>{t("现金：没有足够确定性时保留预算，不为满仓降低标准。", "Cash: budget held back when certainty is insufficient; standards are not lowered to force full investment.")}</li></ul></article>
+              <article><p className="kicker">04 · HUMAN REVIEW</p><h3>{t("人工判断看什么", "What human review is for")}</h3><ul><li>{t("人工未确认不阻止持仓，也不从模型收益中剔除。", "An unreviewed moat does not block a holding or remove it from model returns.")}</li><li>{t("人工重点判断行业未来、利润改善概率和风险是否被市场提前定价。", "Human judgment focuses on industry outlook, probability of profit improvement and whether risks are already priced in.")}</li><li>{t("点击个股可看护城河、低估原因、修复条件、预期转恶因素和机构参考。", "Click a stock to see its moat, discount reasons, repair conditions, downside outlook and public references.")}</li></ul></article>
+              <article><p className="kicker">05 · MY FILLS</p><h3>{t("实际成交单独记录", "Record your fills separately")}</h3><ul><li>{t("模型开盘代理只是可复现基准，不保证订单成交。", "The model open proxy is a reproducible benchmark, not a guaranteed fill.")}</li><li>{t("填写实际均价、数量和手续费后，才计算实际权重和滑点。", "Actual weight and slippage are calculated only after entering average price, quantity and fees.")}</li><li>{t("未成交或部分成交不会改写公共模型净值。", "Unfilled or partial orders never rewrite the public model NAV.")}</li></ul></article>
+              <article><p className="kicker">06 · ALERTS & LIMITS</p><h3>{t("预警不等于自动交易", "Alerts are not automatic trades")}</h3><ul><li>{t("调仓弹窗解释变化原因，但目标仓位只从下一交易日生效。", "The allocation popup explains changes, but targets take effect only on the next session.")}</li><li>{t("护城河雷达命中只生成待复核；接口不可用也不代表没有风险。", "Radar hits create review items; an unavailable interface is not a clean bill of health.")}</li><li>{t("网站用于研究和记录，不连接券商、不自动下单。", "This site is for research and records; it does not connect to a broker or place orders.")}</li></ul></article>
+            </div>
+            <div className="help-flow"><strong>{t("推荐使用顺序", "Recommended order")}</strong><span>{t("① 看累计和今日收益 → ② 左右滑动比较当日/明日 → ③ 点个股看护城河 → ④ 打开实际成交填写账户数据 → ⑤ 人工决定是否微调仓位", "① Check cumulative and today's return → ② swipe between today's and next boards → ③ open a stock's moat file → ④ enter your account fills → ⑤ decide whether to fine-tune weights")}</span></div>
+            <p className="help-disclaimer">{t("所有内容均为研究辅助，不构成投资建议；模型价格、机构目标价和开盘代理都不能替代你的实际成交记录。", "Research aid only, not investment advice; model prices, institution references and open proxies do not replace your actual fill records.")}</p>
+            <button className="dialog-button primary help-close" onClick={closeHelp}>{t("我知道了，开始查看组合", "Got it — view the portfolio")}</button>
+          </section>
+        </div>
+      )}
 
       {confirmRefresh && (
         <div className="confirm-backdrop" role="presentation">

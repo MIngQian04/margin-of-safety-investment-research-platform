@@ -59,6 +59,10 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /Prior-session holdings/);
   assert.match(page, /CUMULATIVE/);
   assert.match(page, /查看模型累计收益曲线/);
+  assert.match(page, /moat-value-help-seen-v1/);
+  assert.match(page, /网站使用说明/);
+  assert.match(page, /模型信号、当日收益、明日执行和你的真实成交分开/);
+  assert.match(page, /推荐使用顺序/);
   assert.match(page, /不保证你的订单能成交/);
   assert.match(page, /待补录成交价/);
   assert.match(page, /capitalFloorForHoldings/);
@@ -131,6 +135,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /\.moat-dialog/);
   assert.match(css, /\.moat-radar-alert/);
   assert.match(css, /\.language-toggle/);
+  assert.match(css, /\.help-dialog/);
+  assert.match(css, /\.help-grid/);
+  assert.match(css, /\.help-button/);
   assert.match(css, /\.holding-row:hover/);
   assert.match(css, /\.holdings-dialog/);
   assert.ok(background.byteLength > 100_000);
