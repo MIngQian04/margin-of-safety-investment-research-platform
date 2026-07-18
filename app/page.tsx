@@ -62,7 +62,7 @@ type PortfolioData = {
   activeAsOf: string;
   distributionAsOf: string;
   returnDate: string;
-  summary: { anchorWeight: number; futureWeight: number; cashWeight: number };
+  summary: { anchorWeight: number; futureWeight: number; cashWeight: number; activeCashWeight: number };
   moatRadar: {
     asOf: string;
     checkedAt: string;
@@ -529,7 +529,7 @@ export default function Home() {
                   <div className="holding-values"><em>{money(holding.price)}</em><em className={holding.dailyReturn >= 0 ? "holding-up" : "holding-down"}>{signedPct(holding.dailyReturn)}</em><strong>{pct(holding.weight)}</strong></div>
                 </button>
               ))}
-              <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>{t("现金", "Cash")}</b></span></span><div className="holding-values"><em>—</em><em>0</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
+              <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>{t("现金", "Cash")}</b></span></span><div className="holding-values"><em>—</em><em>0</em><strong>{pct(data.summary.activeCashWeight)}</strong></div></div>
             </div></section>
 
             <section className="allocation-board allocation-card tomorrow-board"><div className="allocation-card-head"><div><p className="kicker">NEXT SESSION · {data.allocationChange.nextAsOf}</p><h2>{t("明日目标仓位", "Next-session Target")}</h2><small className="allocation-note">{t("下一交易日开盘后生效；参考收盘价不视作成交", "Effective after next-session open; reference close is not a fill")}</small></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("next")}>{t("查看持仓报告", "Open holdings report")}</button></div>
@@ -639,7 +639,7 @@ export default function Home() {
                   <span className="holding-dialog-values"><strong>{pct(holding.weight)}</strong><em>{t("查看护城河", "View moat")} →</em></span>
                 </button>
               ))}
-              <div className="holding-dialog-cash"><span><i className="cash-dot" /><b>{t("现金", "Cash")}</b></span><strong>{pct(data.summary.cashWeight)}</strong></div>
+              <div className="holding-dialog-cash"><span><i className="cash-dot" /><b>{t("现金", "Cash")}</b></span><strong>{pct(holdingsDialogBoard === "active" ? data.summary.activeCashWeight : data.summary.cashWeight)}</strong></div>
             </div>
           </section>
         </div>

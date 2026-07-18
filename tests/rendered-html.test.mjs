@@ -142,6 +142,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.nextHoldings.find((holding) => holding.code === "600941.SH")?.valuationRepair.institutionReferences.length >= 3);
   assert.equal(data.activeAsOf, "2026-07-16");
   assert.equal(data.distributionAsOf, data.activeAsOf);
+  assert.equal(data.summary.activeCashWeight, 0.27500000000000024);
+  assert.equal(data.summary.cashWeight, 0.3250000000000003);
   assert.equal(data.allocationChange.changed, true);
   assert.ok(data.allocationChange.marketContext.includes("没有使用宏观大环境择时信号"));
   assert.equal(data.allocationChange.changes.length, 1);
