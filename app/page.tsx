@@ -89,6 +89,7 @@ type PortfolioData = {
     totalCount: number;
     confirmedWeight: number;
     grayWeight: number;
+    modelDailyReturn: number;
     confirmedDailyReturn: number | null;
     grayDailyReturn: number | null;
     note: string;
@@ -453,7 +454,7 @@ export default function Home() {
   const displayCompany = (holding: Holding) => language === "zh" ? holding.name : companyEnglish[holding.code] ?? holding.name;
   const humanReviewLabel = (holding: Holding) => holding.humanMoatConfirmed
     ? t("人工已确认", "Human confirmed")
-    : t("灰色·待人工判断", "Gray · human review pending");
+    : t("待观察·未人工确认", "Monitoring · not reviewed");
   const updateExecution = (code: string, field: keyof ExecutionRecord, value: string) => {
     const number = Math.max(0, Number(value) || 0);
     setExecutionRecords((current) => ({ ...current, [code]: { quantity: 0, averagePrice: 0, fee: 0, modelOpenPrice: 0, ...current[code], [field]: number } }));
@@ -527,14 +528,14 @@ export default function Home() {
 
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
             <div className="allocation-switcher" role="tablist" aria-label={t("当日与明日仓位切换", "Active and next allocation boards")}><button role="tab" aria-selected={allocationBoard === 0} className={allocationBoard === 0 ? "is-active" : ""} onClick={() => jumpAllocationBoard(0)}>{t("当日收益", "Today's return")}<small>{data.returnDate}</small></button><button role="tab" aria-selected={allocationBoard === 1} className={allocationBoard === 1 ? "is-active" : ""} onClick={() => jumpAllocationBoard(1)}>{t("明日执行", "Next execution")}<small>{data.allocationChange.nextAsOf}</small></button></div>
-            <div className="human-review-summary" role="status"><span>{t("护城河人工判断", "Human moat review")} <b>{data.humanReview.confirmedCount}/{data.humanReview.totalCount}</b></span><span>{data.humanReview.grayWeight > 0 ? t(`灰色目标仓位 ${pct(data.humanReview.grayWeight)}`, `Gray target weight ${pct(data.humanReview.grayWeight)}`) : t("全部已确认", "All confirmed")}</span><strong>{data.humanReview.confirmedDailyReturn == null ? t("人工确认收益待复核", "Confirmed return pending review") : `${t("人工确认今日", "Confirmed today")} ${signedPct(data.humanReview.confirmedDailyReturn)}`}</strong></div>
+            <div className="human-review-summary" role="status"><span>{t("护城河人工判断", "Human moat review")} <b>{data.humanReview.confirmedCount}/{data.humanReview.totalCount}</b></span><span>{data.humanReview.grayWeight > 0 ? t(`待观察目标仓位 ${pct(data.humanReview.grayWeight)}`, `Monitoring target weight ${pct(data.humanReview.grayWeight)}`) : t("全部已确认", "All confirmed")}</span><strong>{`${t("模型今日收益", "Model today")} ${signedPct(data.humanReview.modelDailyReturn)}`}</strong></div>
             <div className="allocation-carousel" ref={allocationCarouselRef} onScroll={(event) => { const target = event.currentTarget; setAllocationBoard(Math.round(target.scrollLeft / Math.max(target.clientWidth - 24, 1))); }}>
             <section className="allocation-board allocation-card"><div className="allocation-card-head"><div><p className="kicker">RETURN {data.returnDate} · POSITION {data.activeAsOf}</p><h2 id="positions-heading">{t("当日收益仓位", "Today's Return Basis")}</h2><small className="allocation-note">{t("收益属于当日；仓位来自上一交易日已公布组合", "Today's return uses the prior session's published holdings")}</small></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("active")}>{t("查看持仓报告", "Open holdings report")}</button></div>
             <div className="holding-list" role="region" aria-label={t("当日生效仓位，可上下滚动", "Today's active holdings; scrollable")} tabIndex={0}>
               <div className="holding-list-tools"><div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values"><em>{t("价格", "Price")}</em><em>{t("今日↓", "Today↓")}</em><strong>{t("仓位", "Weight")}</strong></div></div></div>
               {rankedHoldings.map((holding) => (
-                <button className={`holding-row ${holding.humanMoatConfirmed ? "" : "human-review-card-gray"}`} key={holding.code} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的护城河动态档案`, `View ${companyEnglish[holding.code] ?? holding.name} moat file`)}>
-                  <span className="holding-stock"><i className={`${holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} ${holding.humanMoatConfirmed ? "" : "human-review-dot"}`} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span>
+                <button className="holding-row" key={holding.code} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的护城河动态档案`, `View ${companyEnglish[holding.code] ?? holding.name} moat file`)}>
+                  <span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span>
                   <div className="holding-values"><em>{money(holding.price)}</em><em className={holding.dailyReturn >= 0 ? "holding-up" : "holding-down"}>{signedPct(holding.dailyReturn)}</em><strong>{pct(holding.weight)}</strong></div>
                 </button>
               ))}
@@ -544,7 +545,7 @@ export default function Home() {
             <section className="allocation-board allocation-card tomorrow-board"><div className="allocation-card-head"><div><p className="kicker">NEXT SESSION · {data.allocationChange.nextAsOf}</p><h2>{t("明日目标仓位", "Next-session Target")}</h2><small className="allocation-note">{t("下一交易日开盘后生效；参考收盘价不视作成交", "Effective after next-session open; reference close is not a fill")}</small></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("next")}>{t("查看持仓报告", "Open holdings report")}</button></div>
             <div className="holding-list next-holding-list" role="region" aria-label={t("明日待执行仓位，可上下滚动", "Next-session target holdings; scrollable")} tabIndex={0}>
               <div className="holding-list-tools"><div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values next-values"><em>{t("参考收盘", "Ref close")}</em><strong>{t("目标仓位", "Target")}</strong></div></div></div>
-              {rankedNextHoldings.map((holding) => <button className={`holding-row ${holding.humanMoatConfirmed ? "" : "human-review-card-gray"}`} key={`next-${holding.code}`} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的明日目标仓位`, `View ${companyEnglish[holding.code] ?? holding.name} next-session target`)}><span className="holding-stock"><i className={`${holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} ${holding.humanMoatConfirmed ? "" : "human-review-dot"}`} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span><div className="holding-values next-values"><em>{money(holding.price)}</em><strong>{pct(holding.weight)}</strong></div></button>)}
+              {rankedNextHoldings.map((holding) => <button className="holding-row" key={`next-${holding.code}`} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的明日目标仓位`, `View ${companyEnglish[holding.code] ?? holding.name} next-session target`)}><span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span><div className="holding-values next-values"><em>{money(holding.price)}</em><strong>{pct(holding.weight)}</strong></div></button>)}
               <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>{t("现金", "Cash")}</b></span></span><div className="holding-values next-values"><em>—</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
             </div></section>
             </div>
@@ -643,8 +644,8 @@ export default function Home() {
             </div>
             <div className="holdings-dialog-list">
               {holdingsDialogItems.map((holding) => (
-                <button className={`holding-dialog-row ${holding.humanMoatConfirmed ? "" : "human-review-card-gray"}`} key={`dialog-${holdingsDialogBoard}-${holding.code}`} onClick={() => openHoldingMoat(holding)} aria-label={t(`查看${holding.name}的护城河信息`, `View ${companyEnglish[holding.code] ?? holding.name} moat information`)}>
-                  <span className="holding-dialog-stock"><i className={`${holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} ${holding.humanMoatConfirmed ? "" : "human-review-dot"}`} /><span><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span>
+                <button className="holding-dialog-row" key={`dialog-${holdingsDialogBoard}-${holding.code}`} onClick={() => openHoldingMoat(holding)} aria-label={t(`查看${holding.name}的护城河信息`, `View ${companyEnglish[holding.code] ?? holding.name} moat information`)}>
+                  <span className="holding-dialog-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span>
                   <span className="holding-dialog-values"><strong>{pct(holding.weight)}</strong><em>{t("查看护城河", "View moat")} →</em></span>
                 </button>
               ))}
@@ -667,10 +668,10 @@ export default function Home() {
             </div>
             <div className={`human-review-wrap ${selectedHolding.humanMoatConfirmed ? "" : "pending"}`}>
               {!selectedHolding.humanMoatConfirmed && <span className="human-review-alert" aria-hidden="true" title={t("待人工判断", "Human review pending")}>!</span>}
-              <button type="button" className={`human-review-status ${selectedHolding.humanMoatConfirmed ? "confirmed" : "gray"}`} onClick={() => setShowValuationResearch((current) => !current)} aria-expanded={showValuationResearch}><span>{t("人工护城河判断", "Human moat judgment")}</span><strong>{humanReviewLabel(selectedHolding)}</strong><small>{selectedHolding.humanMoatConfirmed ? t("已确认符合AI研究，可按正常持仓收益观察。点击查看估值复核。", "Confirmed as consistent with the AI thesis; normal holding return applies. Click for valuation review.") : t("尚未判断是否符合AI研究；点击查看低估原因、修复条件和机构估值参考。", "Not yet judged against the AI thesis; click to review undervaluation reasons, repair conditions and institution references.")}</small></button>
+              <button type="button" className={`human-review-status ${selectedHolding.humanMoatConfirmed ? "confirmed" : "gray"}`} onClick={() => setShowValuationResearch((current) => !current)} aria-expanded={showValuationResearch}><span>{t("人工护城河判断", "Human moat judgment")}</span><strong>{humanReviewLabel(selectedHolding)}</strong><small>{selectedHolding.humanMoatConfirmed ? t("人工判断仅用于记录和后续预警，不改变模型已计算的持仓收益。点击查看估值复核。", "Human review is informational and supports future alerts; it does not change model holdings or returns. Click for valuation review.") : t("尚未判断；这不会阻止当前持仓或模型收益，只在出现不利证据时触发后续预警。点击查看低估原因、修复条件和机构估值参考。", "Not yet reviewed; this does not block the current holding or model return. It only supports future alerts when adverse evidence appears. Click to review undervaluation reasons, repair conditions and institution references.")}</small></button>
             </div>
-            {!selectedHolding.humanMoatConfirmed && selectedHolding.valuationRepair?.institutionReferenceAboveOptimistic && (
-              <div className="valuation-rule-hold" role="status"><span>{t("估值规则动作", "Valuation rule")}</span><strong>{t("自动持有", "Auto-hold")}</strong><small>{t(`最低机构参考价 ${money(selectedHolding.valuationRepair.institutionReferencePrice ?? 0)} 高于乐观DCF ${money(selectedHolding.valuationRepair.optimisticDcfValuePerShare ?? 0)}；允许持有，但护城河仍待人工确认。`, `The lowest linked institution reference ${money(selectedHolding.valuationRepair.institutionReferencePrice ?? 0)} is above the optimistic DCF ${money(selectedHolding.valuationRepair.optimisticDcfValuePerShare ?? 0)}; auto-hold is allowed, but the moat remains unconfirmed.`)}</small></div>
+            {selectedHolding.valuationRepair?.institutionReferenceAboveOptimistic && (
+              <div className="valuation-rule-hold" role="status"><span>{t("估值规则动作", "Valuation rule")}</span><strong>{t("安全边际充足", "Margin supported")}</strong><small>{t(`最低机构参考价 ${money(selectedHolding.valuationRepair.institutionReferencePrice ?? 0)} 高于乐观DCF ${money(selectedHolding.valuationRepair.optimisticDcfValuePerShare ?? 0)}；估值规则允许继续持有，护城河判断仍单独用于观察和预警。`, `The lowest linked institution reference ${money(selectedHolding.valuationRepair.institutionReferencePrice ?? 0)} is above the optimistic DCF ${money(selectedHolding.valuationRepair.optimisticDcfValuePerShare ?? 0)}; valuation supports holding, while moat review remains a separate monitoring and alert layer.`)}</small></div>
             )}
             {showValuationResearch && selectedHolding.valuationRepair && (
               <section className="valuation-repair" aria-label={t("估值修复辅助研究", "Valuation repair research aid")}>
