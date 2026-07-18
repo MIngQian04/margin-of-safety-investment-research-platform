@@ -43,6 +43,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /查看持仓报告/);
   assert.match(page, /distributionAsOf/);
   assert.match(page, /allocation-change-ack-v1/);
+  assert.match(page, /humanMoatConfirmed/);
+  assert.match(page, /灰色·待人工判断/);
+  assert.match(page, /人工确认收益待复核/);
   assert.match(page, /明日仓位已更新/);
   assert.match(page, /为什么/);
   assert.match(page, /影响/);
@@ -131,6 +134,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(background.byteLength > 100_000);
   assert.ok(data.holdings.length > 0);
   assert.ok(data.nextHoldings.length > 0);
+  assert.equal(data.humanReview.confirmedCount, 0);
+  assert.ok(data.humanReview.grayWeight > 0);
+  assert.ok(data.holdings.every((holding) => holding.humanMoatConfirmed === false));
   assert.equal(data.activeAsOf, "2026-07-16");
   assert.equal(data.distributionAsOf, data.activeAsOf);
   assert.equal(data.allocationChange.changed, true);

@@ -11,6 +11,7 @@ type Holding = {
   price: number;
   dailyReturn: number;
   reason?: string;
+  humanMoatConfirmed: boolean;
   valuation?: Record<string, { discountRate: number; valuePerShare: number; marginOfSafety: number }> | null;
   distribution: {
     skewness: number;
@@ -62,6 +63,15 @@ type PortfolioData = {
   };
   holdings: Holding[];
   nextHoldings: Holding[];
+  humanReview: {
+    confirmedCount: number;
+    totalCount: number;
+    confirmedWeight: number;
+    grayWeight: number;
+    confirmedDailyReturn: number | null;
+    grayDailyReturn: number | null;
+    note: string;
+  };
   allocationChange: {
     changed: boolean;
     activeAsOf: string;
@@ -418,6 +428,9 @@ export default function Home() {
   const chartHistory = selectedRange === "TODAY" || selectedRange === "CUMULATIVE" ? data.navHistory : personalHistory;
   const activeMoatCopy = selectedHolding ? moatEnglish[selectedHolding.code] : null;
   const displayCompany = (holding: Holding) => language === "zh" ? holding.name : companyEnglish[holding.code] ?? holding.name;
+  const humanReviewLabel = (holding: Holding) => holding.humanMoatConfirmed
+    ? t("人工已确认", "Human confirmed")
+    : t("灰色·待人工判断", "Gray · human review pending");
   const updateExecution = (code: string, field: keyof ExecutionRecord, value: string) => {
     const number = Math.max(0, Number(value) || 0);
     setExecutionRecords((current) => ({ ...current, [code]: { quantity: 0, averagePrice: 0, fee: 0, modelOpenPrice: 0, ...current[code], [field]: number } }));
@@ -490,13 +503,14 @@ export default function Home() {
 
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
             <div className="allocation-switcher" role="tablist" aria-label={t("当日与明日仓位切换", "Active and next allocation boards")}><button role="tab" aria-selected={allocationBoard === 0} className={allocationBoard === 0 ? "is-active" : ""} onClick={() => jumpAllocationBoard(0)}>{t("当日收益", "Today's return")}<small>{data.returnDate}</small></button><button role="tab" aria-selected={allocationBoard === 1} className={allocationBoard === 1 ? "is-active" : ""} onClick={() => jumpAllocationBoard(1)}>{t("明日执行", "Next execution")}<small>{data.allocationChange.nextAsOf}</small></button></div>
+            <div className="human-review-summary" role="status"><span>{t("护城河人工判断", "Human moat review")} <b>{data.humanReview.confirmedCount}/{data.humanReview.totalCount}</b></span><span>{data.humanReview.grayWeight > 0 ? t(`灰色目标仓位 ${pct(data.humanReview.grayWeight)}`, `Gray target weight ${pct(data.humanReview.grayWeight)}`) : t("全部已确认", "All confirmed")}</span><strong>{data.humanReview.confirmedDailyReturn == null ? t("人工确认收益待复核", "Confirmed return pending review") : `${t("人工确认今日", "Confirmed today")} ${signedPct(data.humanReview.confirmedDailyReturn)}`}</strong></div>
             <div className="allocation-carousel" ref={allocationCarouselRef} onScroll={(event) => { const target = event.currentTarget; setAllocationBoard(Math.round(target.scrollLeft / Math.max(target.clientWidth - 24, 1))); }}>
             <section className="allocation-board allocation-card"><div className="allocation-card-head"><div><p className="kicker">RETURN {data.returnDate} · POSITION {data.activeAsOf}</p><h2 id="positions-heading">{t("当日收益仓位", "Today's Return Basis")}</h2><small className="allocation-note">{t("收益属于当日；仓位来自上一交易日已公布组合", "Today's return uses the prior session's published holdings")}</small></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("active")}>{t("查看持仓报告", "Open holdings report")}</button></div>
             <div className="holding-list" role="region" aria-label={t("当日生效仓位，可上下滚动", "Today's active holdings; scrollable")} tabIndex={0}>
               <div className="holding-list-tools"><div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values"><em>{t("价格", "Price")}</em><em>{t("今日↓", "Today↓")}</em><strong>{t("仓位", "Weight")}</strong></div></div></div>
               {rankedHoldings.map((holding) => (
                 <button className="holding-row" key={holding.code} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的护城河动态档案`, `View ${companyEnglish[holding.code] ?? holding.name} moat file`)}>
-                  <span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span>
+                  <span className="holding-stock"><i className={`${holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} ${holding.humanMoatConfirmed ? "" : "human-review-dot"}`} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small><em className={holding.humanMoatConfirmed ? "human-review-confirmed" : "human-review-gray"}>{humanReviewLabel(holding)}</em></span></span>
                   <div className="holding-values"><em>{money(holding.price)}</em><em className={holding.dailyReturn >= 0 ? "holding-up" : "holding-down"}>{signedPct(holding.dailyReturn)}</em><strong>{pct(holding.weight)}</strong></div>
                 </button>
               ))}
@@ -506,7 +520,7 @@ export default function Home() {
             <section className="allocation-board allocation-card tomorrow-board"><div className="allocation-card-head"><div><p className="kicker">NEXT SESSION · {data.allocationChange.nextAsOf}</p><h2>{t("明日目标仓位", "Next-session Target")}</h2><small className="allocation-note">{t("下一交易日开盘后生效；参考收盘价不视作成交", "Effective after next-session open; reference close is not a fill")}</small></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("next")}>{t("查看持仓报告", "Open holdings report")}</button></div>
             <div className="holding-list next-holding-list" role="region" aria-label={t("明日待执行仓位，可上下滚动", "Next-session target holdings; scrollable")} tabIndex={0}>
               <div className="holding-list-tools"><div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values next-values"><em>{t("参考收盘", "Ref close")}</em><strong>{t("目标仓位", "Target")}</strong></div></div></div>
-              {rankedNextHoldings.map((holding) => <button className="holding-row" key={`next-${holding.code}`} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的明日目标仓位`, `View ${companyEnglish[holding.code] ?? holding.name} next-session target`)}><span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span><div className="holding-values next-values"><em>{money(holding.price)}</em><strong>{pct(holding.weight)}</strong></div></button>)}
+              {rankedNextHoldings.map((holding) => <button className="holding-row" key={`next-${holding.code}`} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的明日目标仓位`, `View ${companyEnglish[holding.code] ?? holding.name} next-session target`)}><span className="holding-stock"><i className={`${holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} ${holding.humanMoatConfirmed ? "" : "human-review-dot"}`} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small><em className={holding.humanMoatConfirmed ? "human-review-confirmed" : "human-review-gray"}>{humanReviewLabel(holding)}</em></span></span><div className="holding-values next-values"><em>{money(holding.price)}</em><strong>{pct(holding.weight)}</strong></div></button>)}
               <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>{t("现金", "Cash")}</b></span></span><div className="holding-values next-values"><em>—</em><strong>{pct(data.summary.cashWeight)}</strong></div></div>
             </div></section>
             </div>
@@ -606,7 +620,7 @@ export default function Home() {
             <div className="holdings-dialog-list">
               {holdingsDialogItems.map((holding) => (
                 <button className="holding-dialog-row" key={`dialog-${holdingsDialogBoard}-${holding.code}`} onClick={() => openHoldingMoat(holding)} aria-label={t(`查看${holding.name}的护城河信息`, `View ${companyEnglish[holding.code] ?? holding.name} moat information`)}>
-                  <span className="holding-dialog-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span>
+                  <span className="holding-dialog-stock"><i className={`${holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} ${holding.humanMoatConfirmed ? "" : "human-review-dot"}`} /><span><b>{displayCompany(holding)}</b><small>{holding.code} · {humanReviewLabel(holding)}</small></span></span>
                   <span className="holding-dialog-values"><strong>{pct(holding.weight)}</strong><em>{t("查看护城河", "View moat")} →</em></span>
                 </button>
               ))}
@@ -627,6 +641,7 @@ export default function Home() {
               <span>{moatStatus[selectedHolding.moat.status][language === "zh" ? "cn" : "en"]}</span>
               <b>{t("下次复核", "Next review")} {selectedHolding.moat.nextReviewDate}</b>
             </div>
+            <div className={`human-review-status ${selectedHolding.humanMoatConfirmed ? "confirmed" : "gray"}`} role="status"><span>{t("人工护城河判断", "Human moat judgment")}</span><strong>{humanReviewLabel(selectedHolding)}</strong><small>{selectedHolding.humanMoatConfirmed ? t("已确认符合AI研究，可按正常持仓收益观察。", "Confirmed as consistent with the AI thesis; normal holding return applies.") : t("尚未判断是否符合AI研究；保留AI计算仓位，但暂不视为人工确认收益仓位。", "Not yet judged against the AI thesis; the AI target weight remains, but it is not treated as a human-confirmed return position.")}</small></div>
             {selectedHolding.moat.radar.pendingAlertCount > 0 ? (
               <div className="moat-radar-alert" role="status">
                 <span>{t(`发现 ${selectedHolding.moat.radar.pendingAlertCount} 条待人工复核事件`, `${selectedHolding.moat.radar.pendingAlertCount} events pending human review`)}<small>{selectedHolding.moat.radar.highAlertCount} {t("条高优先级", "high priority")}</small></span>
