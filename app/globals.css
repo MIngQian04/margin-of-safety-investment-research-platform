@@ -70,6 +70,7 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .holding-list::-webkit-scrollbar-thumb { background:rgba(113,128,110,.28); border-radius:999px; }
 .holding-list>div,.holding-row { display:flex; justify-content:space-between; align-items:center; min-height:39px; border:0; border-bottom:1px solid rgba(190,203,186,.76); }
 .holding-list .holding-row { min-height:43px; }
+.holding-list .holding-row { margin:4px 0; border-bottom:0; }
 .holding-row { width:100%; padding:0; background:transparent; color:inherit; text-align:left; cursor:pointer; transition:background-color .18s ease; }
 .holding-row:hover { background:rgba(255,255,255,.28); }
 .holding-row.human-review-card-gray { background:rgba(154,151,143,.16); border:1px solid rgba(126,123,115,.46); border-radius:8px; }
