@@ -45,7 +45,6 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /allocation-change-ack-v1/);
   assert.match(page, /humanMoatConfirmed/);
   assert.match(page, /待观察·未人工确认/);
-  assert.match(page, /模型今日收益/);
   assert.match(page, /低估原因与估值修复条件/);
   assert.match(page, /PUBLIC INSTITUTION REFERENCES/);
   assert.match(page, /明日仓位已更新/);
@@ -99,6 +98,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /已复投/);
   assert.match(page, /Total-return unit NAV/);
   assert.match(page, /benchmarkHistory/);
+  assert.match(page, /benchmarkVisible/);
   assert.match(page, /相对大盘/);
   assert.match(page, /unit proxy/);
   assert.match(page, /DYNAMIC MOAT FILE/);
@@ -129,6 +129,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /\.portfolio-distribution \{[^}]*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(css, /\.benchmark-line/);
   assert.match(css, /\.benchmark-strip/);
+  assert.doesNotMatch(page, /human-review-summary/);
+  assert.doesNotMatch(css, /\.human-review-summary/);
   assert.match(css, /\.holding-list b \{[^}]*font-size:17px/);
   assert.match(css, /\.holding-list>div,\.holding-row \{[^}]*min-height:39px/);
   assert.match(css, /\.holding-identity b,\.holding-identity small \{[^}]*white-space:nowrap/);

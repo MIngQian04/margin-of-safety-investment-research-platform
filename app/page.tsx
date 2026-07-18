@@ -294,15 +294,16 @@ function PerformanceChart({ history, benchmarkHistory = [], range, language }: {
   const base = points.at(0)?.nav ?? 1;
   const personalBase = history.at(0)?.nav ?? 1;
   const returns = points.map((point) => point.nav / base - 1);
-  const showBenchmark = range === "CUMULATIVE" && benchmarkHistory.length > 1;
   const benchmarkByDate = new Map(benchmarkHistory.map((point) => [point.date, point]));
-  const benchmarkBase = benchmarkHistory.at(0)?.nav ?? 1;
-  const benchmarkReturns = showBenchmark
-    ? points.map((point) => {
-      const benchmarkPoint = benchmarkByDate.get(point.date);
-      return benchmarkPoint ? benchmarkPoint.nav / benchmarkBase - 1 : null;
-    })
-    : [];
+  const visibleBenchmarkPoints = points
+    .map((point) => benchmarkByDate.get(point.date))
+    .filter((point): point is BenchmarkPoint => point != null);
+  const showBenchmark = visibleBenchmarkPoints.length > 1;
+  const benchmarkBase = visibleBenchmarkPoints.at(0)?.nav ?? 1;
+  const benchmarkReturns = points.map((point) => {
+    const benchmarkPoint = benchmarkByDate.get(point.date);
+    return showBenchmark && benchmarkPoint ? benchmarkPoint.nav / benchmarkBase - 1 : null;
+  });
   const visibleReturns = [...returns, ...benchmarkReturns.filter((value): value is number => value != null)];
   const rawMin = Math.min(...visibleReturns, 0);
   const rawMax = Math.max(...visibleReturns, 0);
@@ -489,6 +490,7 @@ export default function Home() {
   const holdingsDialogItems = holdingsDialogBoard === "active" ? rankedHoldings : rankedNextHoldings;
   const activeRange = selectedRange === "CUMULATIVE" ? cumulativeRange : ranges.find((item) => item.key === selectedRange)!;
   const chartHistory = selectedRange === "TODAY" || selectedRange === "CUMULATIVE" ? data.navHistory : personalHistory;
+  const benchmarkVisible = chartHistory.filter((point) => data.benchmark.history.some((benchmarkPoint) => benchmarkPoint.date === point.date)).length > 1;
   const activeMoatCopy = selectedHolding ? moatEnglish[selectedHolding.code] : null;
   const displayCompany = (holding: Holding) => language === "zh" ? holding.name : companyEnglish[holding.code] ?? holding.name;
   const humanReviewLabel = (holding: Holding) => holding.humanMoatConfirmed
@@ -567,7 +569,7 @@ export default function Home() {
             <PerformanceChart history={chartHistory} benchmarkHistory={data.benchmark.history} range={selectedRange} language={language} />
             <div className="chart-caption">
               <span><i className="line-key" />{t("含分红单位净值收益", "Total-return unit NAV")}</span>
-              {selectedRange === "CUMULATIVE" && data.benchmark.status === "OK" && <span><i className="line-key benchmark-key" />{t(`${data.benchmark.name}单位指数代理`, `${data.benchmark.nameEn} unit proxy`)}</span>}
+              {benchmarkVisible && data.benchmark.status === "OK" && <span><i className="line-key benchmark-key" />{t(`${data.benchmark.name}单位指数代理`, `${data.benchmark.nameEn} unit proxy`)}</span>}
               <span>{t(`自 ${personalStart?.date ?? data.asOf} 按单位1记录`, `Unit 1 since ${personalStart?.date ?? data.asOf}`)}</span>
             </div>
             {selectedRange === "CUMULATIVE" && <div className="benchmark-strip" aria-label={t("策略与大盘累计表现", "Strategy versus market cumulative performance")}>
@@ -579,7 +581,6 @@ export default function Home() {
 
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
             <div className="allocation-switcher" role="tablist" aria-label={t("当日与明日仓位切换", "Active and next allocation boards")}><button role="tab" aria-selected={allocationBoard === 0} className={allocationBoard === 0 ? "is-active" : ""} onClick={() => jumpAllocationBoard(0)}>{t("当日收益", "Today's return")}<small>{data.returnDate}</small></button><button role="tab" aria-selected={allocationBoard === 1} className={allocationBoard === 1 ? "is-active" : ""} onClick={() => jumpAllocationBoard(1)}>{t("明日执行", "Next execution")}<small>{data.allocationChange.nextAsOf}</small></button></div>
-            <div className="human-review-summary" role="status"><span>{t("护城河人工判断", "Human moat review")} <b>{data.humanReview.confirmedCount}/{data.humanReview.totalCount}</b></span><span>{data.humanReview.grayWeight > 0 ? t(`待观察目标仓位 ${pct(data.humanReview.grayWeight)}`, `Monitoring target weight ${pct(data.humanReview.grayWeight)}`) : t("全部已确认", "All confirmed")}</span><strong>{`${t("模型今日收益", "Model today")} ${signedPct(data.humanReview.modelDailyReturn)}`}</strong></div>
             <div className="allocation-carousel" ref={allocationCarouselRef} onScroll={(event) => { const target = event.currentTarget; setAllocationBoard(Math.round(target.scrollLeft / Math.max(target.clientWidth - 24, 1))); }}>
             <section className="allocation-board allocation-card"><div className="allocation-card-head"><div><p className="kicker">RETURN {data.returnDate} · POSITION {data.activeAsOf}</p><h2 id="positions-heading">{t("当日收益仓位", "Today's Return Basis")}</h2><small className="allocation-note">{t("收益属于当日；仓位来自上一交易日已公布组合", "Today's return uses the prior session's published holdings")}</small></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("active")}>{t("查看持仓报告", "Open holdings report")}</button></div>
             <div className="holding-list" role="region" aria-label={t("当日生效仓位，可上下滚动", "Today's active holdings; scrollable")} tabIndex={0}>
