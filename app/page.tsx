@@ -460,7 +460,7 @@ export default function Home() {
   }, [data]);
 
   const t = (zh: string, en: string) => language === "zh" ? zh : en;
-  if (!data && !error) return <main className="status"><p>{t("正在读取安全边际与全球定价权策略…", "Loading the Margin of Safety & Global Pricing Power Strategy…")}</p></main>;
+  if (!data && !error) return <main className="status"><p>{t("正在读取安全边际策略…", "Loading the Margin of Safety Strategy…")}</p></main>;
   if (!data) return <main className="status"><p>{t(error, "Portfolio data is temporarily unavailable.")}</p><button onClick={load}>{t("重新读取", "Retry")}</button></main>;
 
   const latest = data.navHistory.at(-1);
@@ -529,9 +529,9 @@ export default function Home() {
 
   return (
     <main className={`canvas language-${language}`}>
-      <section className="sheet" aria-label={t("安全边际与全球定价权策略总览", "Margin of Safety & Global Pricing Power overview")}>
+      <section className="sheet" aria-label={t("安全边际策略总览", "Margin of Safety Strategy overview")}>
         <header className="topbar">
-          <div><p className="kicker">FORWARD BARBELL · RETURN {data.returnDate}</p><h1>{t("安全边际与全球定价权", "Margin of Safety & Global Pricing Power")}</h1></div>
+          <div><p className="kicker">FORWARD BARBELL · RETURN {data.returnDate}</p><h1>{t("安全边际", "Margin of Safety")}</h1></div>
           <div className="top-actions">
             <span>{t("单位净值", "Unit NAV")} {personalUnitNav.toFixed(4)}<small className="dividend-meta">{t("分红", "Dividends")} {data.dividendSummary.cumulativeCash.toFixed(4)} · {t("已复投", "Reinvested")} {data.dividendSummary.reinvestedCash.toFixed(4)} · {t("待复投", "Pending")} {(data.dividendSummary.pendingCash + data.dividendSummary.receivableCash).toFixed(4)}</small></span>
             <button className="start-date-button" onClick={() => { setDraftStartDate(personalStart?.date ?? latest?.date ?? data.asOf); setShowStartSettings(true); }}>
