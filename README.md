@@ -1,6 +1,6 @@
-# Moat Value Strategy Website
+# Margin of Safety & Global Pricing Power Website
 
-护城河价值策略的公开只读网站。它展示前瞻模型组合的目标仓位、含分红单位净值、个人观察起始日、收益分布和动态护城河档案。
+A 股安全边际与全球定价权策略的公开只读网站。它展示前瞻模型组合的目标仓位、含分红单位净值、个人观察起始日、收益分布和用于验证价值捕获能力的动态护城河档案。
 
 Live site: [ming-daily-portfolio.qianmin968641.chatgpt.site](https://ming-daily-portfolio.qianmin968641.chatgpt.site)
 

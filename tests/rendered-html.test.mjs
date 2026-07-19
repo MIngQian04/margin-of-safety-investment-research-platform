@@ -15,8 +15,8 @@ test("server renders the portfolio shell and finished metadata", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /<title>护城河价值策略｜前瞻哑铃策略<\/title>/);
-  assert.match(html, /正在读取护城河价值策略/);
+  assert.match(html, /<title>安全边际与全球定价权｜前瞻哑铃策略<\/title>/);
+  assert.match(html, /正在读取安全边际与全球定价权策略/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
@@ -53,7 +53,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /change-effect/);
   assert.match(page, /PORTFOLIO DISTRIBUTION/);
   assert.match(page, /chart-tooltip/);
-  assert.match(page, /Moat Value Strategy/);
+  assert.match(page, /Margin of Safety & Global Pricing Power/);
   assert.match(page, /Today/);
   assert.match(page, /Prior-session holdings/);
   assert.match(page, /CUMULATIVE/);
