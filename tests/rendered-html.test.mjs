@@ -156,6 +156,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.holdings.every((holding) => holding.humanMoatConfirmed === false));
   assert.ok(data.nextHoldings.find((holding) => holding.code === "600941.SH")?.valuationRepair.institutionReferences.length >= 3);
   assert.equal(data.activeAsOf, "2026-07-20");
+  assert.equal(data.allocationChange.nextAsOf, "2026-07-22");
   assert.equal(data.distributionAsOf, data.activeAsOf);
   assert.equal(data.summary.activeCashWeight, 0.3500000000000002);
   assert.equal(data.summary.cashWeight, 0.3500000000000002);
