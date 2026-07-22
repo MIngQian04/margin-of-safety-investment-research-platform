@@ -1,6 +1,6 @@
-# Margin of Safety Strategy Website
+# Margin of Safety Investment Research Platform — Public Website
 
-A 股安全边际策略的公开只读网站。它展示前瞻模型组合的目标仓位、含分红单位净值、个人观察起始日、收益分布和动态护城河档案。
+Margin of Safety Investment Research Platform 的公开只读网站。它展示前瞻模型组合的目标仓位、含分红单位净值、个人观察起始日、收益分布和动态护城河档案。
 
 Live site: [ming-daily-portfolio.qianmin968641.chatgpt.site](https://ming-daily-portfolio.qianmin968641.chatgpt.site)
 

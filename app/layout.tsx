@@ -9,17 +9,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const metadataBase = new URL(`${protocol}://${host}`);
   return {
     metadataBase,
-    title: "安全边际｜前瞻哑铃策略",
+    title: "Margin of Safety Investment Research Platform｜安全边际投资研究平台",
     description: "查看 A 股安全边际、前瞻 NAV 与规则化目标配置。",
     icons: { icon: "/favicon.svg" },
     openGraph: {
-      title: "安全边际｜前瞻哑铃策略",
+      title: "Margin of Safety Investment Research Platform｜安全边际投资研究平台",
       description: "安全边际、稳定锚、未来期权与现金，一眼看清今天与下一交易日的目标配置。",
       images: [{ url: "/images/west-lake-willow-bg.png", width: 1824, height: 864, alt: "安全边际策略的西湖柳影背景" }],
       type: "website",
       locale: "zh_CN",
     },
-    twitter: { card: "summary_large_image", title: "安全边际", images: ["/images/west-lake-willow-bg.png"] },
+    twitter: { card: "summary_large_image", title: "Margin of Safety Investment Research Platform", images: ["/images/west-lake-willow-bg.png"] },
   };
 }
 

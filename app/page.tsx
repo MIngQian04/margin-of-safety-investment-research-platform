@@ -460,7 +460,7 @@ export default function Home() {
   }, [data]);
 
   const t = (zh: string, en: string) => language === "zh" ? zh : en;
-  if (!data && !error) return <main className="status"><p>{t("正在读取安全边际策略…", "Loading the Margin of Safety Strategy…")}</p></main>;
+  if (!data && !error) return <main className="status"><p>{t("正在读取安全边际投资研究平台…", "Loading the Margin of Safety Investment Research Platform…")}</p></main>;
   if (!data) return <main className="status"><p>{t(error, "Portfolio data is temporarily unavailable.")}</p><button onClick={load}>{t("重新读取", "Retry")}</button></main>;
 
   const latest = data.navHistory.at(-1);
@@ -529,7 +529,7 @@ export default function Home() {
 
   return (
     <main className={`canvas language-${language}`}>
-      <section className="sheet" aria-label={t("安全边际策略总览", "Margin of Safety Strategy overview")}>
+      <section className="sheet" aria-label={t("安全边际投资研究平台总览", "Margin of Safety Investment Research Platform overview")}>
         <header className="topbar">
           <div><p className="kicker">FORWARD BARBELL · RETURN {data.returnDate}</p><h1>{t("安全边际", "Margin of Safety")}</h1></div>
           <div className="top-actions">
@@ -620,7 +620,7 @@ export default function Home() {
         <div className="confirm-backdrop" role="presentation">
           <section className="help-dialog" role="dialog" aria-modal="true" aria-labelledby="help-dialog-title" aria-describedby="help-dialog-description">
             <div className="moat-dialog-head">
-              <div><p className="kicker">MOAT VALUE STRATEGY · USER GUIDE</p><h2 id="help-dialog-title">{t("网站使用说明", "How to use this site")}</h2></div>
+              <div><p className="kicker">MARGIN OF SAFETY · USER GUIDE</p><h2 id="help-dialog-title">{t("网站使用说明", "How to use this site")}</h2></div>
               <button className="moat-close" aria-label={t("关闭使用说明", "Close user guide")} onClick={closeHelp}>×</button>
             </div>
             <p id="help-dialog-description" className="help-lead">{t("这里把模型信号、当日收益、明日执行和你的真实成交分开。先看模型，再决定是否需要人工调整；网站不会替你下单。", "This guide separates model signals, today's return, next-session execution and your actual fills. Read the model first, then decide whether to fine-tune it; the site never places orders for you.")}</p>

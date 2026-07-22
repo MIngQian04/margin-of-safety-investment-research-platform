@@ -15,8 +15,8 @@ test("server renders the portfolio shell and finished metadata", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /<title>安全边际｜前瞻哑铃策略<\/title>/);
-  assert.match(html, /正在读取安全边际策略/);
+  assert.match(html, /<title>Margin of Safety Investment Research Platform｜安全边际投资研究平台<\/title>/);
+  assert.match(html, /正在读取安全边际投资研究平台/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
