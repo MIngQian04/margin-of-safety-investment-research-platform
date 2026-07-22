@@ -531,7 +531,7 @@ export default function Home() {
     <main className={`canvas language-${language}`}>
       <section className="sheet" aria-label={t("安全边际投资研究平台总览", "Margin of Safety Investment Research Platform overview")}>
         <header className="topbar">
-          <div><p className="kicker">FORWARD BARBELL · RETURN {data.returnDate}</p><h1>{t("安全边际", "Margin of Safety")}</h1></div>
+          <div><p className="kicker">FORWARD BARBELL · RETURN {data.returnDate}</p><h1 className="site-title">{t("安全边际投资研究平台", "Margin of Safety Investment Research Platform")}</h1></div>
           <div className="top-actions">
             <span>{t("单位净值", "Unit NAV")} {personalUnitNav.toFixed(4)}<small className="dividend-meta">{t("分红", "Dividends")} {data.dividendSummary.cumulativeCash.toFixed(4)} · {t("已复投", "Reinvested")} {data.dividendSummary.reinvestedCash.toFixed(4)} · {t("待复投", "Pending")} {(data.dividendSummary.pendingCash + data.dividendSummary.receivableCash).toFixed(4)}</small></span>
             <button className="start-date-button" onClick={() => { setDraftStartDate(personalStart?.date ?? latest?.date ?? data.asOf); setShowStartSettings(true); }}>

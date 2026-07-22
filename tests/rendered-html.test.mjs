@@ -54,6 +54,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /PORTFOLIO DISTRIBUTION/);
   assert.match(page, /chart-tooltip/);
   assert.match(page, /Margin of Safety/);
+  assert.match(page, /Margin of Safety Investment Research Platform/);
+  assert.match(page, /安全边际投资研究平台/);
+  assert.match(page, /className="site-title"/);
   assert.match(page, /Today/);
   assert.match(page, /Prior-session holdings/);
   assert.match(page, /CUMULATIVE/);
