@@ -363,7 +363,9 @@ export default function Home() {
   const [showStartSettings, setShowStartSettings] = useState(false);
   const [personalStartDate, setPersonalStartDate] = useState("");
   const [draftStartDate, setDraftStartDate] = useState("");
-  const [selectedRange, setSelectedRange] = useState<RangeKey>("1Y");
+  // Start on the cumulative view so the strategy-vs-benchmark comparison is
+  // visible immediately; shorter windows remain available from the period bar.
+  const [selectedRange, setSelectedRange] = useState<RangeKey>("CUMULATIVE");
   const [selectedHolding, setSelectedHolding] = useState<Holding | null>(null);
   const [showValuationResearch, setShowValuationResearch] = useState(false);
   const [showHoldingsDialog, setShowHoldingsDialog] = useState(false);
