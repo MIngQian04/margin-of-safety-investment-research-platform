@@ -77,8 +77,10 @@ def _refresh_benchmark_cache(nav_dates: list[str]) -> None:
         return
     try:
         import tushare as ts
-        ts.set_token(token)
-        raw = ts.pro_api().index_daily(
+        # Do not use ``ts.set_token``: it persists the local credential to a
+        # user-level cache.  The benchmark refresh needs the token only for
+        # this in-memory request.
+        raw = ts.pro_api(token).index_daily(
             ts_code=BENCHMARK_CODE,
             start_date=min(nav_dates).replace("-", ""),
             end_date=max(nav_dates).replace("-", ""),

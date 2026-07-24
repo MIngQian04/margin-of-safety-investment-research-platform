@@ -14,7 +14,7 @@ from utils.date_utils import clean_date, to_datetime_index
 class TushareClient:
     """
     Thin Tushare wrapper with:
-    - env-based token loading
+    - env-based, in-memory token loading
     - local CSV cache
     - consistent datetime index
     - simple retry/sleep protection
@@ -37,8 +37,10 @@ class TushareClient:
 
         import tushare as ts
 
-        ts.set_token(self.token)
-        self.pro = ts.pro_api(timeout=request_timeout_seconds)
+        # Pass the token directly to the client.  ``ts.set_token`` persists it
+        # to the user-level ``tk.csv`` cache, which is unnecessary here and
+        # violates this project's local-credential boundary.
+        self.pro = ts.pro_api(self.token, timeout=request_timeout_seconds)
         self.data_dir = Path(data_dir)
         self.sleep_seconds = sleep_seconds
         self.max_retries = max_retries
