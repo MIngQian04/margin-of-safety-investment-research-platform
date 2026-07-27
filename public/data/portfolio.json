@@ -1,11 +1,11 @@
 {
   "asOf": "2026-07-27",
   "returnDate": "2026-07-27",
-  "generatedAt": "2026-07-27T20:33:56+08:00",
+  "generatedAt": "2026-07-27T23:22:22+08:00",
   "summary": {
     "anchorWeight": 0.5749999999999997,
-    "futureWeight": 0.0,
-    "cashWeight": 0.4250000000000002,
+    "futureWeight": 0.075,
+    "cashWeight": 0.3500000000000002,
     "activeCashWeight": 0.3500000000000002,
     "universeScanned": 5523,
     "financialReviewed": 205,
@@ -16,40 +16,39 @@
   "distributionAsOf": "2026-07-24",
   "holdings": [
     {
-      "code": "002032.SZ",
-      "name": "苏泊尔",
+      "code": "600519.SH",
+      "name": "贵州茅台",
       "bucket": "ANCHOR",
       "state": "ANCHOR",
       "theme": "稳定现金流",
-      "industry": "家用电器",
-      "weight": 0.0648648648648648,
-      "price": 42.83,
-      "dailyReturn": -0.0023293733985557674,
+      "industry": "食品饮料",
+      "weight": 0.0702702702702702,
+      "price": 1289.5,
+      "dailyReturn": -0.0060967620104670495,
       "reason": "上一交易日已公布仓位",
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": -2.295416047005287,
-        "excessKurtosis": 19.175160478287896,
-        "skewLabel": "左尾风险型",
+        "skewness": 1.5029408359600933,
+        "excessKurtosis": 7.560141592848314,
+        "skewLabel": "右尾机会型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
       },
       "moat": {
-        "type": "品牌渠道与产品体系",
-        "thesis": "炊具和小家电品牌认知；渠道覆盖及与SEB协同的产品体系可能支持稳定份额",
-        "replicationBarrier": "品牌信任；线下线上渠道；供应链规模和产品开发体系需要持续投入",
+        "type": "产地稀缺与品牌心智",
+        "thesis": "特定产区和酿造生态形成难复制的供给约束；长期品牌认同和社交消费心理支持定价权",
+        "replicationBarrier": "产区生态与长期基酒时间无法快速复制；消费者心智和高端社交共识需要数十年积累",
         "monitoringSignals": [
-          "品类份额",
-          "新品成功率",
-          "渠道效率",
-          "关联交易质量",
-          "毛利率"
+          "直营与批价稳定",
+          "高端市场份额",
+          "吨价与毛利率",
+          "年轻消费群体认知"
         ],
         "invalidationSignals": [
-          "品牌老化",
-          "核心品类份额下降",
-          "新品长期乏力",
-          "渠道费用侵蚀利润"
+          "批价长期倒挂",
+          "品牌溢价持续收窄",
+          "核心消费群体迁移",
+          "渠道库存连续恶化"
         ],
         "status": "DRAFT",
         "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
@@ -59,103 +58,103 @@
         "cautionEvidenceCount": 0,
         "contradictoryEvidenceCount": 0,
         "radar": {
-          "pendingAlertCount": 1,
+          "pendingAlertCount": 0,
           "highAlertCount": 0,
-          "latestAlertDate": "2026-04-24",
-          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
-          "latestAlertSource": "QUARTERLY_FINANCIAL"
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
         }
       },
       "valuation": {
         "very_optimistic": {
           "discountRate": 0.08,
-          "valuePerShare": 54.83135238324875,
-          "marginOfSafety": 0.2802090213226418
+          "valuePerShare": 1292.4799429784314,
+          "marginOfSafety": 0.002310929025538
         },
         "optimistic": {
           "discountRate": 0.09,
-          "valuePerShare": 46.74526930153332,
-          "marginOfSafety": 0.0914141793493654
+          "valuePerShare": 1099.5940277740078,
+          "marginOfSafety": -0.1472710137464072
         },
         "base": {
           "discountRate": 0.1,
-          "valuePerShare": 40.81598991352249,
-          "marginOfSafety": -0.0470233501395634
+          "valuePerShare": 958.1566384098896,
+          "marginOfSafety": -0.2569549139900041
         },
         "cautious": {
           "discountRate": 0.11,
-          "valuePerShare": 36.2822683118504,
-          "marginOfSafety": -0.1528772283014148
+          "valuePerShare": 850.0089689408458,
+          "marginOfSafety": -0.3408228236209029
         },
         "very_pessimistic": {
           "discountRate": 0.12,
-          "valuePerShare": 32.70338424065606,
-          "marginOfSafety": -0.2364374447663774
+          "valuePerShare": 764.6380517109912,
+          "marginOfSafety": -0.4070274899488242
         }
       },
       "metrics": {
-        "股息率": "6.5%",
-        "所有者收益率": "6.4%",
-        "三年ROE": "34.4%",
-        "护城河代理分": "70.5"
+        "股息率": "4.0%",
+        "所有者收益率": "5.1%",
+        "三年ROE": "34.7%",
+        "护城河代理分": "93.4"
       },
       "valuationRepair": {
         "asOf": "2026-07-18",
-        "generatedBy": "本地AI研究辅助：结合品牌渠道、品类份额与DCF敏感性整理",
-        "generatedByEn": "Local AI research aid: brand channels, category share and DCF sensitivity",
+        "generatedBy": "本地AI研究辅助：结合品牌定价、渠道健康与DCF敏感性整理",
+        "generatedByEn": "Local AI research aid: brand pricing, channel health and DCF sensitivity",
         "undervaluationReasons": [
-          "市场担心耐用品消费疲弱、渠道促销和新品成功率下降，使品牌优势难以转化为增量利润。",
-          "与SEB协同和渠道网络提供一定稳定性，但家电行业竞争使毛利率和费用率承压。",
-          "基准DCF略低于当前价格，估值修复需要份额与现金转化同时改善，而不是只靠品牌叙事。"
+          "市场担心批价、渠道库存和高端白酒需求变化，短期品牌溢价未必能转化为稳定增量。",
+          "产区和酿造生态难以复制，但高基数、消费结构变化与渠道治理使利润增长预期更谨慎。",
+          "当前价格高于基准和乐观DCF，估值修复不是低估修复，而是等待业绩和渠道信号消化溢价。"
         ],
         "undervaluationReasonsEn": [
-          "The market worries about weak durable-goods consumption, channel promotions and lower new-product success, making brand strength harder to monetize.",
-          "SEB cooperation and channel reach provide stability, but appliance competition pressures margins and selling expenses.",
-          "The base DCF is below the current price; re-rating needs both share stability and cash conversion, not brand narrative alone."
+          "The market worries about wholesale pricing, channel inventory and premium-liquor demand; brand premium may not translate into near-term growth.",
+          "The origin and ageing ecosystem are hard to copy, but a high base, changing consumption and channel governance make growth expectations cautious.",
+          "The price is above the base and optimistic DCF cases; the task is to digest the premium through earnings and channel evidence, not claim under-valuation."
         ],
         "repairConditions": [
-          "核心品类份额稳定或提升，促销依赖下降且新品成功率改善。",
-          "渠道效率、毛利率和经营现金流同步改善。",
-          "基准DCF重新高于价格，并保持健康的分红与资本回报。"
+          "批价和渠道库存稳定，直营与批发价格体系恢复健康。",
+          "高端市场份额和吨价保持，现金流与分红继续兑现。",
+          "利润增长重新匹配估值，或价格回到基准DCF安全边际内。"
         ],
         "repairConditionsEn": [
-          "Core-category share stabilizes or rises, promotion dependence falls and new-product success improves.",
-          "Channel efficiency, gross margin and operating cash flow improve together.",
-          "The base DCF moves above the price while dividends and capital returns remain healthy."
+          "Wholesale pricing and channel inventory stabilize while direct and wholesale channels normalize.",
+          "Premium-market share and price per tonne hold, with cash flow and dividends delivered.",
+          "Earnings growth catches up with the valuation, or the price returns to the base-DCF safety zone."
         ],
         "failureSignals": [
-          "品牌老化或核心品类份额连续下降。",
-          "新品长期乏力，渠道费用持续侵蚀利润。",
-          "现金流和分红承诺弱化，估值只能依赖非常乐观情景。"
+          "批价长期倒挂，渠道库存持续恶化。",
+          "品牌溢价和高端份额连续收窄。",
+          "现金流或分红弱化，价格仍明显高于乐观DCF。"
         ],
         "failureSignalsEn": [
-          "The brand ages or core-category share keeps falling.",
-          "New products remain weak and channel expenses keep eroding profit.",
-          "Cash flow or dividend commitments weaken and the valuation depends only on the very optimistic case."
+          "Wholesale prices remain inverted and channel inventory keeps worsening.",
+          "Brand premium and premium-market share narrow persistently.",
+          "Cash flow or dividends weaken while the price remains materially above the optimistic DCF."
         ],
         "institutionReferences": [
           {
-            "institution": "国泰海通证券",
-            "institutionEn": "GTJA Haitong Securities",
-            "rating": "增持",
-            "ratingEn": "Accumulate",
+            "institution": "富途分析师一致预期汇总",
+            "institutionEn": "Futu analyst consensus summary",
+            "rating": "一致预期汇总",
+            "ratingEn": "Analyst consensus",
             "market": "A股",
             "marketEn": "A-share",
-            "targetPrice": 54.2,
+            "targetPrice": 1742.56,
             "currency": "CNY",
-            "publishedDate": "2026-04-07",
-            "sourceUrl": "https://stock.finance.sina.com.cn/stock/go.php/vReport_Show/kind/lastest/rptid/828921874284/index.phtml",
-            "note": "2025年年报点评给予2026年20倍PE、目标价54.20元，维持增持。",
-            "noteEn": "The annual-report review uses 20x 2026E P/E and sets a CNY 54.20 target with an Accumulate rating."
+            "publishedDate": "2026-07-15",
+            "sourceUrl": "https://www.futunn.com/stock/600519-SH/forecast",
+            "note": "页面汇总的分析师目标价平均值为1742.56元；不是单一机构独立目标价。",
+            "noteEn": "The page reports an analyst target-price average of CNY 1,742.56; this is an aggregation, not a single institution's independent target."
           }
         ],
-        "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以品类份额、渠道效率和现金流供人工判断。",
-        "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on category share, channel efficiency and cash flow.",
-        "currentPrice": 42.83,
-        "baseDcfValuePerShare": 40.81598991352249,
-        "baseDcfMargin": -0.0470233501395634,
-        "optimisticDcfValuePerShare": 46.74526930153332,
-        "institutionReferencePrice": 54.2,
+        "disclaimer": "这是模型辅助研究，不是自动买卖信号；当前重点是识别溢价消化条件，不把品牌质量自动等同于低估。",
+        "disclaimerEn": "This is a model research aid, not an automatic trading signal; the focus is premium digestion, not treating brand quality as automatic under-valuation.",
+        "currentPrice": 1289.5,
+        "baseDcfValuePerShare": 958.1566384098896,
+        "baseDcfMargin": -0.2569549139900041,
+        "optimisticDcfValuePerShare": 1099.5940277740078,
+        "institutionReferencePrice": 1742.56,
         "institutionReferenceAboveOptimistic": true,
         "valuationRule": "HOLD"
       }
@@ -306,39 +305,40 @@
       }
     },
     {
-      "code": "600519.SH",
-      "name": "贵州茅台",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "食品饮料",
-      "weight": 0.0702702702702702,
-      "price": 1289.5,
-      "dailyReturn": -0.0060967620104670495,
+      "code": "600941.SH",
+      "name": "中国移动",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "十五五六网",
+      "industry": "通信",
+      "weight": 0.025,
+      "price": 94.39,
+      "dailyReturn": -0.0031682331819621323,
       "reason": "上一交易日已公布仓位",
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 1.5029408359600933,
-        "excessKurtosis": 7.560141592848314,
-        "skewLabel": "右尾机会型",
-        "kurtosisLabel": "高厚尾跳跃型",
+        "skewness": 0.02722771177691833,
+        "excessKurtosis": 2.3940377941690087,
+        "skewLabel": "近对称分布",
+        "kurtosisLabel": "厚尾波动型",
         "observations": 252
       },
       "moat": {
-        "type": "产地稀缺与品牌心智",
-        "thesis": "特定产区和酿造生态形成难复制的供给约束；长期品牌认同和社交消费心理支持定价权",
-        "replicationBarrier": "产区生态与长期基酒时间无法快速复制；消费者心智和高端社交共识需要数十年积累",
+        "type": "牌照网络与规模效应",
+        "thesis": "稀缺频谱和全国网络；客户规模及云网协同可能形成高固定成本行业的进入壁垒",
+        "replicationBarrier": "监管牌照；频谱资源；网络资本投入和客户覆盖无法由新进入者快速复制",
         "monitoringSignals": [
-          "直营与批价稳定",
-          "高端市场份额",
-          "吨价与毛利率",
-          "年轻消费群体认知"
+          "移动客户质量",
+          "ARPU",
+          "云业务现金回报",
+          "资本开支效率",
+          "自由现金流"
         ],
         "invalidationSignals": [
-          "批价长期倒挂",
-          "品牌溢价持续收窄",
-          "核心消费群体迁移",
-          "渠道库存连续恶化"
+          "监管改变回报机制",
+          "ARPU持续下降",
+          "云业务只增收不增利",
+          "资本开支长期失控"
         ],
         "status": "DRAFT",
         "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
@@ -358,104 +358,133 @@
       "valuation": {
         "very_optimistic": {
           "discountRate": 0.08,
-          "valuePerShare": 1292.4799429784314,
-          "marginOfSafety": 0.002310929025538
+          "valuePerShare": 154.96373472568675,
+          "marginOfSafety": 0.6417388995199358
         },
         "optimistic": {
           "discountRate": 0.09,
-          "valuePerShare": 1099.5940277740078,
-          "marginOfSafety": -0.1472710137464072
+          "valuePerShare": 131.918664509414,
+          "marginOfSafety": 0.3975915299228094
         },
         "base": {
           "discountRate": 0.1,
-          "valuePerShare": 958.1566384098896,
-          "marginOfSafety": -0.2569549139900041
+          "valuePerShare": 115.02041371879504,
+          "marginOfSafety": 0.2185656713507262
         },
         "cautious": {
           "discountRate": 0.11,
-          "valuePerShare": 850.0089689408458,
-          "marginOfSafety": -0.3408228236209029
+          "valuePerShare": 102.09945661314516,
+          "marginOfSafety": 0.0816766247817053
         },
         "very_pessimistic": {
           "discountRate": 0.12,
-          "valuePerShare": 764.6380517109912,
-          "marginOfSafety": -0.4070274899488242
+          "valuePerShare": 91.89975499208823,
+          "marginOfSafety": -0.0263825088241524
         }
       },
       "metrics": {
-        "股息率": "4.0%",
-        "所有者收益率": "5.1%",
-        "三年ROE": "34.7%",
-        "护城河代理分": "93.4"
+        "未来逻辑分": "88.8",
+        "DCF安全边际": "21.9%",
+        "当前状态": "BOTTOM_HOLD_NO_ADD"
       },
       "valuationRepair": {
         "asOf": "2026-07-18",
-        "generatedBy": "本地AI研究辅助：结合品牌定价、渠道健康与DCF敏感性整理",
-        "generatedByEn": "Local AI research aid: brand pricing, channel health and DCF sensitivity",
+        "generatedBy": "本地AI研究辅助：结合当前缓存财务、DCF敏感性与公开机构研报整理",
+        "generatedByEn": "Local AI research aid: current cached financials, DCF sensitivity and public institution reports",
         "undervaluationReasons": [
-          "市场担心批价、渠道库存和高端白酒需求变化，短期品牌溢价未必能转化为稳定增量。",
-          "产区和酿造生态难以复制，但高基数、消费结构变化与渠道治理使利润增长预期更谨慎。",
-          "当前价格高于基准和乐观DCF，估值修复不是低估修复，而是等待业绩和渠道信号消化溢价。"
+          "市场仍按低增长通信运营商定价：公开研报提到2026年一季度主营业务收入同比下降1.1%、归母净利润同比下降4.2%，短期还受到增值税调整影响。",
+          "算力、云和智能服务的投入回报尚未完全验证，资本开支强度、云业务利润率和ARPU压力使市场不愿给出高成长科技公司的估值倍数。",
+          "牌照和网络规模带来稳定现金流，但监管定价、行业竞争和高折旧资本密集度限制了估值扩张速度。"
         ],
         "undervaluationReasonsEn": [
-          "The market worries about wholesale pricing, channel inventory and premium-liquor demand; brand premium may not translate into near-term growth.",
-          "The origin and ageing ecosystem are hard to copy, but a high base, changing consumption and channel governance make growth expectations cautious.",
-          "The price is above the base and optimistic DCF cases; the task is to digest the premium through earnings and channel evidence, not claim under-valuation."
+          "The market still prices it as a low-growth telecom operator: public research cites a 1.1% YoY decline in Q1 2026 principal-business revenue and a 4.2% decline in attributable profit, with VAT reform adding short-term pressure.",
+          "Returns from cloud, computing and intelligent services are not fully proven; capex intensity, cloud margins and ARPU pressure keep the multiple below high-growth technology companies.",
+          "Licences and network scale support stable cash flow, but regulated pricing, competition and depreciation-heavy capital intensity limit multiple expansion."
         ],
         "repairConditions": [
-          "批价和渠道库存稳定，直营与批发价格体系恢复健康。",
-          "高端市场份额和吨价保持，现金流与分红继续兑现。",
-          "利润增长重新匹配估值，或价格回到基准DCF安全边际内。"
+          "主营业务收入和ARPU降幅收窄，移动、宽带及物联网客户质量继续改善。",
+          "经营现金流和自由现金流持续增长，分红兑现，同时资本开支下降并保持合理资本回报。",
+          "算力、云和智能服务收入增长转化为可持续毛利和现金流，而不是只增收不增利。",
+          "监管与竞争环境没有恶化，市场开始愿意用更高的PB或稳定现金流倍数重新定价。"
         ],
         "repairConditionsEn": [
-          "Wholesale pricing and channel inventory stabilize while direct and wholesale channels normalize.",
-          "Premium-market share and price per tonne hold, with cash flow and dividends delivered.",
-          "Earnings growth catches up with the valuation, or the price returns to the base-DCF safety zone."
+          "Principal-business revenue and ARPU declines narrow while mobile, broadband and IoT customer quality keeps improving.",
+          "Operating and free cash flow continue to grow, dividends are delivered, and lower capex earns a reasonable return.",
+          "Cloud, computing and intelligent-service growth converts into sustainable margin and cash flow rather than revenue without profit.",
+          "Regulation and competition do not worsen, and the market begins to re-rate the company on a higher PB or stable-cash-flow multiple."
         ],
         "failureSignals": [
-          "批价长期倒挂，渠道库存持续恶化。",
-          "品牌溢价和高端份额连续收窄。",
-          "现金流或分红弱化，价格仍明显高于乐观DCF。"
+          "ARPU持续下降且客户增长主要依赖低质量促销。",
+          "资本开支重新上升，但算力和云业务现金回报没有同步改善。",
+          "自由现金流或分红承诺弱化，云业务出现持续增收不增利。"
         ],
         "failureSignalsEn": [
-          "Wholesale prices remain inverted and channel inventory keeps worsening.",
-          "Brand premium and premium-market share narrow persistently.",
-          "Cash flow or dividends weaken while the price remains materially above the optimistic DCF."
+          "ARPU keeps falling and customer growth relies mainly on low-quality promotions.",
+          "Capex rises again without a matching improvement in computing and cloud cash returns.",
+          "Free cash flow or dividend commitments weaken, while cloud revenue keeps growing without profit."
         ],
         "institutionReferences": [
           {
-            "institution": "富途分析师一致预期汇总",
-            "institutionEn": "Futu analyst consensus summary",
-            "rating": "一致预期汇总",
-            "ratingEn": "Analyst consensus",
+            "institution": "华泰证券",
+            "institutionEn": "Huatai Securities",
+            "rating": "买入",
+            "ratingEn": "Buy",
             "market": "A股",
             "marketEn": "A-share",
-            "targetPrice": 1742.56,
+            "targetPrice": 114.3,
             "currency": "CNY",
-            "publishedDate": "2026-07-15",
-            "sourceUrl": "https://www.futunn.com/stock/600519-SH/forecast",
-            "note": "页面汇总的分析师目标价平均值为1742.56元；不是单一机构独立目标价。",
-            "noteEn": "The page reports an analyst target-price average of CNY 1,742.56; this is an aggregation, not a single institution's independent target."
+            "publishedDate": "2026-04-21",
+            "sourceUrl": "https://quote.cfi.cn/ybdata.aspx?id=20260421000306",
+            "note": "1.7倍2026年PB；同时给出港股目标价97.5港元。",
+            "noteEn": "1.7x 2026 PB; also gives an HK target of HKD 97.5."
+          },
+          {
+            "institution": "中金公司",
+            "institutionEn": "CICC",
+            "rating": "跑赢行业",
+            "ratingEn": "Outperform",
+            "market": "A股",
+            "marketEn": "A-share",
+            "targetPrice": 118.0,
+            "currency": "CNY",
+            "publishedDate": "2026-04-21",
+            "sourceUrl": "https://quote.cfi.cn/ybdata.aspx?id=20260421000392",
+            "note": "SOTP估值；报告同时提示ARPU下滑和应收账款回款风险。",
+            "noteEn": "SOTP valuation; the report also flags ARPU decline and receivables collection risk."
+          },
+          {
+            "institution": "汇丰环球研究",
+            "institutionEn": "HSBC Global Research",
+            "rating": "买入",
+            "ratingEn": "Buy",
+            "market": "A股",
+            "marketEn": "A-share",
+            "targetPrice": 112.0,
+            "currency": "CNY",
+            "publishedDate": "2026-06-02",
+            "sourceUrl": "https://www.aastocks.com/sc/stocks/analysis/stock-aafn-con/941/HK6/NOW.1514075/hk-stock-news",
+            "note": "下调A股目标价；同时将港股目标价下调至95港元。",
+            "noteEn": "Lowered the A-share target; also lowered the H-share target to HKD 95."
           }
         ],
-        "disclaimer": "这是模型辅助研究，不是自动买卖信号；当前重点是识别溢价消化条件，不把品牌质量自动等同于低估。",
-        "disclaimerEn": "This is a model research aid, not an automatic trading signal; the focus is premium digestion, not treating brand quality as automatic under-valuation.",
-        "currentPrice": 1289.5,
-        "baseDcfValuePerShare": 958.1566384098896,
-        "baseDcfMargin": -0.2569549139900041,
-        "optimisticDcfValuePerShare": 1099.5940277740078,
-        "institutionReferencePrice": 1742.56,
-        "institutionReferenceAboveOptimistic": true,
-        "valuationRule": "HOLD"
+        "disclaimer": "机构目标价是公开预测，不是事实或保证；不同货币、估值方法和发布日期不可直接横向比较。该卡只辅助人工判断，不自动改变confirmed、护城河状态、仓位或收益。",
+        "disclaimerEn": "Institution targets are public forecasts, not facts or guarantees; currencies, methods and dates are not directly comparable. This panel only assists human review and never changes confirmation, moat status, weights or returns.",
+        "currentPrice": 94.39,
+        "baseDcfValuePerShare": 115.02041371879504,
+        "baseDcfMargin": 0.2185656713507262,
+        "optimisticDcfValuePerShare": 131.918664509414,
+        "institutionReferencePrice": 112.0,
+        "institutionReferenceAboveOptimistic": false,
+        "valuationRule": "REVIEW"
       }
     },
     {
       "code": "000400.SZ",
       "name": "许继电气",
       "bucket": "FUTURE",
-      "state": "",
-      "theme": "稳定现金流",
-      "industry": "未分类",
+      "state": "OPTION_SEED",
+      "theme": "电力系统扩容",
+      "industry": "电力设备",
       "weight": 0.025,
       "price": 22.3,
       "dailyReturn": 0.004957187922487671,
@@ -500,10 +529,36 @@
           "latestAlertSource": ""
         }
       },
-      "valuation": null,
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 27.52885499729675,
+          "marginOfSafety": 0.2344778025693612
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 24.364152108589277,
+          "marginOfSafety": 0.0925628748246312
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 22.04357149897095,
+          "marginOfSafety": -0.0114990359205852
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 20.269179410191754,
+          "marginOfSafety": -0.0910681878837779
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 18.86848829138926,
+          "marginOfSafety": -0.1538794488166252
+        }
+      },
       "metrics": {
         "未来逻辑分": "82.5",
-        "DCF安全边际": "0.0%",
+        "DCF安全边际": "-1.1%",
         "当前状态": "BOTTOM_HOLD_NO_ADD"
       },
       "valuationRepair": {
@@ -559,49 +614,49 @@
         "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以资质、订单、现金流和DCF供人工判断。",
         "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on credentials, orders, cash flow and DCF.",
         "currentPrice": 22.3,
-        "baseDcfValuePerShare": null,
-        "baseDcfMargin": null,
-        "optimisticDcfValuePerShare": null,
+        "baseDcfValuePerShare": 22.04357149897095,
+        "baseDcfMargin": -0.0114990359205852,
+        "optimisticDcfValuePerShare": 24.364152108589277,
         "institutionReferencePrice": 33.97,
-        "institutionReferenceAboveOptimistic": false,
-        "valuationRule": "REVIEW"
+        "institutionReferenceAboveOptimistic": true,
+        "valuationRule": "HOLD"
       }
     },
     {
-      "code": "600312.SH",
-      "name": "平高电气",
-      "bucket": "FUTURE",
-      "state": "",
+      "code": "002032.SZ",
+      "name": "苏泊尔",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
       "theme": "稳定现金流",
-      "industry": "未分类",
-      "weight": 0.025,
-      "price": 19.1,
-      "dailyReturn": 0.025228126677402152,
+      "industry": "家用电器",
+      "weight": 0.0648648648648648,
+      "price": 42.83,
+      "dailyReturn": -0.0023293733985557674,
       "reason": "上一交易日已公布仓位",
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.29241728649317655,
-        "excessKurtosis": 1.4378391689710694,
-        "skewLabel": "近对称分布",
-        "kurtosisLabel": "厚尾波动型",
+        "skewness": -2.295416047005287,
+        "excessKurtosis": 19.175160478287896,
+        "skewLabel": "左尾风险型",
+        "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
       },
       "moat": {
-        "type": "高压设备认证与工程可靠性",
-        "thesis": "高压开关设备认证；运行可靠性记录和特高压工程经验可能构成项目准入优势",
-        "replicationBarrier": "高压设备长期运行验证；电网客户认证；大型工程交付记录难以快速建立",
+        "type": "品牌渠道与产品体系",
+        "thesis": "炊具和小家电品牌认知；渠道覆盖及与SEB协同的产品体系可能支持稳定份额",
+        "replicationBarrier": "品牌信任；线下线上渠道；供应链规模和产品开发体系需要持续投入",
         "monitoringSignals": [
-          "高压业务收入",
-          "中标与合同负债",
-          "毛利率",
-          "经营现金流",
-          "应收周转"
+          "品类份额",
+          "新品成功率",
+          "渠道效率",
+          "关联交易质量",
+          "毛利率"
         ],
         "invalidationSignals": [
-          "订单未兑现为现金",
-          "经营现金流继续下滑",
-          "中标份额下降",
-          "替代技术改变需求"
+          "品牌老化",
+          "核心品类份额下降",
+          "新品长期乏力",
+          "渠道费用侵蚀利润"
         ],
         "status": "DRAFT",
         "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
@@ -611,52 +666,79 @@
         "cautionEvidenceCount": 0,
         "contradictoryEvidenceCount": 0,
         "radar": {
-          "pendingAlertCount": 0,
+          "pendingAlertCount": 1,
           "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
+          "latestAlertDate": "2026-04-24",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
         }
       },
-      "valuation": null,
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 54.83135238324875,
+          "marginOfSafety": 0.2802090213226418
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 46.74526930153332,
+          "marginOfSafety": 0.0914141793493654
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 40.81598991352249,
+          "marginOfSafety": -0.0470233501395634
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 36.2822683118504,
+          "marginOfSafety": -0.1528772283014148
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 32.70338424065606,
+          "marginOfSafety": -0.2364374447663774
+        }
+      },
       "metrics": {
-        "未来逻辑分": "79.5",
-        "DCF安全边际": "0.0%",
-        "当前状态": "WAIT_NO_CONFIRMATION"
+        "股息率": "6.5%",
+        "所有者收益率": "6.4%",
+        "三年ROE": "34.4%",
+        "护城河代理分": "70.5"
       },
       "valuationRepair": {
         "asOf": "2026-07-18",
-        "generatedBy": "本地AI研究辅助：结合电网设备订单、现金转化假设与DCF敏感性整理",
-        "generatedByEn": "Local AI research aid: grid-equipment orders, cash conversion assumptions and DCF sensitivity",
+        "generatedBy": "本地AI研究辅助：结合品牌渠道、品类份额与DCF敏感性整理",
+        "generatedByEn": "Local AI research aid: brand channels, category share and DCF sensitivity",
         "undervaluationReasons": [
-          "市场担心电网设备订单兑现存在周期性，且项目收入确认与经营现金流之间可能有时间差。",
-          "高压和特高压资质构成准入优势，但工程项目集中度、应收账款和毛利率波动压低估值倍数。",
-          "当前价格接近基准DCF，估值修复更依赖订单转现金，而不是单纯的政策预期。"
+          "市场担心耐用品消费疲弱、渠道促销和新品成功率下降，使品牌优势难以转化为增量利润。",
+          "与SEB协同和渠道网络提供一定稳定性，但家电行业竞争使毛利率和费用率承压。",
+          "基准DCF略低于当前价格，估值修复需要份额与现金转化同时改善，而不是只靠品牌叙事。"
         ],
         "undervaluationReasonsEn": [
-          "The market worries that grid-equipment orders are cyclical and that project revenue recognition may lead operating cash flow.",
-          "High-voltage and UHV credentials support access, but project concentration, receivables and margin volatility suppress the multiple.",
-          "The current price is close to the base DCF; re-rating depends on orders becoming cash rather than policy expectations alone."
+          "The market worries about weak durable-goods consumption, channel promotions and lower new-product success, making brand strength harder to monetize.",
+          "SEB cooperation and channel reach provide stability, but appliance competition pressures margins and selling expenses.",
+          "The base DCF is below the current price; re-rating needs both share stability and cash conversion, not brand narrative alone."
         ],
         "repairConditions": [
-          "中标和合同负债持续转化为收入与经营现金流，应收周转不恶化。",
-          "高压业务份额、毛利率和项目交付记录保持改善。",
-          "基准DCF重新产生安全边际，并且现金回报与资本开支保持匹配。"
+          "核心品类份额稳定或提升，促销依赖下降且新品成功率改善。",
+          "渠道效率、毛利率和经营现金流同步改善。",
+          "基准DCF重新高于价格，并保持健康的分红与资本回报。"
         ],
         "repairConditionsEn": [
-          "Awards and contract liabilities convert into revenue and operating cash flow without worsening receivables turnover.",
-          "High-voltage share, gross margin and project-delivery records continue to improve.",
-          "The base DCF regains a margin of safety while cash returns remain matched to capex."
+          "Core-category share stabilizes or rises, promotion dependence falls and new-product success improves.",
+          "Channel efficiency, gross margin and operating cash flow improve together.",
+          "The base DCF moves above the price while dividends and capital returns remain healthy."
         ],
         "failureSignals": [
-          "订单增长但经营现金流持续下降，应收账款占用加剧。",
-          "中标份额或高压业务毛利率持续下滑。",
-          "替代技术改变需求，乐观DCF也无法覆盖当前价格。"
+          "品牌老化或核心品类份额连续下降。",
+          "新品长期乏力，渠道费用持续侵蚀利润。",
+          "现金流和分红承诺弱化，估值只能依赖非常乐观情景。"
         ],
         "failureSignalsEn": [
-          "Orders grow while operating cash flow keeps falling and receivables consume more capital.",
-          "Tender share or high-voltage gross margin deteriorates persistently.",
-          "Substitute technology changes demand and even the optimistic DCF no longer covers the price."
+          "The brand ages or core-category share keeps falling.",
+          "New products remain weak and channel expenses keep eroding profit.",
+          "Cash flow or dividend commitments weaken and the valuation depends only on the very optimistic case."
         ],
         "institutionReferences": [
           {
@@ -666,166 +748,21 @@
             "ratingEn": "Accumulate",
             "market": "A股",
             "marketEn": "A-share",
-            "targetPrice": 20.37,
+            "targetPrice": 54.2,
             "currency": "CNY",
-            "publishedDate": "2026-07-12",
-            "sourceUrl": "https://quote.cfi.cn/ybdata.aspx?id=20260712000105",
-            "note": "按2026年21倍PE给出目标价20.37元，评级为增持。",
-            "noteEn": "Sets a CNY 20.37 target at 21x 2026E P/E with an Accumulate rating."
+            "publishedDate": "2026-04-07",
+            "sourceUrl": "https://stock.finance.sina.com.cn/stock/go.php/vReport_Show/kind/lastest/rptid/828921874284/index.phtml",
+            "note": "2025年年报点评给予2026年20倍PE、目标价54.20元，维持增持。",
+            "noteEn": "The annual-report review uses 20x 2026E P/E and sets a CNY 54.20 target with an Accumulate rating."
           }
         ],
-        "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前先以订单、现金流和DCF敏感性供人工判断。",
-        "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on orders, cash flow and DCF sensitivity.",
-        "currentPrice": 19.1,
-        "baseDcfValuePerShare": null,
-        "baseDcfMargin": null,
-        "optimisticDcfValuePerShare": null,
-        "institutionReferencePrice": 20.37,
-        "institutionReferenceAboveOptimistic": false,
-        "valuationRule": "REVIEW"
-      }
-    },
-    {
-      "code": "300760.SZ",
-      "name": "迈瑞医疗",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "医药生物",
-      "weight": 0.15,
-      "price": 148.56,
-      "dailyReturn": 0.014892744910506961,
-      "reason": "上一交易日已公布仓位",
-      "humanMoatConfirmed": false,
-      "distribution": {
-        "skewness": 0.5620606450725295,
-        "excessKurtosis": 0.39864027536396707,
-        "skewLabel": "右尾机会型",
-        "kurtosisLabel": "常态尾部",
-        "observations": 252
-      },
-      "moat": {
-        "type": "装机基础与医疗平台协同",
-        "thesis": "医院装机基础；产品平台覆盖和本地服务网络可能形成工作流黏性及交叉销售优势",
-        "replicationBarrier": "医疗设备验证周期；售后服务网络；多产品研发和医院使用习惯需要长期建设",
-        "monitoringSignals": [
-          "高端产品渗透率",
-          "海外收入质量",
-          "装机与续购",
-          "研发效率",
-          "毛利率"
-        ],
-        "invalidationSignals": [
-          "医院客户显著转向竞争者",
-          "高端突破停滞",
-          "价格竞争持续侵蚀毛利",
-          "海外合规受阻"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 0,
-          "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
-        }
-      },
-      "valuation": {
-        "very_optimistic": {
-          "discountRate": 0.08,
-          "valuePerShare": 195.01937631149656,
-          "marginOfSafety": 0.3127313968194436
-        },
-        "optimistic": {
-          "discountRate": 0.09,
-          "valuePerShare": 167.1873115124679,
-          "marginOfSafety": 0.1253857802400908
-        },
-        "base": {
-          "discountRate": 0.1,
-          "valuePerShare": 146.77890283412756,
-          "marginOfSafety": -0.0119890762376981
-        },
-        "cautious": {
-          "discountRate": 0.11,
-          "valuePerShare": 131.17396381441563,
-          "marginOfSafety": -0.1170303997414133
-        },
-        "very_pessimistic": {
-          "discountRate": 0.12,
-          "valuePerShare": 118.85554804115588,
-          "marginOfSafety": -0.1999491919685253
-        }
-      },
-      "metrics": {
-        "股息率": "3.1%",
-        "所有者收益率": "6.4%",
-        "三年ROE": "32.5%",
-        "护城河代理分": "88.5"
-      },
-      "valuationRepair": {
-        "asOf": "2026-07-18",
-        "generatedBy": "本地AI研究辅助：结合医院装机、产品平台与DCF敏感性整理",
-        "generatedByEn": "Local AI research aid: hospital installed base, product platform and DCF sensitivity",
-        "undervaluationReasons": [
-          "市场担心医院预算、集采和海外合规环境压制高端设备增长，短期估值更偏谨慎。",
-          "装机基础、产品平台和服务网络可能形成工作流黏性，但高端产品渗透与海外收入质量仍需验证。",
-          "基准DCF略低于当前价格，估值修复需要现金收益和高端突破共同兑现。"
-        ],
-        "undervaluationReasonsEn": [
-          "The market worries that hospital budgets, procurement and overseas compliance may constrain high-end equipment growth.",
-          "The installed base, product platform and service network may create workflow stickiness, but premium penetration and overseas revenue quality still need proof.",
-          "The base DCF is slightly below the current price; re-rating needs both cash earnings and high-end progress."
-        ],
-        "repairConditions": [
-          "高端产品渗透率提升，装机与续购保持，海外收入质量改善。",
-          "研发效率、毛利率和经营现金流同步改善。",
-          "海外合规风险可控，基准DCF重新出现安全边际。"
-        ],
-        "repairConditionsEn": [
-          "Premium-product penetration rises while installations, renewals and overseas revenue quality improve.",
-          "R&D efficiency, gross margin and operating cash flow improve together.",
-          "Overseas compliance risk remains controlled and the base DCF regains a margin of safety."
-        ],
-        "failureSignals": [
-          "医院客户显著转向竞争者，高端突破停滞。",
-          "价格竞争持续侵蚀毛利，现金流弱于利润。",
-          "海外合规受阻，平台协同无法转化为收入和现金。"
-        ],
-        "failureSignalsEn": [
-          "Hospitals materially switch to rivals and high-end progress stalls.",
-          "Price competition keeps eroding margin and cash flow trails profit.",
-          "Overseas compliance is blocked and platform synergies fail to convert into revenue and cash."
-        ],
-        "institutionReferences": [
-          {
-            "institution": "华创证券",
-            "institutionEn": "Huachuang Securities",
-            "rating": "推荐",
-            "ratingEn": "Recommend",
-            "market": "A股",
-            "marketEn": "A-share",
-            "targetPrice": 213.0,
-            "currency": "CNY",
-            "publishedDate": "2026-04-30",
-            "sourceUrl": "https://basic.10jqka.com.cn/300760/worth.html",
-            "note": "页面摘录华创证券一季报点评，DCF估值约2582亿元、目标价约213元。",
-            "noteEn": "The page quotes Huachuang's Q1 review: DCF value around CNY 258.2bn and target around CNY 213."
-          }
-        ],
-        "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以装机、续购、海外合规和现金流供人工判断。",
-        "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on installations, renewals, overseas compliance and cash flow.",
-        "currentPrice": 148.56,
-        "baseDcfValuePerShare": 146.77890283412756,
-        "baseDcfMargin": -0.0119890762376981,
-        "optimisticDcfValuePerShare": 167.1873115124679,
-        "institutionReferencePrice": 213.0,
+        "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以品类份额、渠道效率和现金流供人工判断。",
+        "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on category share, channel efficiency and cash flow.",
+        "currentPrice": 42.83,
+        "baseDcfValuePerShare": 40.81598991352249,
+        "baseDcfMargin": -0.0470233501395634,
+        "optimisticDcfValuePerShare": 46.74526930153332,
+        "institutionReferencePrice": 54.2,
         "institutionReferenceAboveOptimistic": true,
         "valuationRule": "HOLD"
       }
@@ -976,40 +913,40 @@
       }
     },
     {
-      "code": "600941.SH",
-      "name": "中国移动",
+      "code": "600312.SH",
+      "name": "平高电气",
       "bucket": "FUTURE",
-      "state": "",
-      "theme": "稳定现金流",
-      "industry": "未分类",
+      "state": "OPTION_SEED",
+      "theme": "电力系统扩容",
+      "industry": "电力设备",
       "weight": 0.025,
-      "price": 94.39,
-      "dailyReturn": -0.0031682331819621323,
+      "price": 19.1,
+      "dailyReturn": 0.025228126677402152,
       "reason": "上一交易日已公布仓位",
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.02722771177691833,
-        "excessKurtosis": 2.3940377941690087,
+        "skewness": 0.29241728649317655,
+        "excessKurtosis": 1.4378391689710694,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
       },
       "moat": {
-        "type": "牌照网络与规模效应",
-        "thesis": "稀缺频谱和全国网络；客户规模及云网协同可能形成高固定成本行业的进入壁垒",
-        "replicationBarrier": "监管牌照；频谱资源；网络资本投入和客户覆盖无法由新进入者快速复制",
+        "type": "高压设备认证与工程可靠性",
+        "thesis": "高压开关设备认证；运行可靠性记录和特高压工程经验可能构成项目准入优势",
+        "replicationBarrier": "高压设备长期运行验证；电网客户认证；大型工程交付记录难以快速建立",
         "monitoringSignals": [
-          "移动客户质量",
-          "ARPU",
-          "云业务现金回报",
-          "资本开支效率",
-          "自由现金流"
+          "高压业务收入",
+          "中标与合同负债",
+          "毛利率",
+          "经营现金流",
+          "应收周转"
         ],
         "invalidationSignals": [
-          "监管改变回报机制",
-          "ARPU持续下降",
-          "云业务只增收不增利",
-          "资本开支长期失控"
+          "订单未兑现为现金",
+          "经营现金流继续下滑",
+          "中标份额下降",
+          "替代技术改变需求"
         ],
         "status": "DRAFT",
         "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
@@ -1026,101 +963,242 @@
           "latestAlertSource": ""
         }
       },
-      "valuation": null,
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 22.12880152055544,
+          "marginOfSafety": 0.1585759958405987
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 19.524559646759982,
+          "marginOfSafety": 0.0222282537570672
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 17.614948094708716,
+          "marginOfSafety": -0.0777514086539939
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 16.154796434147162,
+          "marginOfSafety": -0.1541991395734471
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 15.00216423070873,
+          "marginOfSafety": -0.2145463753555638
+        }
+      },
       "metrics": {
-        "未来逻辑分": "88.8",
-        "DCF安全边际": "0.0%",
-        "当前状态": "BOTTOM_HOLD_NO_ADD"
+        "未来逻辑分": "79.5",
+        "DCF安全边际": "-7.8%",
+        "当前状态": "WAIT_NO_CONFIRMATION"
       },
       "valuationRepair": {
         "asOf": "2026-07-18",
-        "generatedBy": "本地AI研究辅助：结合当前缓存财务、DCF敏感性与公开机构研报整理",
-        "generatedByEn": "Local AI research aid: current cached financials, DCF sensitivity and public institution reports",
+        "generatedBy": "本地AI研究辅助：结合电网设备订单、现金转化假设与DCF敏感性整理",
+        "generatedByEn": "Local AI research aid: grid-equipment orders, cash conversion assumptions and DCF sensitivity",
         "undervaluationReasons": [
-          "市场仍按低增长通信运营商定价：公开研报提到2026年一季度主营业务收入同比下降1.1%、归母净利润同比下降4.2%，短期还受到增值税调整影响。",
-          "算力、云和智能服务的投入回报尚未完全验证，资本开支强度、云业务利润率和ARPU压力使市场不愿给出高成长科技公司的估值倍数。",
-          "牌照和网络规模带来稳定现金流，但监管定价、行业竞争和高折旧资本密集度限制了估值扩张速度。"
+          "市场担心电网设备订单兑现存在周期性，且项目收入确认与经营现金流之间可能有时间差。",
+          "高压和特高压资质构成准入优势，但工程项目集中度、应收账款和毛利率波动压低估值倍数。",
+          "当前价格接近基准DCF，估值修复更依赖订单转现金，而不是单纯的政策预期。"
         ],
         "undervaluationReasonsEn": [
-          "The market still prices it as a low-growth telecom operator: public research cites a 1.1% YoY decline in Q1 2026 principal-business revenue and a 4.2% decline in attributable profit, with VAT reform adding short-term pressure.",
-          "Returns from cloud, computing and intelligent services are not fully proven; capex intensity, cloud margins and ARPU pressure keep the multiple below high-growth technology companies.",
-          "Licences and network scale support stable cash flow, but regulated pricing, competition and depreciation-heavy capital intensity limit multiple expansion."
+          "The market worries that grid-equipment orders are cyclical and that project revenue recognition may lead operating cash flow.",
+          "High-voltage and UHV credentials support access, but project concentration, receivables and margin volatility suppress the multiple.",
+          "The current price is close to the base DCF; re-rating depends on orders becoming cash rather than policy expectations alone."
         ],
         "repairConditions": [
-          "主营业务收入和ARPU降幅收窄，移动、宽带及物联网客户质量继续改善。",
-          "经营现金流和自由现金流持续增长，分红兑现，同时资本开支下降并保持合理资本回报。",
-          "算力、云和智能服务收入增长转化为可持续毛利和现金流，而不是只增收不增利。",
-          "监管与竞争环境没有恶化，市场开始愿意用更高的PB或稳定现金流倍数重新定价。"
+          "中标和合同负债持续转化为收入与经营现金流，应收周转不恶化。",
+          "高压业务份额、毛利率和项目交付记录保持改善。",
+          "基准DCF重新产生安全边际，并且现金回报与资本开支保持匹配。"
         ],
         "repairConditionsEn": [
-          "Principal-business revenue and ARPU declines narrow while mobile, broadband and IoT customer quality keeps improving.",
-          "Operating and free cash flow continue to grow, dividends are delivered, and lower capex earns a reasonable return.",
-          "Cloud, computing and intelligent-service growth converts into sustainable margin and cash flow rather than revenue without profit.",
-          "Regulation and competition do not worsen, and the market begins to re-rate the company on a higher PB or stable-cash-flow multiple."
+          "Awards and contract liabilities convert into revenue and operating cash flow without worsening receivables turnover.",
+          "High-voltage share, gross margin and project-delivery records continue to improve.",
+          "The base DCF regains a margin of safety while cash returns remain matched to capex."
         ],
         "failureSignals": [
-          "ARPU持续下降且客户增长主要依赖低质量促销。",
-          "资本开支重新上升，但算力和云业务现金回报没有同步改善。",
-          "自由现金流或分红承诺弱化，云业务出现持续增收不增利。"
+          "订单增长但经营现金流持续下降，应收账款占用加剧。",
+          "中标份额或高压业务毛利率持续下滑。",
+          "替代技术改变需求，乐观DCF也无法覆盖当前价格。"
         ],
         "failureSignalsEn": [
-          "ARPU keeps falling and customer growth relies mainly on low-quality promotions.",
-          "Capex rises again without a matching improvement in computing and cloud cash returns.",
-          "Free cash flow or dividend commitments weaken, while cloud revenue keeps growing without profit."
+          "Orders grow while operating cash flow keeps falling and receivables consume more capital.",
+          "Tender share or high-voltage gross margin deteriorates persistently.",
+          "Substitute technology changes demand and even the optimistic DCF no longer covers the price."
         ],
         "institutionReferences": [
           {
-            "institution": "华泰证券",
-            "institutionEn": "Huatai Securities",
-            "rating": "买入",
-            "ratingEn": "Buy",
+            "institution": "国泰海通证券",
+            "institutionEn": "GTJA Haitong Securities",
+            "rating": "增持",
+            "ratingEn": "Accumulate",
             "market": "A股",
             "marketEn": "A-share",
-            "targetPrice": 114.3,
+            "targetPrice": 20.37,
             "currency": "CNY",
-            "publishedDate": "2026-04-21",
-            "sourceUrl": "https://quote.cfi.cn/ybdata.aspx?id=20260421000306",
-            "note": "1.7倍2026年PB；同时给出港股目标价97.5港元。",
-            "noteEn": "1.7x 2026 PB; also gives an HK target of HKD 97.5."
-          },
-          {
-            "institution": "中金公司",
-            "institutionEn": "CICC",
-            "rating": "跑赢行业",
-            "ratingEn": "Outperform",
-            "market": "A股",
-            "marketEn": "A-share",
-            "targetPrice": 118.0,
-            "currency": "CNY",
-            "publishedDate": "2026-04-21",
-            "sourceUrl": "https://quote.cfi.cn/ybdata.aspx?id=20260421000392",
-            "note": "SOTP估值；报告同时提示ARPU下滑和应收账款回款风险。",
-            "noteEn": "SOTP valuation; the report also flags ARPU decline and receivables collection risk."
-          },
-          {
-            "institution": "汇丰环球研究",
-            "institutionEn": "HSBC Global Research",
-            "rating": "买入",
-            "ratingEn": "Buy",
-            "market": "A股",
-            "marketEn": "A-share",
-            "targetPrice": 112.0,
-            "currency": "CNY",
-            "publishedDate": "2026-06-02",
-            "sourceUrl": "https://www.aastocks.com/sc/stocks/analysis/stock-aafn-con/941/HK6/NOW.1514075/hk-stock-news",
-            "note": "下调A股目标价；同时将港股目标价下调至95港元。",
-            "noteEn": "Lowered the A-share target; also lowered the H-share target to HKD 95."
+            "publishedDate": "2026-07-12",
+            "sourceUrl": "https://quote.cfi.cn/ybdata.aspx?id=20260712000105",
+            "note": "按2026年21倍PE给出目标价20.37元，评级为增持。",
+            "noteEn": "Sets a CNY 20.37 target at 21x 2026E P/E with an Accumulate rating."
           }
         ],
-        "disclaimer": "机构目标价是公开预测，不是事实或保证；不同货币、估值方法和发布日期不可直接横向比较。该卡只辅助人工判断，不自动改变confirmed、护城河状态、仓位或收益。",
-        "disclaimerEn": "Institution targets are public forecasts, not facts or guarantees; currencies, methods and dates are not directly comparable. This panel only assists human review and never changes confirmation, moat status, weights or returns.",
-        "currentPrice": 94.39,
-        "baseDcfValuePerShare": null,
-        "baseDcfMargin": null,
-        "optimisticDcfValuePerShare": null,
-        "institutionReferencePrice": 112.0,
-        "institutionReferenceAboveOptimistic": false,
-        "valuationRule": "REVIEW"
+        "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前先以订单、现金流和DCF敏感性供人工判断。",
+        "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on orders, cash flow and DCF sensitivity.",
+        "currentPrice": 19.1,
+        "baseDcfValuePerShare": 17.614948094708716,
+        "baseDcfMargin": -0.0777514086539939,
+        "optimisticDcfValuePerShare": 19.524559646759982,
+        "institutionReferencePrice": 20.37,
+        "institutionReferenceAboveOptimistic": true,
+        "valuationRule": "HOLD"
+      }
+    },
+    {
+      "code": "300760.SZ",
+      "name": "迈瑞医疗",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "医药生物",
+      "weight": 0.15,
+      "price": 148.56,
+      "dailyReturn": 0.014892744910506961,
+      "reason": "上一交易日已公布仓位",
+      "humanMoatConfirmed": false,
+      "distribution": {
+        "skewness": 0.5620606450725295,
+        "excessKurtosis": 0.39864027536396707,
+        "skewLabel": "右尾机会型",
+        "kurtosisLabel": "常态尾部",
+        "observations": 252
+      },
+      "moat": {
+        "type": "装机基础与医疗平台协同",
+        "thesis": "医院装机基础；产品平台覆盖和本地服务网络可能形成工作流黏性及交叉销售优势",
+        "replicationBarrier": "医疗设备验证周期；售后服务网络；多产品研发和医院使用习惯需要长期建设",
+        "monitoringSignals": [
+          "高端产品渗透率",
+          "海外收入质量",
+          "装机与续购",
+          "研发效率",
+          "毛利率"
+        ],
+        "invalidationSignals": [
+          "医院客户显著转向竞争者",
+          "高端突破停滞",
+          "价格竞争持续侵蚀毛利",
+          "海外合规受阻"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 195.01937631149656,
+          "marginOfSafety": 0.3127313968194436
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 167.1873115124679,
+          "marginOfSafety": 0.1253857802400908
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 146.77890283412756,
+          "marginOfSafety": -0.0119890762376981
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 131.17396381441563,
+          "marginOfSafety": -0.1170303997414133
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 118.85554804115588,
+          "marginOfSafety": -0.1999491919685253
+        }
+      },
+      "metrics": {
+        "股息率": "3.1%",
+        "所有者收益率": "6.4%",
+        "三年ROE": "32.5%",
+        "护城河代理分": "88.5"
+      },
+      "valuationRepair": {
+        "asOf": "2026-07-18",
+        "generatedBy": "本地AI研究辅助：结合医院装机、产品平台与DCF敏感性整理",
+        "generatedByEn": "Local AI research aid: hospital installed base, product platform and DCF sensitivity",
+        "undervaluationReasons": [
+          "市场担心医院预算、集采和海外合规环境压制高端设备增长，短期估值更偏谨慎。",
+          "装机基础、产品平台和服务网络可能形成工作流黏性，但高端产品渗透与海外收入质量仍需验证。",
+          "基准DCF略低于当前价格，估值修复需要现金收益和高端突破共同兑现。"
+        ],
+        "undervaluationReasonsEn": [
+          "The market worries that hospital budgets, procurement and overseas compliance may constrain high-end equipment growth.",
+          "The installed base, product platform and service network may create workflow stickiness, but premium penetration and overseas revenue quality still need proof.",
+          "The base DCF is slightly below the current price; re-rating needs both cash earnings and high-end progress."
+        ],
+        "repairConditions": [
+          "高端产品渗透率提升，装机与续购保持，海外收入质量改善。",
+          "研发效率、毛利率和经营现金流同步改善。",
+          "海外合规风险可控，基准DCF重新出现安全边际。"
+        ],
+        "repairConditionsEn": [
+          "Premium-product penetration rises while installations, renewals and overseas revenue quality improve.",
+          "R&D efficiency, gross margin and operating cash flow improve together.",
+          "Overseas compliance risk remains controlled and the base DCF regains a margin of safety."
+        ],
+        "failureSignals": [
+          "医院客户显著转向竞争者，高端突破停滞。",
+          "价格竞争持续侵蚀毛利，现金流弱于利润。",
+          "海外合规受阻，平台协同无法转化为收入和现金。"
+        ],
+        "failureSignalsEn": [
+          "Hospitals materially switch to rivals and high-end progress stalls.",
+          "Price competition keeps eroding margin and cash flow trails profit.",
+          "Overseas compliance is blocked and platform synergies fail to convert into revenue and cash."
+        ],
+        "institutionReferences": [
+          {
+            "institution": "华创证券",
+            "institutionEn": "Huachuang Securities",
+            "rating": "推荐",
+            "ratingEn": "Recommend",
+            "market": "A股",
+            "marketEn": "A-share",
+            "targetPrice": 213.0,
+            "currency": "CNY",
+            "publishedDate": "2026-04-30",
+            "sourceUrl": "https://basic.10jqka.com.cn/300760/worth.html",
+            "note": "页面摘录华创证券一季报点评，DCF估值约2582亿元、目标价约213元。",
+            "noteEn": "The page quotes Huachuang's Q1 review: DCF value around CNY 258.2bn and target around CNY 213."
+          }
+        ],
+        "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以装机、续购、海外合规和现金流供人工判断。",
+        "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on installations, renewals, overseas compliance and cash flow.",
+        "currentPrice": 148.56,
+        "baseDcfValuePerShare": 146.77890283412756,
+        "baseDcfMargin": -0.0119890762376981,
+        "optimisticDcfValuePerShare": 167.1873115124679,
+        "institutionReferencePrice": 213.0,
+        "institutionReferenceAboveOptimistic": true,
+        "valuationRule": "HOLD"
       }
     },
     {
@@ -1280,7 +1358,7 @@
       "weight": 0.0702702702702702,
       "price": 1289.5,
       "dailyReturn": -0.0060967620104670495,
-      "reason": "估值仍高于乐观DCF情景；上一档减仓后的冷静期剩余3个交易日，暂不重复减仓。",
+      "reason": "价格已高于乐观DCF情景；先发出估值预警并保留一个交易日，确认前不卖出、不替换。",
       "humanMoatConfirmed": false,
       "distribution": {
         "skewness": 1.5029408359600933,
@@ -1569,7 +1647,7 @@
       "weight": 0.125,
       "price": 38.02,
       "dailyReturn": 0.04393190554640314,
-      "reason": "估值仍高于乐观DCF情景，但冷静期后没有新的财务、业绩或DCF恶化证据；保持仓位，不重复减仓。",
+      "reason": "价格已高于乐观DCF情景；先发出估值预警并保留一个交易日，确认前不卖出、不替换。",
       "humanMoatConfirmed": false,
       "distribution": {
         "skewness": 0.5130752175656106,
@@ -2138,6 +2216,468 @@
         "institutionReferenceAboveOptimistic": false,
         "valuationRule": "REVIEW"
       }
+    },
+    {
+      "code": "600941.SH",
+      "name": "中国移动",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "十五五六网",
+      "industry": "通信",
+      "weight": 0.025,
+      "price": 94.39,
+      "dailyReturn": -0.0031682331819621323,
+      "reason": "财务接口在 2026-07-27 刷新失败，保留最近已披露报告期 20260331；保留既有种子仓，暂停加仓/晋级，不把缺失数据当成现金收益恶化。",
+      "humanMoatConfirmed": false,
+      "distribution": {
+        "skewness": 0.02722771177691833,
+        "excessKurtosis": 2.3940377941690087,
+        "skewLabel": "近对称分布",
+        "kurtosisLabel": "厚尾波动型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "牌照网络与规模效应",
+        "thesis": "稀缺频谱和全国网络；客户规模及云网协同可能形成高固定成本行业的进入壁垒",
+        "replicationBarrier": "监管牌照；频谱资源；网络资本投入和客户覆盖无法由新进入者快速复制",
+        "monitoringSignals": [
+          "移动客户质量",
+          "ARPU",
+          "云业务现金回报",
+          "资本开支效率",
+          "自由现金流"
+        ],
+        "invalidationSignals": [
+          "监管改变回报机制",
+          "ARPU持续下降",
+          "云业务只增收不增利",
+          "资本开支长期失控"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 154.96373472568675,
+          "marginOfSafety": 0.6417388995199358
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 131.918664509414,
+          "marginOfSafety": 0.3975915299228094
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 115.02041371879504,
+          "marginOfSafety": 0.2185656713507262
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 102.09945661314516,
+          "marginOfSafety": 0.0816766247817053
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 91.89975499208823,
+          "marginOfSafety": -0.0263825088241524
+        }
+      },
+      "metrics": {
+        "未来逻辑分": "88.8",
+        "DCF安全边际": "21.9%",
+        "当前状态": "BOTTOM_HOLD_NO_ADD"
+      },
+      "valuationRepair": {
+        "asOf": "2026-07-18",
+        "generatedBy": "本地AI研究辅助：结合当前缓存财务、DCF敏感性与公开机构研报整理",
+        "generatedByEn": "Local AI research aid: current cached financials, DCF sensitivity and public institution reports",
+        "undervaluationReasons": [
+          "市场仍按低增长通信运营商定价：公开研报提到2026年一季度主营业务收入同比下降1.1%、归母净利润同比下降4.2%，短期还受到增值税调整影响。",
+          "算力、云和智能服务的投入回报尚未完全验证，资本开支强度、云业务利润率和ARPU压力使市场不愿给出高成长科技公司的估值倍数。",
+          "牌照和网络规模带来稳定现金流，但监管定价、行业竞争和高折旧资本密集度限制了估值扩张速度。"
+        ],
+        "undervaluationReasonsEn": [
+          "The market still prices it as a low-growth telecom operator: public research cites a 1.1% YoY decline in Q1 2026 principal-business revenue and a 4.2% decline in attributable profit, with VAT reform adding short-term pressure.",
+          "Returns from cloud, computing and intelligent services are not fully proven; capex intensity, cloud margins and ARPU pressure keep the multiple below high-growth technology companies.",
+          "Licences and network scale support stable cash flow, but regulated pricing, competition and depreciation-heavy capital intensity limit multiple expansion."
+        ],
+        "repairConditions": [
+          "主营业务收入和ARPU降幅收窄，移动、宽带及物联网客户质量继续改善。",
+          "经营现金流和自由现金流持续增长，分红兑现，同时资本开支下降并保持合理资本回报。",
+          "算力、云和智能服务收入增长转化为可持续毛利和现金流，而不是只增收不增利。",
+          "监管与竞争环境没有恶化，市场开始愿意用更高的PB或稳定现金流倍数重新定价。"
+        ],
+        "repairConditionsEn": [
+          "Principal-business revenue and ARPU declines narrow while mobile, broadband and IoT customer quality keeps improving.",
+          "Operating and free cash flow continue to grow, dividends are delivered, and lower capex earns a reasonable return.",
+          "Cloud, computing and intelligent-service growth converts into sustainable margin and cash flow rather than revenue without profit.",
+          "Regulation and competition do not worsen, and the market begins to re-rate the company on a higher PB or stable-cash-flow multiple."
+        ],
+        "failureSignals": [
+          "ARPU持续下降且客户增长主要依赖低质量促销。",
+          "资本开支重新上升，但算力和云业务现金回报没有同步改善。",
+          "自由现金流或分红承诺弱化，云业务出现持续增收不增利。"
+        ],
+        "failureSignalsEn": [
+          "ARPU keeps falling and customer growth relies mainly on low-quality promotions.",
+          "Capex rises again without a matching improvement in computing and cloud cash returns.",
+          "Free cash flow or dividend commitments weaken, while cloud revenue keeps growing without profit."
+        ],
+        "institutionReferences": [
+          {
+            "institution": "华泰证券",
+            "institutionEn": "Huatai Securities",
+            "rating": "买入",
+            "ratingEn": "Buy",
+            "market": "A股",
+            "marketEn": "A-share",
+            "targetPrice": 114.3,
+            "currency": "CNY",
+            "publishedDate": "2026-04-21",
+            "sourceUrl": "https://quote.cfi.cn/ybdata.aspx?id=20260421000306",
+            "note": "1.7倍2026年PB；同时给出港股目标价97.5港元。",
+            "noteEn": "1.7x 2026 PB; also gives an HK target of HKD 97.5."
+          },
+          {
+            "institution": "中金公司",
+            "institutionEn": "CICC",
+            "rating": "跑赢行业",
+            "ratingEn": "Outperform",
+            "market": "A股",
+            "marketEn": "A-share",
+            "targetPrice": 118.0,
+            "currency": "CNY",
+            "publishedDate": "2026-04-21",
+            "sourceUrl": "https://quote.cfi.cn/ybdata.aspx?id=20260421000392",
+            "note": "SOTP估值；报告同时提示ARPU下滑和应收账款回款风险。",
+            "noteEn": "SOTP valuation; the report also flags ARPU decline and receivables collection risk."
+          },
+          {
+            "institution": "汇丰环球研究",
+            "institutionEn": "HSBC Global Research",
+            "rating": "买入",
+            "ratingEn": "Buy",
+            "market": "A股",
+            "marketEn": "A-share",
+            "targetPrice": 112.0,
+            "currency": "CNY",
+            "publishedDate": "2026-06-02",
+            "sourceUrl": "https://www.aastocks.com/sc/stocks/analysis/stock-aafn-con/941/HK6/NOW.1514075/hk-stock-news",
+            "note": "下调A股目标价；同时将港股目标价下调至95港元。",
+            "noteEn": "Lowered the A-share target; also lowered the H-share target to HKD 95."
+          }
+        ],
+        "disclaimer": "机构目标价是公开预测，不是事实或保证；不同货币、估值方法和发布日期不可直接横向比较。该卡只辅助人工判断，不自动改变confirmed、护城河状态、仓位或收益。",
+        "disclaimerEn": "Institution targets are public forecasts, not facts or guarantees; currencies, methods and dates are not directly comparable. This panel only assists human review and never changes confirmation, moat status, weights or returns.",
+        "currentPrice": 94.39,
+        "baseDcfValuePerShare": 115.02041371879504,
+        "baseDcfMargin": 0.2185656713507262,
+        "optimisticDcfValuePerShare": 131.918664509414,
+        "institutionReferencePrice": 112.0,
+        "institutionReferenceAboveOptimistic": false,
+        "valuationRule": "REVIEW"
+      }
+    },
+    {
+      "code": "000400.SZ",
+      "name": "许继电气",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "电力系统扩容",
+      "industry": "电力设备",
+      "weight": 0.025,
+      "price": 22.3,
+      "dailyReturn": 0.004957187922487671,
+      "reason": "财务接口在 2026-07-27 刷新失败，保留最近已披露报告期 20260331；保留既有种子仓，暂停加仓/晋级，不把缺失数据当成现金收益恶化。",
+      "humanMoatConfirmed": false,
+      "distribution": {
+        "skewness": 0.10428920124721582,
+        "excessKurtosis": 2.5528434813127623,
+        "skewLabel": "近对称分布",
+        "kurtosisLabel": "厚尾波动型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "电网认证与工程经验",
+        "thesis": "电网核心设备的资质认证；长期工程记录和系统适配经验可能形成项目准入壁垒",
+        "replicationBarrier": "安全可靠性验证；电网客户认证；工程交付经验和存量系统适配周期较长",
+        "monitoringSignals": [
+          "电网相关收入",
+          "中标份额",
+          "合同负债",
+          "毛利率",
+          "经营现金流"
+        ],
+        "invalidationSignals": [
+          "电网收入持续下降",
+          "中标份额丢失",
+          "应收和现金流恶化",
+          "技术路线被替代"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 27.52885499729675,
+          "marginOfSafety": 0.2344778025693612
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 24.364152108589277,
+          "marginOfSafety": 0.0925628748246312
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 22.04357149897095,
+          "marginOfSafety": -0.0114990359205852
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 20.269179410191754,
+          "marginOfSafety": -0.0910681878837779
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 18.86848829138926,
+          "marginOfSafety": -0.1538794488166252
+        }
+      },
+      "metrics": {
+        "未来逻辑分": "82.5",
+        "DCF安全边际": "-1.1%",
+        "当前状态": "BOTTOM_HOLD_NO_ADD"
+      },
+      "valuationRepair": {
+        "asOf": "2026-07-18",
+        "generatedBy": "本地AI研究辅助：结合电网资质、订单兑现与DCF敏感性整理",
+        "generatedByEn": "Local AI research aid: grid credentials, order conversion and DCF sensitivity",
+        "undervaluationReasons": [
+          "市场担心电网投资节奏与项目交付波动，订单确认和现金回收可能不同步。",
+          "资质认证和系统适配形成项目准入优势，但集中客户、应收账款和技术路线变化压低估值。",
+          "基准DCF仅提供有限安全边际，估值修复需要订单质量和现金流同时兑现。"
+        ],
+        "undervaluationReasonsEn": [
+          "The market worries about grid-investment timing and project-delivery volatility, with order recognition and cash collection out of sync.",
+          "Credentials and system compatibility support access, but customer concentration, receivables and technology shifts suppress the multiple.",
+          "The base DCF offers only a limited margin of safety; re-rating needs both order quality and cash conversion."
+        ],
+        "repairConditions": [
+          "电网相关收入、中标份额和合同负债持续转化为现金。",
+          "毛利率与经营现金流改善，应收周转不恶化。",
+          "基准DCF安全边际扩大，并出现可验证的订单趋势。"
+        ],
+        "repairConditionsEn": [
+          "Grid-related revenue, tender share and contract liabilities convert consistently into cash.",
+          "Gross margin and operating cash flow improve without worse receivables turnover.",
+          "The base-DCF margin widens and a verifiable order trend emerges."
+        ],
+        "failureSignals": [
+          "电网收入持续下降或中标份额丢失。",
+          "应收账款和经营现金流同步恶化。",
+          "技术路线被替代，连乐观DCF也失去支撑。"
+        ],
+        "failureSignalsEn": [
+          "Grid revenue keeps falling or tender share is lost.",
+          "Receivables and operating cash flow deteriorate together.",
+          "The technology path is displaced and even the optimistic DCF loses support."
+        ],
+        "institutionReferences": [
+          {
+            "institution": "富途分析师一致预期汇总",
+            "institutionEn": "Futu analyst consensus summary",
+            "rating": "一致预期汇总",
+            "ratingEn": "Analyst consensus",
+            "market": "A股",
+            "marketEn": "A-share",
+            "targetPrice": 33.97,
+            "currency": "CNY",
+            "publishedDate": "2026-07-16",
+            "sourceUrl": "https://www.futunn.com/stock/000400-SZ/forecast",
+            "note": "页面汇总的分析师目标价平均值为33.97元；不是单一机构独立目标价。",
+            "noteEn": "The page reports an analyst target-price average of CNY 33.97; this is an aggregation, not a single institution's independent target."
+          }
+        ],
+        "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以资质、订单、现金流和DCF供人工判断。",
+        "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on credentials, orders, cash flow and DCF.",
+        "currentPrice": 22.3,
+        "baseDcfValuePerShare": 22.04357149897095,
+        "baseDcfMargin": -0.0114990359205852,
+        "optimisticDcfValuePerShare": 24.364152108589277,
+        "institutionReferencePrice": 33.97,
+        "institutionReferenceAboveOptimistic": true,
+        "valuationRule": "HOLD"
+      }
+    },
+    {
+      "code": "600312.SH",
+      "name": "平高电气",
+      "bucket": "FUTURE",
+      "state": "OPTION_SEED",
+      "theme": "电力系统扩容",
+      "industry": "电力设备",
+      "weight": 0.025,
+      "price": 19.1,
+      "dailyReturn": 0.025228126677402152,
+      "reason": "财务接口在 2026-07-27 刷新失败，保留最近已披露报告期 20260331；保留既有种子仓，暂停加仓/晋级，不把缺失数据当成现金收益恶化。",
+      "humanMoatConfirmed": false,
+      "distribution": {
+        "skewness": 0.29241728649317655,
+        "excessKurtosis": 1.4378391689710694,
+        "skewLabel": "近对称分布",
+        "kurtosisLabel": "厚尾波动型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "高压设备认证与工程可靠性",
+        "thesis": "高压开关设备认证；运行可靠性记录和特高压工程经验可能构成项目准入优势",
+        "replicationBarrier": "高压设备长期运行验证；电网客户认证；大型工程交付记录难以快速建立",
+        "monitoringSignals": [
+          "高压业务收入",
+          "中标与合同负债",
+          "毛利率",
+          "经营现金流",
+          "应收周转"
+        ],
+        "invalidationSignals": [
+          "订单未兑现为现金",
+          "经营现金流继续下滑",
+          "中标份额下降",
+          "替代技术改变需求"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 22.12880152055544,
+          "marginOfSafety": 0.1585759958405987
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 19.524559646759982,
+          "marginOfSafety": 0.0222282537570672
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 17.614948094708716,
+          "marginOfSafety": -0.0777514086539939
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 16.154796434147162,
+          "marginOfSafety": -0.1541991395734471
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 15.00216423070873,
+          "marginOfSafety": -0.2145463753555638
+        }
+      },
+      "metrics": {
+        "未来逻辑分": "79.5",
+        "DCF安全边际": "-7.8%",
+        "当前状态": "WAIT_NO_CONFIRMATION"
+      },
+      "valuationRepair": {
+        "asOf": "2026-07-18",
+        "generatedBy": "本地AI研究辅助：结合电网设备订单、现金转化假设与DCF敏感性整理",
+        "generatedByEn": "Local AI research aid: grid-equipment orders, cash conversion assumptions and DCF sensitivity",
+        "undervaluationReasons": [
+          "市场担心电网设备订单兑现存在周期性，且项目收入确认与经营现金流之间可能有时间差。",
+          "高压和特高压资质构成准入优势，但工程项目集中度、应收账款和毛利率波动压低估值倍数。",
+          "当前价格接近基准DCF，估值修复更依赖订单转现金，而不是单纯的政策预期。"
+        ],
+        "undervaluationReasonsEn": [
+          "The market worries that grid-equipment orders are cyclical and that project revenue recognition may lead operating cash flow.",
+          "High-voltage and UHV credentials support access, but project concentration, receivables and margin volatility suppress the multiple.",
+          "The current price is close to the base DCF; re-rating depends on orders becoming cash rather than policy expectations alone."
+        ],
+        "repairConditions": [
+          "中标和合同负债持续转化为收入与经营现金流，应收周转不恶化。",
+          "高压业务份额、毛利率和项目交付记录保持改善。",
+          "基准DCF重新产生安全边际，并且现金回报与资本开支保持匹配。"
+        ],
+        "repairConditionsEn": [
+          "Awards and contract liabilities convert into revenue and operating cash flow without worsening receivables turnover.",
+          "High-voltage share, gross margin and project-delivery records continue to improve.",
+          "The base DCF regains a margin of safety while cash returns remain matched to capex."
+        ],
+        "failureSignals": [
+          "订单增长但经营现金流持续下降，应收账款占用加剧。",
+          "中标份额或高压业务毛利率持续下滑。",
+          "替代技术改变需求，乐观DCF也无法覆盖当前价格。"
+        ],
+        "failureSignalsEn": [
+          "Orders grow while operating cash flow keeps falling and receivables consume more capital.",
+          "Tender share or high-voltage gross margin deteriorates persistently.",
+          "Substitute technology changes demand and even the optimistic DCF no longer covers the price."
+        ],
+        "institutionReferences": [
+          {
+            "institution": "国泰海通证券",
+            "institutionEn": "GTJA Haitong Securities",
+            "rating": "增持",
+            "ratingEn": "Accumulate",
+            "market": "A股",
+            "marketEn": "A-share",
+            "targetPrice": 20.37,
+            "currency": "CNY",
+            "publishedDate": "2026-07-12",
+            "sourceUrl": "https://quote.cfi.cn/ybdata.aspx?id=20260712000105",
+            "note": "按2026年21倍PE给出目标价20.37元，评级为增持。",
+            "noteEn": "Sets a CNY 20.37 target at 21x 2026E P/E with an Accumulate rating."
+          }
+        ],
+        "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前先以订单、现金流和DCF敏感性供人工判断。",
+        "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on orders, cash flow and DCF sensitivity.",
+        "currentPrice": 19.1,
+        "baseDcfValuePerShare": 17.614948094708716,
+        "baseDcfMargin": -0.0777514086539939,
+        "optimisticDcfValuePerShare": 19.524559646759982,
+        "institutionReferencePrice": 20.37,
+        "institutionReferenceAboveOptimistic": true,
+        "valuationRule": "HOLD"
+      }
     }
   ],
   "humanReview": {
@@ -2151,40 +2691,12 @@
     "note": "人工护城河判断仅用于观察和预警，不是持仓或收益计算门槛；模型按目标仓位计算全部持仓收益，出现有据可查的不利证据时再触发复核。"
   },
   "allocationChange": {
-    "changed": true,
+    "changed": false,
     "activeAsOf": "2026-07-24",
     "nextAsOf": "2026-07-28",
     "effectiveLabel": "下一交易日开盘后生效",
     "marketContext": "本轮没有使用宏观大环境择时信号；变化只由个股筛选/证据状态、锚仓继承纪律、经济因子分散和现金预算约束驱动。",
-    "changes": [
-      {
-        "code": "000400.SZ",
-        "name": "许继电气",
-        "oldWeight": 0.025,
-        "newWeight": 0.0,
-        "changeType": "退出",
-        "reason": "当前未来产业证据或时点门槛未达到入选要求，回到观察状态并把预算留在现金；不等于自动判定产业逻辑失效。",
-        "effect": "仅作为下一交易日目标信号；不会回溯修改今日收益，也不会自动下单。"
-      },
-      {
-        "code": "600312.SH",
-        "name": "平高电气",
-        "oldWeight": 0.025,
-        "newWeight": 0.0,
-        "changeType": "退出",
-        "reason": "当前未来产业证据或时点门槛未达到入选要求，回到观察状态并把预算留在现金；不等于自动判定产业逻辑失效。",
-        "effect": "仅作为下一交易日目标信号；不会回溯修改今日收益，也不会自动下单。"
-      },
-      {
-        "code": "600941.SH",
-        "name": "中国移动",
-        "oldWeight": 0.025,
-        "newWeight": 0.0,
-        "changeType": "退出",
-        "reason": "当前未来产业证据或时点门槛未达到入选要求，回到观察状态并把预算留在现金；不等于自动判定产业逻辑失效。",
-        "effect": "仅作为下一交易日目标信号；不会回溯修改今日收益，也不会自动下单。"
-      }
-    ],
+    "changes": [],
     "valuationWarnings": []
   },
   "moatRadar": {
