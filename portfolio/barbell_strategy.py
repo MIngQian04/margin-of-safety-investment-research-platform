@@ -371,7 +371,16 @@ def classify_future_states(
     thesis_pass = pd.to_numeric(out["future_thesis_score"], errors="coerce").ge(72)
     value_pass = (out["valuation_gate"].isin({"REASONABLE", "FAIR_TO_RICH"})
                   & pd.to_numeric(out["dcf_margin_of_safety"], errors="coerce").ge(0))
-    cash_pass = out["financial_check"].eq("PASS_SURVIVAL")
+    data_status = out.get(
+        "financial_data_status", pd.Series("LIVE", index=out.index)
+    ).fillna("LIVE").astype(str).str.upper()
+    financial_error = out.get(
+        "financial_data_error", pd.Series("", index=out.index)
+    ).fillna("").astype(str)
+    data_unavailable = data_status.isin({"STALE_CACHE", "CACHE_ONLY", "UNAVAILABLE", "INCOMPLETE"}) | out[
+        "financial_check"
+    ].astype(str).str.startswith(("ERROR", "NOT_FETCHED"))
+    cash_pass = out["financial_check"].eq("PASS_SURVIVAL") & ~data_unavailable
     bottom = out["timing_status"].eq("BOTTOM_HOLD_NO_ADD")
     trend = out["timing_status"].eq("BOTTOM_VOLUME_CONFIRMATION")
     evidence_pass = out["seed_evidence_ready"]
@@ -386,17 +395,38 @@ def classify_future_states(
         default="RESEARCH_ONLY",
     )
     evidence_failed = evidence_gate_enabled & ~evidence_pass
+    out["financial_data_status"] = data_status
+    out["financial_data_error"] = financial_error
+    out["financial_data_unavailable"] = data_unavailable
+    report_dates = out.get("financial_report_date", pd.Series("", index=out.index))
+    out["financial_report_date"] = report_dates.fillna("").astype(str)
+    announcement_dates = out.get("financial_announcement_date", pd.Series("", index=out.index))
+    out["financial_announcement_date"] = announcement_dates.fillna("").astype(str)
+    def _financial_data_reason(row: pd.Series) -> str:
+        status = str(row.get("financial_data_status", "")).upper()
+        prefix = (
+            "财务接口在 " + str(as_of or "本次信号日") + " 刷新失败"
+            if status in {"STALE_CACHE", "CACHE_ONLY", "UNAVAILABLE"}
+            else "截至 " + str(as_of or "本次信号日") + " 财务报表数据不完整"
+        )
+        report_date = str(row.get("financial_report_date", ""))
+        suffix = "，保留最近已披露报告期 " + report_date if report_date else "，本次未取得可用财务数据"
+        return prefix + suffix + "；暂停新增与晋级，不把缺失数据当成现金收益恶化。"
+
+    data_unavailable_reason = out.apply(_financial_data_reason, axis=1)
     out["state_reason"] = np.select(
         [invalidated,
          out["barbell_state"].eq("PROMOTED_CORE"),
          out["barbell_state"].eq("CONFIRMED_BUILD"),
          out["barbell_state"].eq("OPTION_SEED"),
-         evidence_failed],
+         evidence_failed,
+         data_unavailable],
         ["invalidation trigger recorded",
          "national policy + thesis + value + cash earnings + seed evidence + 3 milestones + bottom-volume trend confirmed",
          "national policy + thesis + value + cash earnings + seed evidence + at least 2 milestones confirmed; staged build/reduction weight",
          "national policy + thesis + value + cash earnings + auditable seed evidence + bottom/trend position; promotion gates not complete",
-         "seed evidence gate failed: " + out["evidence_status"].astype(str)],
+         "seed evidence gate failed: " + out["evidence_status"].astype(str),
+         data_unavailable_reason],
         default="one or more policy, thesis, value, cash-earnings, milestone or timing gates failed",
     )
 
@@ -496,6 +526,15 @@ def classify_future_states(
         # confirmation is absent, while freezing additions and promotion.
         # Hard thesis, evidence and cash failures retain their normal
         # reduction behaviour.
+        if bool(data_unavailable.loc[idx]):
+            out.at[idx, "barbell_state"] = prior_state
+            out.at[idx, "valuation_warning_status"] = "DATA_UNAVAILABLE"
+            held_reason = data_unavailable_reason.loc[idx].replace(
+                "暂停新增与晋级", "保留既有种子仓，暂停加仓/晋级"
+            )
+            out.at[idx, "valuation_warning_reason"] = held_reason
+            out.at[idx, "state_reason"] = held_reason
+            continue
         hard_ready = bool(policy_pass.loc[idx] and thesis_pass.loc[idx] and cash_pass.loc[idx]
                           and evidence_pass.loc[idx] and not invalidated.loc[idx])
         timing_ready = bool(bottom.loc[idx] or trend.loc[idx])

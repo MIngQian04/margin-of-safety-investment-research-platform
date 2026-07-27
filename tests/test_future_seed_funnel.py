@@ -32,3 +32,11 @@ def test_funnel_reports_first_failed_gate_in_strategy_order():
     assert result.loc["value", "first_failed_gate"] == "VALUE_UNSUPPORTED"
     assert result.loc["cash", "first_failed_gate"] == "CASH_EARNINGS_FAIL"
     assert result.loc["thesis", "first_failed_gate"] == "THESIS_BELOW_72"
+
+
+def test_funnel_exposes_financial_data_outage_separately_from_cash_failure():
+    result = build_future_research_funnel(pd.DataFrame([base(
+        ts_code="outage", barbell_state="RESEARCH_ONLY",
+        financial_data_status="STALE_CACHE", financial_check="PASS_SURVIVAL",
+    )])).set_index("ts_code")
+    assert result.loc["outage", "first_failed_gate"] == "FINANCIAL_DATA_UNAVAILABLE"

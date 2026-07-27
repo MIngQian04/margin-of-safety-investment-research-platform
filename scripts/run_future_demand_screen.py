@@ -58,22 +58,99 @@ def timing_features(close: pd.DataFrame, volume: pd.DataFrame, codes: list[str])
     return pd.DataFrame(rows)
 
 
-def get_statements(client: TushareClient | None, code: str, refresh: bool) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+def _latest_report_metadata(frame: pd.DataFrame, as_of: str | None) -> tuple[str, str]:
+    """Return the latest report period and announcement known at ``as_of``."""
+    if frame is None or frame.empty or "end_date" not in frame:
+        return "", ""
+    view = frame.copy()
+    view["end_date"] = view["end_date"].astype(str).str.replace("-", "", regex=False)
+    if "ann_date" in view:
+        view["ann_date"] = view["ann_date"].fillna("").astype(str).str.replace("-", "", regex=False)
+        if as_of:
+            cutoff = str(as_of).replace("-", "")
+            view = view[(view["ann_date"].eq("")) | view["ann_date"].le(cutoff)]
+    if view.empty:
+        return "", ""
+    view = view.sort_values(["end_date", "ann_date"] if "ann_date" in view else ["end_date"])
+    row = view.iloc[-1]
+    return str(row.get("end_date", "")), str(row.get("ann_date", ""))
+
+
+def _filter_statements_as_of(frame: pd.DataFrame, as_of: str | None) -> pd.DataFrame:
+    """Prevent cached rows announced after the signal date from entering DCF."""
+    if frame is None or frame.empty or not as_of or "ann_date" not in frame:
+        return frame
+    view = frame.copy()
+    ann = view["ann_date"].fillna("").astype(str).str.replace("-", "", regex=False)
+    cutoff = str(as_of).replace("-", "")
+    return view[ann.eq("") | ann.le(cutoff)].copy()
+
+
+def get_statements(
+    client: TushareClient | None,
+    code: str,
+    refresh: bool,
+    as_of: str | None = None,
+    return_metadata: bool = False,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame] | tuple[tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame], dict]:
+    """Fetch statements without destroying a valid cache on a transient failure.
+
+    A failed refresh is explicitly marked as ``STALE_CACHE`` when a local frame
+    exists.  That frame may be used to explain and preserve an existing holding,
+    but it is never treated as fresh data for a new entry or promotion.
+    """
     frames = []
+    statuses = []
+    errors = []
+    report_dates = []
+    announcement_dates = []
     for endpoint in ["income", "cashflow", "balancesheet"]:
         path = FIN / endpoint / f"{code.replace('.', '_')}.parquet"
-        if path.exists() and not refresh:
-            frame = pd.read_parquet(path)
+        cached = pd.read_parquet(path) if path.exists() else pd.DataFrame()
+        if not refresh:
+            frame = cached
+            statuses.append("CACHE_ONLY" if not frame.empty else "UNAVAILABLE")
         elif client is not None:
-            path.parent.mkdir(parents=True, exist_ok=True)
-            frame = getattr(client.pro, endpoint)(ts_code=code, start_date="20190101")
-            frame = pd.DataFrame() if frame is None else frame
-            frame.to_parquet(path, index=False)
-            time.sleep(client.sleep_seconds)
+            try:
+                result = getattr(client.pro, endpoint)(ts_code=code, start_date="20190101")
+                frame = pd.DataFrame() if result is None else result
+                if frame.empty:
+                    raise RuntimeError(f"{endpoint} returned no rows")
+                path.parent.mkdir(parents=True, exist_ok=True)
+                frame.to_parquet(path, index=False)
+                statuses.append("LIVE")
+                time.sleep(client.sleep_seconds)
+            except Exception as exc:
+                errors.append(f"{endpoint}: {type(exc).__name__}: {str(exc)[:180]}")
+                if not cached.empty:
+                    frame = cached
+                    statuses.append("STALE_CACHE")
+                else:
+                    frame = pd.DataFrame()
+                    statuses.append("UNAVAILABLE")
         else:
-            return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+            frame = cached
+            statuses.append("CACHE_ONLY" if not frame.empty else "UNAVAILABLE")
+        report_date, announcement_date = _latest_report_metadata(frame, as_of)
+        report_dates.append(report_date)
+        announcement_dates.append(announcement_date)
         frames.append(frame)
-    return tuple(frames)
+    if "UNAVAILABLE" in statuses:
+        status = "UNAVAILABLE"
+    elif "STALE_CACHE" in statuses:
+        status = "STALE_CACHE"
+    elif all(value == "LIVE" for value in statuses):
+        status = "LIVE"
+    else:
+        status = "CACHE_ONLY"
+    metadata = {
+        "financial_data_status": status,
+        "financial_data_error": "; ".join(errors),
+        "financial_report_date": max((date for date in report_dates if date), default=""),
+        "financial_announcement_date": max((date for date in announcement_dates if date), default=""),
+    }
+    result = tuple(frames)
+    return (result, metadata) if return_metadata else result
 
 
 def _quarterly_profit_growth(income: pd.DataFrame, as_of: str | None = None) -> dict:
@@ -135,9 +212,28 @@ def financial_checks(screen: pd.DataFrame, refresh: bool, as_of: str | None = No
     rows = []
     for _, row in screen.iterrows():
         try:
-            income, cashflow, balance = get_statements(client, row["ts_code"], refresh)
+            statement_result, metadata = get_statements(
+                client, row["ts_code"], refresh, as_of=as_of, return_metadata=True,
+            )
+            income, cashflow, balance = statement_result
             if income.empty or cashflow.empty or balance.empty:
-                rows.append({"ts_code": row["ts_code"], "financial_check": "NOT_FETCHED"})
+                rows.append({"ts_code": row["ts_code"], **metadata, "financial_check": "NOT_FETCHED"})
+                continue
+            income = _filter_statements_as_of(income, as_of)
+            cashflow = _filter_statements_as_of(cashflow, as_of)
+            balance = _filter_statements_as_of(balance, as_of)
+            if income.empty or cashflow.empty or balance.empty:
+                rows.append({"ts_code": row["ts_code"], **metadata, "financial_check": "NOT_FETCHED"})
+                continue
+            annual_periods = []
+            for frame in (income, cashflow, balance):
+                periods = set(frame.get("end_date", pd.Series(dtype=object)).astype(str).str.replace("-", "", regex=False))
+                annual_periods.append({period for period in periods if period.endswith("1231")})
+            if not set.intersection(*annual_periods):
+                metadata = {**metadata, "financial_data_status": "INCOMPLETE",
+                            "financial_data_error": (metadata.get("financial_data_error", "") + "; " if metadata.get("financial_data_error") else "")
+                            + "no common annual report period available as of signal date"}
+                rows.append({"ts_code": row["ts_code"], **metadata, "financial_check": "NOT_FETCHED"})
                 continue
             value = owner_earnings_from_statements(
                 income, cashflow, balance, float(row["total_share"]) * 10000.0,
@@ -155,15 +251,18 @@ def financial_checks(screen: pd.DataFrame, refresh: bool, as_of: str | None = No
                 )
             check = "PASS_SURVIVAL" if value["normalized_owner_earnings"] > 0 and value["normalized_fcf"] > 0 else "FAIL_CASH_EARNINGS"
             growth = _quarterly_profit_growth(income, as_of)
-            rows.append({"ts_code": row["ts_code"], **value, **growth,
+            rows.append({"ts_code": row["ts_code"], **metadata, **value, **growth,
                          "owner_earnings_yield": owner_yield,
                          "dcf_margin_of_safety": margin, "financial_check": check})
         except Exception as exc:
-            rows.append({"ts_code": row["ts_code"], "financial_check": f"ERROR: {str(exc)[:120]}"})
-    columns = ["ts_code", "financial_years", "normalized_owner_earnings", "normalized_fcf",
+            rows.append({"ts_code": row["ts_code"], "financial_data_status": "UNAVAILABLE",
+                         "financial_data_error": str(exc)[:240], "financial_check": f"ERROR: {str(exc)[:120]}"})
+    columns = ["ts_code", "financial_as_of", "financial_years", "normalized_owner_earnings", "normalized_fcf",
                "net_cash", "owner_earnings_value_per_share", "owner_earnings_yield",
                "dcf_margin_of_safety", "profit_growth_q1", "profit_growth_q2",
                "profit_growth_avg", "profit_loss_to_profit", "profit_growth_quarters",
+               "financial_data_status", "financial_data_error", "financial_report_date",
+               "financial_announcement_date",
                "financial_check"]
     sensitivity_columns = [
         f"dcf_{scenario}_{field}"

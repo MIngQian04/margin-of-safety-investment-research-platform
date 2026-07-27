@@ -89,7 +89,10 @@ def anchor_financial_checks(watchlist: pd.DataFrame, daily: pd.DataFrame, refres
 def markdown_table(frame: pd.DataFrame, columns: list[str], labels: list[str]) -> str:
     if frame.empty:
         return "暂无。"
-    shown = frame[columns].copy()
+    # A transient financial outage can leave a diagnostic frame without some
+    # optional quality columns.  Keep the report renderable and show a dash
+    # instead of aborting the entire portfolio export.
+    shown = frame.reindex(columns=columns).copy()
     if "target_weight" in shown:
         shown["target_weight"] = shown["target_weight"].map(lambda x: f"{x:.1%}")
     if "dcf_margin_of_safety" in shown:
@@ -122,6 +125,10 @@ def build_future_research_funnel(states: pd.DataFrame) -> pd.DataFrame:
     out["research_direction"] = mapped.map(lambda value: value[1] if isinstance(value, tuple) else "其他规划方向")
 
     def first_gate(row: pd.Series) -> str:
+        data_status = str(row.get("financial_data_status", "")).upper()
+        financial_check = str(row.get("financial_check", ""))
+        if data_status in {"STALE_CACHE", "CACHE_ONLY", "UNAVAILABLE", "INCOMPLETE"} or financial_check.startswith(("ERROR", "NOT_FETCHED")):
+            return "FINANCIAL_DATA_UNAVAILABLE"
         if row.get("barbell_state") == "PROMOTED_CORE":
             return "PROMOTED_CORE"
         if row.get("barbell_state") == "CONFIRMED_BUILD":

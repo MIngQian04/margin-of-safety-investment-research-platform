@@ -632,6 +632,12 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
         change_type = "新增" if not old else "退出" if not new else "增仓" if new_weight > old_weight else "减仓"
         changed_item = new or old
         detail = str(new.get("reason", "")).strip() if new else ""
+        if not detail and old and str(old.get("bucket", "")) == "FUTURE":
+            # An exited future row is no longer present in target_portfolio;
+            # use the diagnostic state row instead of hiding the cause behind
+            # the generic “timing/evidence” message.
+            diagnostic = future.loc[code] if code in future.index else pd.Series(dtype=object)
+            detail = str(diagnostic.get("state_reason", "")).strip()
         changes.append({
             "code": code,
             "name": (new or old)["name"],

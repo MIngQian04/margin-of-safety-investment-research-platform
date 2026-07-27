@@ -2,6 +2,7 @@ import pandas as pd
 import pytest
 
 from selection.future_demand import decision_status, research_tier, score_future_thesis, valuation_gate
+from scripts import run_future_demand_screen as future_screen
 from scripts.run_future_demand_screen import _quarterly_profit_growth
 
 
@@ -43,3 +44,32 @@ def test_two_reported_quarters_drive_profit_growth_average():
     result = _quarterly_profit_growth(income, "2026-07-17")
     assert result["profit_growth_quarters"] == 2
     assert abs(result["profit_growth_avg"] - .09) < 1e-9
+
+
+def test_refresh_failure_keeps_existing_statement_cache_and_marks_it_stale(tmp_path, monkeypatch):
+    monkeypatch.setattr(future_screen, "FIN", tmp_path)
+    cached = pd.DataFrame([{
+        "end_date": "20260331", "ann_date": "20260421", "n_income_attr_p": 10,
+    }])
+    for endpoint in ["income", "cashflow", "balancesheet"]:
+        path = tmp_path / endpoint / "A.parquet"
+        path.parent.mkdir(parents=True)
+        cached.to_parquet(path, index=False)
+
+    class BrokenPro:
+        def __getattr__(self, _name):
+            def call(**_kwargs):
+                raise ConnectionError("temporary Tushare outage")
+            return call
+
+    class Client:
+        pro = BrokenPro()
+        sleep_seconds = 0
+
+    frames, metadata = future_screen.get_statements(
+        Client(), "A", refresh=True, as_of="20260727", return_metadata=True,
+    )
+    assert metadata["financial_data_status"] == "STALE_CACHE"
+    assert metadata["financial_report_date"] == "20260331"
+    assert metadata["financial_announcement_date"] == "20260421"
+    assert all(len(frame) == 1 for frame in frames)
