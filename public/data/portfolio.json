@@ -1280,7 +1280,7 @@
       "weight": 0.0702702702702702,
       "price": 1289.5,
       "dailyReturn": -0.0060967620104670495,
-      "reason": "估值仍高于乐观DCF情景；上一档减仓后的冷静期剩余2个交易日，暂不重复减仓。",
+      "reason": "估值仍高于乐观DCF情景；上一档减仓后的冷静期剩余3个交易日，暂不重复减仓。",
       "humanMoatConfirmed": false,
       "distribution": {
         "skewness": 1.5029408359600933,
