@@ -13,7 +13,7 @@ from selection.moat_monitor import build_moat_monitor
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TRADING_DAYS = 252
-RISK_FREE_RATE_ANNUAL = 0.015
+RISK_FREE_RATE_ANNUAL = 0.0
 DIVIDEND_EVENTS_PATH = PROJECT_ROOT / "data/processed/portfolio/dividend_events.csv"
 MOAT_REGISTRY_PATH = PROJECT_ROOT / "config/moat-thesis-registry.csv"
 MOAT_EVIDENCE_PATH = PROJECT_ROOT / "config/moat-evidence-ledger.csv"
@@ -319,6 +319,9 @@ def _performance_metrics(nav_frame: pd.DataFrame) -> dict:
         "minimumObservations": 30,
         "method": "标准Sharpe=(日均超额收益/日收益标准差)×√252；Smart Sharpe再按偏度与超额峰度修正",
     }
+    if observations < result["minimumObservations"]:
+        result["status"] = "SHORT_SAMPLE"
+        return result
     if observations < 2:
         result["status"] = "INSUFFICIENT_DATA"
         return result
