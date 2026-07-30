@@ -29,7 +29,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   ]);
   const data = JSON.parse(dataText);
   assert.doesNotMatch(page, /ming-portfolio-units-v1|投入 1 单位|清零，重新开始/);
-  assert.doesNotMatch(page, /组合 Sharpe|加权个股 Sharpe|年化波动|最大回撤/);
+  assert.match(page, /Sharpe Ratio/);
+  assert.match(page, /Smart Sharpe/);
   assert.match(page, /Kurtosis/);
   assert.match(page, /Portfolio Return Curve/);
   assert.match(page, /aria-pressed/);
@@ -189,6 +190,10 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(Number.isInteger(data.moatRadar.pendingAlerts));
   assert.ok(Number.isFinite(data.distributionSummary.skewness));
   assert.ok(Number.isFinite(data.distributionSummary.excessKurtosis));
+  assert.ok(Number.isFinite(data.performanceMetrics.sharpe));
+  assert.ok(Number.isFinite(data.performanceMetrics.smartSharpe));
+  assert.equal(data.performanceMetrics.status, "SHORT_SAMPLE");
+  assert.ok(data.performanceMetrics.observations >= 2);
   assert.ok(Number.isFinite(data.dividendSummary.cumulativeCash));
   assert.ok(Number.isFinite(data.dividendSummary.reinvestedCash));
   assert.ok(Number.isFinite(data.dividendSummary.pendingCash));
