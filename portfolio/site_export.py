@@ -13,6 +13,7 @@ from selection.moat_monitor import build_moat_monitor
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 TRADING_DAYS = 252
+RISK_FREE_RATE_ANNUAL = 0.015
 DIVIDEND_EVENTS_PATH = PROJECT_ROOT / "data/processed/portfolio/dividend_events.csv"
 MOAT_REGISTRY_PATH = PROJECT_ROOT / "config/moat-thesis-registry.csv"
 MOAT_EVIDENCE_PATH = PROJECT_ROOT / "config/moat-evidence-ledger.csv"
@@ -287,6 +288,60 @@ def _distribution_metrics(returns: pd.Series) -> dict:
         "kurtosisLabel": _kurtosis_label(excess_kurtosis),
         "observations": int(returns.size),
     }
+
+
+def _performance_metrics(nav_frame: pd.DataFrame) -> dict:
+    """Return annualized Sharpe and skew/kurtosis-adjusted Smart Sharpe.
+
+    The first NAV row is the unit-1 restart baseline rather than a realized
+    trading return, so it is excluded. The adjusted ratio follows the
+    Pézier–White higher-moment correction:
+    SR * [1 + (S / 6) * SR - (K / 24) * SR²], where K is excess kurtosis.
+    """
+    returns = pd.to_numeric(
+        nav_frame.get("daily_return", pd.Series(dtype=float)), errors="coerce"
+    ).dropna()
+    if "date" in nav_frame and len(returns) == len(nav_frame):
+        returns = returns.iloc[1:]
+    returns = returns.tail(TRADING_DAYS)
+    observations = int(returns.size)
+    result = {
+        "sharpe": None,
+        "smartSharpe": None,
+        "observations": observations,
+        "periodStart": str(nav_frame.iloc[-observations]["date"])
+        if observations and len(nav_frame) >= observations else "",
+        "periodEnd": str(nav_frame.iloc[-1]["date"])
+        if observations and not nav_frame.empty else "",
+        "annualRiskFreeRate": RISK_FREE_RATE_ANNUAL,
+        "annualizationFactor": TRADING_DAYS,
+        "status": "SHORT_SAMPLE" if observations < 30 else "OK",
+        "minimumObservations": 30,
+        "method": "标准Sharpe=(日均超额收益/日收益标准差)×√252；Smart Sharpe再按偏度与超额峰度修正",
+    }
+    if observations < 2:
+        result["status"] = "INSUFFICIENT_DATA"
+        return result
+    daily_rf = (1 + RISK_FREE_RATE_ANNUAL) ** (1 / TRADING_DAYS) - 1
+    excess = returns - daily_rf
+    volatility = float(returns.std(ddof=1))
+    if not volatility or not pd.notna(volatility):
+        result["status"] = "INSUFFICIENT_VARIATION"
+        return result
+    sharpe = float(excess.mean() / volatility * (TRADING_DAYS ** 0.5))
+    skewness = _number(returns.skew())
+    excess_kurtosis = _number(returns.kurt())
+    smart_sharpe = float(
+        sharpe
+        * (1 + (skewness / 6) * sharpe - (excess_kurtosis / 24) * (sharpe ** 2))
+    )
+    result.update({
+        "sharpe": sharpe,
+        "smartSharpe": smart_sharpe,
+        "skewness": skewness,
+        "excessKurtosis": excess_kurtosis,
+    })
+    return result
 
 
 def _portfolio_distribution(portfolio: pd.DataFrame) -> tuple[dict[str, dict], dict, dict[str, float]]:
@@ -676,6 +731,7 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
     # with a benchmark from the actual restart date, not just the latest 60 rows.
     nav_frame = pd.read_csv(nav_path) if nav_path.exists() else pd.DataFrame()
     nav_history = nav_frame.to_dict("records")
+    performance_metrics = _performance_metrics(nav_frame)
     latest_nav = nav_frame.iloc[-1] if not nav_frame.empty else pd.Series(dtype=float)
     nav_dates = nav_frame["date"].astype(str).tolist() if not nav_frame.empty else []
     _refresh_benchmark_cache(nav_dates)
@@ -711,6 +767,7 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
             "note": "规则命中只生成待人工复核事件，不会自动改变护城河结论或触发交易",
         },
         "distributionSummary": distribution_summary,
+        "performanceMetrics": performance_metrics,
         "dividendSummary": {
             "cumulativeCash": _number(latest_nav.get("cumulative_dividend_cash", 0.0)),
             "reinvestedCash": _number(latest_nav.get("reinvested_dividend_cash", 0.0)),
