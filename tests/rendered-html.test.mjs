@@ -190,10 +190,11 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(Number.isInteger(data.moatRadar.pendingAlerts));
   assert.ok(Number.isFinite(data.distributionSummary.skewness));
   assert.ok(Number.isFinite(data.distributionSummary.excessKurtosis));
-  assert.ok(Number.isFinite(data.performanceMetrics.sharpe));
-  assert.ok(Number.isFinite(data.performanceMetrics.smartSharpe));
+  assert.equal(data.performanceMetrics.sharpe, null);
+  assert.equal(data.performanceMetrics.smartSharpe, null);
   assert.equal(data.performanceMetrics.status, "SHORT_SAMPLE");
   assert.ok(data.performanceMetrics.observations >= 2);
+  assert.equal(data.performanceMetrics.annualRiskFreeRate, 0);
   assert.ok(Number.isFinite(data.dividendSummary.cumulativeCash));
   assert.ok(Number.isFinite(data.dividendSummary.reinvestedCash));
   assert.ok(Number.isFinite(data.dividendSummary.pendingCash));

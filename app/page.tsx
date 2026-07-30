@@ -161,7 +161,7 @@ const cumulativeRange = { key: "CUMULATIVE" as const, cn: "累计", en: "Cumulat
 const pct = (value: number, digits = 1) => `${(value * 100).toFixed(digits)}%`;
 const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value, 2)}`;
 const decimal = (value: number) => Number.isFinite(value) ? value.toFixed(2) : "—";
-const ratio = (value: number | null) => value == null || !Number.isFinite(value) ? "—" : value.toFixed(2);
+const ratio = (value: number | null, status?: PerformanceMetrics["status"]) => status && status !== "OK" ? "—" : value == null || !Number.isFinite(value) ? "—" : value.toFixed(2);
 const money = (value: number) => `¥${value.toFixed(2)}`;
 const distributionEnglish: Record<string, string> = {
   "右尾机会型": "Right-tail opportunity", "左尾风险型": "Left-tail risk",
@@ -596,8 +596,8 @@ export default function Home() {
               <div><span>{t("相对大盘", "Excess vs market")}</span><strong className={benchmarkExcess == null ? "pending" : benchmarkExcess >= 0 ? "up" : "down"}>{benchmarkExcess == null ? "—" : signedPct(benchmarkExcess)}</strong><small>{data.benchmark.status === "OK" ? t("策略累计收益减基准", "Strategy cumulative return minus benchmark") : t("不推断超额收益", "No excess-return inference")}</small></div>
             </div>}
             <div className="risk-metrics" aria-label={t("风险调整收益指标", "Risk-adjusted performance metrics")}>
-              <div><span>{t("Sharpe Ratio", "Sharpe Ratio")}</span><strong className={data.performanceMetrics.sharpe == null ? "pending" : data.performanceMetrics.sharpe >= 0 ? "up" : "down"}>{ratio(data.performanceMetrics.sharpe)}</strong><small>{t("按1.5%年化无风险率；样本", "1.5% annual risk-free rate; sample")} {data.performanceMetrics.observations} {t("个交易日", "sessions")}</small></div>
-              <div><span>{t("Smart Sharpe", "Smart Sharpe")}</span><strong className={data.performanceMetrics.smartSharpe == null ? "pending" : data.performanceMetrics.smartSharpe >= 0 ? "up" : "down"}>{ratio(data.performanceMetrics.smartSharpe)}</strong><small>{data.performanceMetrics.status === "SHORT_SAMPLE" ? t("偏度与超额峰度修正；短样本", "Skew/kurtosis adjusted; short sample") : t("偏度与超额峰度修正", "Skew/kurtosis adjusted")}</small></div>
+              <div><span>{t("Sharpe Ratio", "Sharpe Ratio")}</span><strong className={data.performanceMetrics.sharpe == null ? "pending" : data.performanceMetrics.sharpe >= 0 ? "up" : "down"}>{ratio(data.performanceMetrics.sharpe, data.performanceMetrics.status)}</strong><small>{data.performanceMetrics.status === "SHORT_SAMPLE" ? t(`现金基准0%；${data.performanceMetrics.observations}/30个交易日，数据不足`, `0% cash baseline; ${data.performanceMetrics.observations}/30 sessions, insufficient data`) : t("现金基准0%；已实现模型净值", "0% cash baseline; realized model NAV")}</small></div>
+              <div><span>{t("Smart Sharpe", "Smart Sharpe")}</span><strong className={data.performanceMetrics.smartSharpe == null ? "pending" : data.performanceMetrics.smartSharpe >= 0 ? "up" : "down"}>{ratio(data.performanceMetrics.smartSharpe, data.performanceMetrics.status)}</strong><small>{data.performanceMetrics.status === "SHORT_SAMPLE" ? t("偏度与超额峰度修正；历史不足", "Skew/kurtosis adjusted; insufficient history") : t("偏度与超额峰度修正", "Skew/kurtosis adjusted")}</small></div>
             </div>
           </section>
 
