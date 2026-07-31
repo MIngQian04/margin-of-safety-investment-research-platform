@@ -147,7 +147,7 @@ type PortfolioData = {
   };
 };
 
-type RangeKey = "TODAY" | "5D" | "1M" | "6M" | "1Y" | "CUMULATIVE";
+type RangeKey = "TODAY" | "5D" | "1M" | "6M" | "1Y" | "CUMULATIVE" | "CALENDAR";
 type Language = "zh" | "en";
 const ranges: { key: RangeKey; cn: string; en: string; days: number }[] = [
   { key: "TODAY", cn: "今日", en: "Today", days: 1 },
@@ -157,6 +157,7 @@ const ranges: { key: RangeKey; cn: string; en: string; days: number }[] = [
   { key: "1Y", cn: "1年", en: "1 Year", days: 252 },
 ];
 const cumulativeRange = { key: "CUMULATIVE" as const, cn: "累计", en: "Cumulative", days: 0 };
+const calendarRange = { key: "CALENDAR" as const, cn: "收益日历", en: "Return calendar", days: 0 };
 
 const pct = (value: number, digits = 1) => `${(value * 100).toFixed(digits)}%`;
 const signedPct = (value: number) => `${value >= 0 ? "+" : ""}${pct(value, 2)}`;
@@ -294,6 +295,51 @@ function trailingReturn(history: NavPoint[], tradingDays: number) {
 const A_SHARE_LOT_SIZE = 100;
 function capitalFloorForHoldings(holdings: Holding[]) {
   return Math.ceil(Math.max(0, ...holdings.filter((holding) => holding.weight > 0 && holding.price > 0).map((holding) => holding.price * A_SHARE_LOT_SIZE / holding.weight)));
+}
+
+function ReturnCalendar({ history, language }: { history: NavPoint[]; language: Language }) {
+  const months = new Map<string, NavPoint[]>();
+  history.forEach((point) => {
+    const key = point.date.slice(0, 7);
+    months.set(key, [...(months.get(key) ?? []), point]);
+  });
+  const baseline = history.at(0)?.nav ?? 1;
+  const weekdays = language === "zh" ? ["日", "一", "二", "三", "四", "五", "六"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  return (
+    <div className="return-calendar" aria-label={language === "zh" ? "每日组合收益日历" : "Daily portfolio return calendar"}>
+      <div className="calendar-intro">
+        <strong>{language === "zh" ? "每日已实现收益" : "Realized daily returns"}</strong>
+        <small>{language === "zh" ? "仅显示已经记录的模型净值；首日为单位净值基准" : "Recorded model NAV only; the first date is the unit-NAV baseline"}</small>
+      </div>
+      <div className="calendar-months">
+        {[...months.entries()].map(([key, monthPoints]) => {
+          const [year, month] = key.split("-").map(Number);
+          const firstDay = new Date(year, month - 1, 1).getDay();
+          const cells: (NavPoint | null)[] = [...Array(firstDay).fill(null), ...monthPoints];
+          return (
+            <section className="calendar-month" key={key} aria-label={`${year}-${String(month).padStart(2, "0")}`}>
+              <h3>{language === "zh" ? `${year}年${month}月` : `${new Date(year, month - 1).toLocaleString("en", { month: "long" })} ${year}`}</h3>
+              <div className="calendar-weekdays">{weekdays.map((weekday) => <span key={weekday}>{weekday}</span>)}</div>
+              <div className="calendar-grid">
+                {cells.map((point, index) => point ? (
+                  <div className={`calendar-day ${point.dailyReturn > 0 ? "positive" : point.dailyReturn < 0 ? "negative" : "neutral"}`} key={point.date}>
+                    <b>{Number(point.date.slice(-2))}</b>
+                    <strong>{signedPct(point.dailyReturn)}</strong>
+                    <small>{language === "zh" ? "累" : "cum"} {signedPct(point.nav / baseline - 1)}</small>
+                  </div>
+                ) : <div className="calendar-day empty" key={`empty-${key}-${index}`} aria-hidden="true" />)}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+      <div className="calendar-legend" aria-label={language === "zh" ? "收益日历图例" : "Return calendar legend"}>
+        <span><i className="calendar-swatch positive" />{language === "zh" ? "上涨" : "Up"}</span>
+        <span><i className="calendar-swatch negative" />{language === "zh" ? "下跌" : "Down"}</span>
+        <span>{language === "zh" ? "单日收益 · 累计收益" : "Daily return · cumulative return"}</span>
+      </div>
+    </div>
+  );
 }
 
 function PerformanceChart({ history, benchmarkHistory = [], range, language }: { history: NavPoint[]; benchmarkHistory?: BenchmarkPoint[]; range: RangeKey; language: Language }) {
@@ -506,8 +552,8 @@ export default function Home() {
   );
   const rankedNextHoldings = [...data.nextHoldings].sort((left, right) => right.weight - left.weight || left.code.localeCompare(right.code));
   const holdingsDialogItems = holdingsDialogBoard === "active" ? rankedHoldings : rankedNextHoldings;
-  const activeRange = selectedRange === "CUMULATIVE" ? cumulativeRange : ranges.find((item) => item.key === selectedRange)!;
-  const chartHistory = selectedRange === "TODAY" || selectedRange === "CUMULATIVE" ? data.navHistory : personalHistory;
+  const activeRange = selectedRange === "CUMULATIVE" ? cumulativeRange : selectedRange === "CALENDAR" ? calendarRange : ranges.find((item) => item.key === selectedRange)!;
+  const chartHistory = selectedRange === "TODAY" || selectedRange === "CUMULATIVE" || selectedRange === "CALENDAR" ? data.navHistory : personalHistory;
   const benchmarkVisible = chartHistory.filter((point) => data.benchmark.history.some((benchmarkPoint) => benchmarkPoint.date === point.date)).length > 1;
   const activeMoatCopy = selectedHolding ? moatEnglish[selectedHolding.code] : null;
   const displayCompany = (holding: Holding) => language === "zh" ? holding.name : companyEnglish[holding.code] ?? holding.name;
@@ -564,10 +610,10 @@ export default function Home() {
         </header>
 
         <div className="period-summary" aria-label={t("组合周期收益", "Portfolio period returns")}>
-            <button className={`period-total ${selectedRange === "CUMULATIVE" ? "is-active" : ""}`} aria-label={t("查看模型累计收益曲线", "View model cumulative return curve")} aria-pressed={selectedRange === "CUMULATIVE"} onClick={() => setSelectedRange("CUMULATIVE")}>
-              <span>{t("累计", "Cumulative")}</span>
+            <button className={`period-total ${selectedRange === "CALENDAR" ? "is-active" : ""}`} aria-label={selectedRange === "CALENDAR" ? t("返回模型累计收益曲线", "Return to model cumulative return curve") : t("打开每日收益日历", "Open daily return calendar")} aria-pressed={selectedRange === "CALENDAR"} onClick={() => setSelectedRange(selectedRange === "CALENDAR" ? "CUMULATIVE" : "CALENDAR")}>
+              <span>{selectedRange === "CALENDAR" ? t("累计视图", "Cumulative view") : t("收益日历", "Return calendar")}</span>
               <strong className={modelCumulative >= 0 ? "up" : "down"}>{signedPct(modelCumulative)}</strong>
-              <em>{selectedRange === "CUMULATIVE" ? t("正在查看累计曲线", "Viewing cumulative curve") : t("点击查看累计曲线", "View cumulative curve")}</em>
+              <em>{selectedRange === "CALENDAR" ? t("点击返回累计曲线", "Return to cumulative curve") : t("点击查看每日收益", "View daily returns")}</em>
             </button>
           {periods.map((period) => (
             <button key={period.key} className={selectedRange === period.key ? "is-active" : ""} aria-pressed={selectedRange === period.key} onClick={() => setSelectedRange(period.key)}>
@@ -584,7 +630,7 @@ export default function Home() {
               <div><p className="kicker">PORTFOLIO PERFORMANCE</p><h2 id="chart-heading">{t("组合收益曲线", "Portfolio Return Curve")}</h2></div>
               <p>{language === "zh" ? `${activeRange.cn}视图` : `${activeRange.en} View`}</p>
             </div>
-            <PerformanceChart history={chartHistory} benchmarkHistory={data.benchmark.history} range={selectedRange} language={language} />
+            {selectedRange === "CALENDAR" ? <ReturnCalendar history={data.navHistory} language={language} /> : <PerformanceChart history={chartHistory} benchmarkHistory={data.benchmark.history} range={selectedRange} language={language} />}
             <div className="chart-caption">
               <span><i className="line-key" />{t("含分红单位净值收益", "Total-return unit NAV")}</span>
               {benchmarkVisible && data.benchmark.status === "OK" && <span><i className="line-key benchmark-key" />{t(`${data.benchmark.name}单位指数代理`, `${data.benchmark.nameEn} unit proxy`)}</span>}
