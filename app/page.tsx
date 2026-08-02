@@ -610,11 +610,11 @@ export default function Home() {
         </header>
 
         <div className="period-summary" aria-label={t("组合周期收益", "Portfolio period returns")}>
-            <button className={`period-total ${selectedRange === "CALENDAR" ? "is-active" : ""}`} aria-label={selectedRange === "CALENDAR" ? t("返回模型累计收益曲线", "Return to model cumulative return curve") : t("打开每日收益日历", "Open daily return calendar")} aria-pressed={selectedRange === "CALENDAR"} onClick={() => setSelectedRange(selectedRange === "CALENDAR" ? "CUMULATIVE" : "CALENDAR")}>
-              <span>{selectedRange === "CALENDAR" ? t("累计视图", "Cumulative view") : t("收益日历", "Return calendar")}</span>
+            <div className="period-total">
+              <span>{t("累计", "Cumulative")}</span>
               <strong className={modelCumulative >= 0 ? "up" : "down"}>{signedPct(modelCumulative)}</strong>
-              <em>{selectedRange === "CALENDAR" ? t("点击返回累计曲线", "Return to cumulative curve") : t("点击查看每日收益", "View daily returns")}</em>
-            </button>
+              <em>{t("图表右上角可切换曲线/日历", "Use the chart's upper-right toggle")}</em>
+            </div>
           {periods.map((period) => (
             <button key={period.key} className={selectedRange === period.key ? "is-active" : ""} aria-pressed={selectedRange === period.key} onClick={() => setSelectedRange(period.key)}>
               <span>{language === "zh" ? period.cn : period.en}{period.key === "TODAY" && <small>{t("按昨日生效仓位", "Prior-session holdings")}</small>}</span>
@@ -628,7 +628,9 @@ export default function Home() {
           <section className="chart-section" aria-labelledby="chart-heading">
             <div className="section-heading">
               <div><p className="kicker">PORTFOLIO PERFORMANCE</p><h2 id="chart-heading">{selectedRange === "CALENDAR" ? t("每日收益日历", "Daily Return Calendar") : t("组合收益曲线", "Portfolio Return Curve")}</h2></div>
-              <p>{language === "zh" ? `${activeRange.cn}视图` : `${activeRange.en} View`}</p>
+              <button type="button" className="view-toggle" aria-label={selectedRange === "CALENDAR" ? t("切换到累计收益曲线", "Switch to cumulative return curve") : t("切换到收益日历", "Switch to return calendar")} aria-pressed={selectedRange === "CALENDAR"} onClick={() => setSelectedRange(selectedRange === "CALENDAR" ? "CUMULATIVE" : "CALENDAR")}>
+                {selectedRange === "CALENDAR" ? t("累计视图", "Cumulative view") : t("收益日历", "Return calendar")}<small>{selectedRange === "CALENDAR" ? t("点击切换曲线", "Click for curve") : t("点击切换日历", "Click for calendar")}</small>
+              </button>
             </div>
             {selectedRange === "CALENDAR" ? <ReturnCalendar history={data.navHistory} language={language} /> : <PerformanceChart history={chartHistory} benchmarkHistory={data.benchmark.history} range={selectedRange} language={language} />}
             <div className="chart-caption">

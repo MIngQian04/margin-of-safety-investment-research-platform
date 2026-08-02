@@ -66,7 +66,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /收益日历/);
   assert.match(page, /calendar-grid/);
   assert.match(page, /useState<RangeKey>\("CALENDAR"\)/);
-  assert.match(page, /打开每日收益日历/);
+  assert.match(page, /view-toggle/);
+  assert.match(page, /图表右上角可切换曲线\/日历/);
   assert.match(page, /moat-value-help-seen-v1/);
   assert.match(page, /网站使用说明/);
   assert.match(page, /模型信号、当日收益、明日执行和你的真实成交分开/);
