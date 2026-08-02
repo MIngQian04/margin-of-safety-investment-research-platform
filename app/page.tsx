@@ -425,9 +425,9 @@ export default function Home() {
   const [showStartSettings, setShowStartSettings] = useState(false);
   const [personalStartDate, setPersonalStartDate] = useState("");
   const [draftStartDate, setDraftStartDate] = useState("");
-  // Start on the cumulative view so the strategy-vs-benchmark comparison is
-  // visible immediately; shorter windows remain available from the period bar.
-  const [selectedRange, setSelectedRange] = useState<RangeKey>("CUMULATIVE");
+  // Start on the realized return calendar so daily results are visible immediately;
+  // the period bar still returns to the cumulative strategy-vs-benchmark curve.
+  const [selectedRange, setSelectedRange] = useState<RangeKey>("CALENDAR");
   const [selectedHolding, setSelectedHolding] = useState<Holding | null>(null);
   const [showValuationResearch, setShowValuationResearch] = useState(false);
   const [showHoldingsDialog, setShowHoldingsDialog] = useState(false);
@@ -627,7 +627,7 @@ export default function Home() {
         <div className="main-grid">
           <section className="chart-section" aria-labelledby="chart-heading">
             <div className="section-heading">
-              <div><p className="kicker">PORTFOLIO PERFORMANCE</p><h2 id="chart-heading">{t("组合收益曲线", "Portfolio Return Curve")}</h2></div>
+              <div><p className="kicker">PORTFOLIO PERFORMANCE</p><h2 id="chart-heading">{selectedRange === "CALENDAR" ? t("每日收益日历", "Daily Return Calendar") : t("组合收益曲线", "Portfolio Return Curve")}</h2></div>
               <p>{language === "zh" ? `${activeRange.cn}视图` : `${activeRange.en} View`}</p>
             </div>
             {selectedRange === "CALENDAR" ? <ReturnCalendar history={data.navHistory} language={language} /> : <PerformanceChart history={chartHistory} benchmarkHistory={data.benchmark.history} range={selectedRange} language={language} />}

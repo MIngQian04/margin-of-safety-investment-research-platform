@@ -65,7 +65,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /ReturnCalendar/);
   assert.match(page, /收益日历/);
   assert.match(page, /calendar-grid/);
-  assert.match(page, /useState<RangeKey>\("CUMULATIVE"\)/);
+  assert.match(page, /useState<RangeKey>\("CALENDAR"\)/);
   assert.match(page, /打开每日收益日历/);
   assert.match(page, /moat-value-help-seen-v1/);
   assert.match(page, /网站使用说明/);
