@@ -67,7 +67,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /calendar-grid/);
   assert.match(page, /useState<RangeKey>\("CALENDAR"\)/);
   assert.match(page, /view-toggle/);
-  assert.match(page, /图表右上角可切换曲线\/日历/);
+  assert.match(page, /右上角切换/);
   assert.match(page, /moat-value-help-seen-v1/);
   assert.match(page, /网站使用说明/);
   assert.match(page, /模型信号、当日收益、明日执行和你的真实成交分开/);
@@ -106,11 +106,11 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /t\("单位净值", "Unit NAV"\)/);
   assert.match(page, /dividendSummary\.cumulativeCash/);
   assert.match(page, /已复投/);
-  assert.match(page, /Total-return unit NAV/);
+  assert.match(page, /策略净值|Strategy NAV/);
   assert.match(page, /benchmarkHistory/);
   assert.match(page, /benchmarkVisible/);
   assert.match(page, /相对大盘/);
-  assert.match(page, /unit proxy/);
+  assert.match(page, /CSI 300 proxy|沪深300代理/);
   assert.match(page, /DYNAMIC MOAT FILE/);
   assert.match(page, /查看\$\{holding\.name\}的护城河动态档案/);
   assert.match(page, /什么变化代表削弱/);

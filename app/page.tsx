@@ -308,8 +308,8 @@ function ReturnCalendar({ history, language }: { history: NavPoint[]; language: 
   return (
     <div className="return-calendar" aria-label={language === "zh" ? "每日组合收益日历" : "Daily portfolio return calendar"}>
       <div className="calendar-intro">
-        <strong>{language === "zh" ? "每日已实现收益" : "Realized daily returns"}</strong>
-        <small>{language === "zh" ? "仅显示已经记录的模型净值；首日为单位净值基准" : "Recorded model NAV only; the first date is the unit-NAV baseline"}</small>
+        <strong>{language === "zh" ? "每日收益" : "Daily returns"}</strong>
+        <small>{language === "zh" ? "单日 · 累计" : "Daily · cumulative"}</small>
       </div>
       <div className="calendar-months">
         {[...months.entries()].map(([key, monthPoints]) => {
@@ -613,13 +613,13 @@ export default function Home() {
             <div className="period-total">
               <span>{t("累计", "Cumulative")}</span>
               <strong className={modelCumulative >= 0 ? "up" : "down"}>{signedPct(modelCumulative)}</strong>
-              <em>{t("图表右上角可切换曲线/日历", "Use the chart's upper-right toggle")}</em>
+              <em>{t("右上角切换", "Use chart toggle")}</em>
             </div>
           {periods.map((period) => (
             <button key={period.key} className={selectedRange === period.key ? "is-active" : ""} aria-pressed={selectedRange === period.key} onClick={() => setSelectedRange(period.key)}>
               <span>{language === "zh" ? period.cn : period.en}{period.key === "TODAY" && <small>{t("按昨日生效仓位", "Prior-session holdings")}</small>}</span>
               <strong className={period.value == null ? "pending" : period.value >= 0 ? "up" : "down"}>{period.value == null ? "—" : signedPct(period.value)}</strong>
-              {period.value != null && <em>{t("点击查看曲线", "View chart")}</em>}
+              {period.value != null && <em>{t("查看", "View")}</em>}
             </button>
           ))}
         </div>
@@ -634,9 +634,9 @@ export default function Home() {
             </div>
             {selectedRange === "CALENDAR" ? <ReturnCalendar history={data.navHistory} language={language} /> : <PerformanceChart history={chartHistory} benchmarkHistory={data.benchmark.history} range={selectedRange} language={language} />}
             <div className="chart-caption">
-              <span><i className="line-key" />{t("含分红单位净值收益", "Total-return unit NAV")}</span>
-              {benchmarkVisible && data.benchmark.status === "OK" && <span><i className="line-key benchmark-key" />{t(`${data.benchmark.name}单位指数代理`, `${data.benchmark.nameEn} unit proxy`)}</span>}
-              <span>{t(`自 ${personalStart?.date ?? data.asOf} 按单位1记录`, `Unit 1 since ${personalStart?.date ?? data.asOf}`)}</span>
+              <span><i className="line-key" />{t("策略净值", "Strategy NAV")}</span>
+              {benchmarkVisible && data.benchmark.status === "OK" && <span><i className="line-key benchmark-key" />{t("沪深300代理", "CSI 300 proxy")}</span>}
+              <span>{t(`起始 ${personalStart?.date ?? data.asOf}`, `Start ${personalStart?.date ?? data.asOf}`)}</span>
             </div>
             {selectedRange === "CUMULATIVE" && <div className="benchmark-strip" aria-label={t("策略与大盘累计表现", "Strategy versus market cumulative performance")}>
               <div><span>{t("策略", "Strategy")}</span><strong className={modelCumulative >= 0 ? "up" : "down"}>{signedPct(modelCumulative)}</strong><small>{t("从组合起始日单位1", "Unit 1 from portfolio start")}</small></div>
@@ -644,15 +644,15 @@ export default function Home() {
               <div><span>{t("相对大盘", "Excess vs market")}</span><strong className={benchmarkExcess == null ? "pending" : benchmarkExcess >= 0 ? "up" : "down"}>{benchmarkExcess == null ? "—" : signedPct(benchmarkExcess)}</strong><small>{data.benchmark.status === "OK" ? t("策略累计收益减基准", "Strategy cumulative return minus benchmark") : t("不推断超额收益", "No excess-return inference")}</small></div>
             </div>}
             <div className="risk-metrics" aria-label={t("风险调整收益指标", "Risk-adjusted performance metrics")}>
-              <div><span>{t("Sharpe Ratio", "Sharpe Ratio")}</span><strong className={data.performanceMetrics.sharpe == null ? "pending" : data.performanceMetrics.sharpe >= 0 ? "up" : "down"}>{ratio(data.performanceMetrics.sharpe, data.performanceMetrics.status)}</strong><small>{data.performanceMetrics.status === "SHORT_SAMPLE" ? t(`现金基准0%；${data.performanceMetrics.observations}/30个交易日，数据不足`, `0% cash baseline; ${data.performanceMetrics.observations}/30 sessions, insufficient data`) : t("现金基准0%；已实现模型净值", "0% cash baseline; realized model NAV")}</small></div>
-              <div><span>{t("Smart Sharpe", "Smart Sharpe")}</span><strong className={data.performanceMetrics.smartSharpe == null ? "pending" : data.performanceMetrics.smartSharpe >= 0 ? "up" : "down"}>{ratio(data.performanceMetrics.smartSharpe, data.performanceMetrics.status)}</strong><small>{data.performanceMetrics.status === "SHORT_SAMPLE" ? t("偏度与超额峰度修正；历史不足", "Skew/kurtosis adjusted; insufficient history") : t("偏度与超额峰度修正", "Skew/kurtosis adjusted")}</small></div>
+              <div><span>{t("Sharpe Ratio", "Sharpe Ratio")}</span><strong className={data.performanceMetrics.sharpe == null ? "pending" : data.performanceMetrics.sharpe >= 0 ? "up" : "down"}>{ratio(data.performanceMetrics.sharpe, data.performanceMetrics.status)}</strong><small>{data.performanceMetrics.status === "SHORT_SAMPLE" ? t(`${data.performanceMetrics.observations}/30日 · 数据不足`, `${data.performanceMetrics.observations}/30d · insufficient`) : t("现金基准0%", "0% cash baseline")}</small></div>
+              <div><span>{t("Smart Sharpe", "Smart Sharpe")}</span><strong className={data.performanceMetrics.smartSharpe == null ? "pending" : data.performanceMetrics.smartSharpe >= 0 ? "up" : "down"}>{ratio(data.performanceMetrics.smartSharpe, data.performanceMetrics.status)}</strong><small>{t("偏度/峰度修正", "Skew/kurtosis adjusted")}</small></div>
             </div>
           </section>
 
           <aside className="portfolio-panel" aria-labelledby="positions-heading">
             <div className="allocation-switcher" role="tablist" aria-label={t("当日与明日仓位切换", "Active and next allocation boards")}><button role="tab" aria-selected={allocationBoard === 0} className={allocationBoard === 0 ? "is-active" : ""} onClick={() => jumpAllocationBoard(0)}>{t("当日收益", "Today's return")}<small>{data.returnDate}</small></button><button role="tab" aria-selected={allocationBoard === 1} className={allocationBoard === 1 ? "is-active" : ""} onClick={() => jumpAllocationBoard(1)}>{t("明日执行", "Next execution")}<small>{data.allocationChange.nextAsOf}</small></button></div>
             <div className="allocation-carousel" ref={allocationCarouselRef} onScroll={(event) => { const target = event.currentTarget; setAllocationBoard(Math.round(target.scrollLeft / Math.max(target.clientWidth - 24, 1))); }}>
-            <section className="allocation-board allocation-card"><div className="allocation-card-head"><div><p className="kicker">RETURN {data.returnDate} · POSITION {data.activeAsOf}</p><h2 id="positions-heading">{t("当日收益仓位", "Today's Return Basis")}</h2><small className="allocation-note">{t("收益属于当日；仓位来自上一交易日已公布组合", "Today's return uses the prior session's published holdings")}</small></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("active")}>{t("查看持仓报告", "Open holdings report")}</button></div>
+            <section className="allocation-board allocation-card"><div className="allocation-card-head"><div><p className="kicker">RETURN {data.returnDate} · POSITION {data.activeAsOf}</p><h2 id="positions-heading">{t("当日收益仓位", "Today's Return Basis")}</h2><small className="allocation-note">{t("按上一交易日仓位计算", "Uses prior-session holdings")}</small></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("active")}>{t("查看持仓报告", "Open holdings report")}</button></div>
             <div className="holding-list" role="region" aria-label={t("当日生效仓位，可上下滚动", "Today's active holdings; scrollable")} tabIndex={0}>
               <div className="holding-list-tools"><div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values"><em>{t("价格", "Price")}</em><em>{t("今日↓", "Today↓")}</em><strong>{t("仓位", "Weight")}</strong></div></div></div>
               {rankedHoldings.map((holding) => (
@@ -664,7 +664,7 @@ export default function Home() {
               <div className="cash-line"><span className="holding-stock"><i className="cash-dot" /><span className="holding-identity"><b>{t("现金", "Cash")}</b></span></span><div className="holding-values"><em>—</em><em>0</em><strong>{pct(data.summary.activeCashWeight)}</strong></div></div>
             </div></section>
 
-            <section className="allocation-board allocation-card tomorrow-board"><div className="allocation-card-head"><div><p className="kicker">NEXT SESSION · {data.allocationChange.nextAsOf}</p><h2>{t("明日目标仓位", "Next-session Target")}</h2><small className="allocation-note">{t("下一交易日开盘后生效；参考收盘价不视作成交", "Effective after next-session open; reference close is not a fill")}</small></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("next")}>{t("查看持仓报告", "Open holdings report")}</button></div>
+            <section className="allocation-board allocation-card tomorrow-board"><div className="allocation-card-head"><div><p className="kicker">NEXT SESSION · {data.allocationChange.nextAsOf}</p><h2>{t("明日目标仓位", "Next-session Target")}</h2><small className="allocation-note">{t("下个交易日开盘生效", "Effective next-session open")}</small></div><button className="holdings-open-button" onClick={() => openHoldingsDialog("next")}>{t("查看持仓报告", "Open holdings report")}</button></div>
             <div className="holding-list next-holding-list" role="region" aria-label={t("明日待执行仓位，可上下滚动", "Next-session target holdings; scrollable")} tabIndex={0}>
               <div className="holding-list-tools"><div className="holding-list-head"><span>{t("标的", "Stock")}</span><div className="holding-values next-values"><em>{t("参考收盘", "Ref close")}</em><strong>{t("目标仓位", "Target")}</strong></div></div></div>
               {rankedNextHoldings.map((holding) => <button className="holding-row" key={`next-${holding.code}`} onClick={() => setSelectedHolding(holding)} aria-label={t(`查看${holding.name}的明日目标仓位`, `View ${companyEnglish[holding.code] ?? holding.name} next-session target`)}><span className="holding-stock"><i className={holding.bucket === "ANCHOR" ? "anchor-dot" : "future-dot"} /><span className="holding-identity"><b>{displayCompany(holding)}</b><small>{holding.code}</small></span></span><div className="holding-values next-values"><em>{money(holding.price)}</em><strong>{pct(holding.weight)}</strong></div></button>)}
