@@ -303,13 +303,11 @@ function ReturnCalendar({ history, language }: { history: NavPoint[]; language: 
     const key = point.date.slice(0, 7);
     months.set(key, [...(months.get(key) ?? []), point]);
   });
-  const baseline = history.at(0)?.nav ?? 1;
   const weekdays = language === "zh" ? ["日", "一", "二", "三", "四", "五", "六"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   return (
     <div className="return-calendar" aria-label={language === "zh" ? "每日组合收益日历" : "Daily portfolio return calendar"}>
       <div className="calendar-intro">
         <strong>{language === "zh" ? "每日收益" : "Daily returns"}</strong>
-        <small>{language === "zh" ? "单日 · 累计" : "Daily · cumulative"}</small>
       </div>
       <div className="calendar-months">
         {[...months.entries()].map(([key, monthPoints]) => {
@@ -325,7 +323,6 @@ function ReturnCalendar({ history, language }: { history: NavPoint[]; language: 
                   <div className={`calendar-day ${point.dailyReturn > 0 ? "positive" : point.dailyReturn < 0 ? "negative" : "neutral"}`} key={point.date}>
                     <b>{Number(point.date.slice(-2))}</b>
                     <strong>{signedPct(point.dailyReturn)}</strong>
-                    <small>{language === "zh" ? "累" : "cum"} {signedPct(point.nav / baseline - 1)}</small>
                   </div>
                 ) : <div className="calendar-day empty" key={`empty-${key}-${index}`} aria-hidden="true" />)}
               </div>
@@ -336,7 +333,7 @@ function ReturnCalendar({ history, language }: { history: NavPoint[]; language: 
       <div className="calendar-legend" aria-label={language === "zh" ? "收益日历图例" : "Return calendar legend"}>
         <span><i className="calendar-swatch positive" />{language === "zh" ? "上涨" : "Up"}</span>
         <span><i className="calendar-swatch negative" />{language === "zh" ? "下跌" : "Down"}</span>
-        <span>{language === "zh" ? "单日收益 · 累计收益" : "Daily return · cumulative return"}</span>
+        <span>{language === "zh" ? "每日收益" : "Daily return"}</span>
       </div>
     </div>
   );
