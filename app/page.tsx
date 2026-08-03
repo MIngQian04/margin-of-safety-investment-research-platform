@@ -607,11 +607,11 @@ export default function Home() {
         </header>
 
         <div className="period-summary" aria-label={t("组合周期收益", "Portfolio period returns")}>
-            <div className="period-total">
+            <button type="button" className={`period-total ${selectedRange === "CUMULATIVE" ? "is-active" : ""}`} aria-pressed={selectedRange === "CUMULATIVE"} onClick={() => setSelectedRange("CUMULATIVE")}>
               <span>{t("累计", "Cumulative")}</span>
               <strong className={modelCumulative >= 0 ? "up" : "down"}>{signedPct(modelCumulative)}</strong>
-              <em>{t("右上角切换", "Use chart toggle")}</em>
-            </div>
+              <em>{t("点击查看曲线", "View cumulative curve")}</em>
+            </button>
           {periods.map((period) => (
             <button key={period.key} className={selectedRange === period.key ? "is-active" : ""} aria-pressed={selectedRange === period.key} onClick={() => setSelectedRange(period.key)}>
               <span>{language === "zh" ? period.cn : period.en}{period.key === "TODAY" && <small>{t("按昨日生效仓位", "Prior-session holdings")}</small>}</span>
