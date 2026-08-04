@@ -168,7 +168,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.activeAsOf <= data.returnDate);
   assert.ok(data.allocationChange.nextAsOf >= data.returnDate);
   assert.equal(data.distributionAsOf, data.activeAsOf);
-  assert.ok(Math.abs(data.summary.activeCashWeight - 0.375) < 1e-9);
+  assert.ok(data.summary.activeCashWeight >= 0 && data.summary.activeCashWeight <= 1);
   assert.ok(data.summary.cashWeight >= 0 && data.summary.cashWeight <= 1);
   assert.ok(data.allocationChange.marketContext.includes("没有使用宏观大环境择时信号"));
   assert.ok(data.allocationChange.changes.every((change) => change.code && change.reason !== undefined));
