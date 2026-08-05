@@ -1,7 +1,7 @@
 {
   "asOf": "2026-08-04",
   "returnDate": "2026-08-04",
-  "generatedAt": "2026-08-05T00:33:16+08:00",
+  "generatedAt": "2026-08-05T19:01:26+08:00",
   "summary": {
     "anchorWeight": 0.5499999999999998,
     "futureWeight": 0.05,
@@ -335,151 +335,6 @@
       }
     },
     {
-      "code": "002032.SZ",
-      "name": "苏泊尔",
-      "bucket": "ANCHOR",
-      "state": "ANCHOR",
-      "theme": "稳定现金流",
-      "industry": "家用电器",
-      "weight": 0.0648648648648648,
-      "price": 42.08,
-      "dailyReturn": -0.01359587435536802,
-      "reason": "上一交易日已公布仓位",
-      "humanMoatConfirmed": false,
-      "distribution": {
-        "skewness": -1.7365262548718594,
-        "excessKurtosis": 15.286924027215825,
-        "skewLabel": "左尾风险型",
-        "kurtosisLabel": "高厚尾跳跃型",
-        "observations": 252
-      },
-      "moat": {
-        "type": "品牌渠道与产品体系",
-        "thesis": "炊具和小家电品牌认知；渠道覆盖及与SEB协同的产品体系可能支持稳定份额",
-        "replicationBarrier": "品牌信任；线下线上渠道；供应链规模和产品开发体系需要持续投入",
-        "monitoringSignals": [
-          "品类份额",
-          "新品成功率",
-          "渠道效率",
-          "关联交易质量",
-          "毛利率"
-        ],
-        "invalidationSignals": [
-          "品牌老化",
-          "核心品类份额下降",
-          "新品长期乏力",
-          "渠道费用侵蚀利润"
-        ],
-        "status": "DRAFT",
-        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
-        "lastReviewDate": "2026-07-16",
-        "nextReviewDate": "2026-10-31",
-        "supportingEvidenceCount": 0,
-        "cautionEvidenceCount": 0,
-        "contradictoryEvidenceCount": 0,
-        "radar": {
-          "pendingAlertCount": 1,
-          "highAlertCount": 0,
-          "latestAlertDate": "2026-04-24",
-          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
-          "latestAlertSource": "QUARTERLY_FINANCIAL"
-        }
-      },
-      "valuation": {
-        "very_optimistic": {
-          "discountRate": 0.08,
-          "valuePerShare": 54.83135238324875,
-          "marginOfSafety": 0.3030264349631357
-        },
-        "optimistic": {
-          "discountRate": 0.09,
-          "valuePerShare": 46.74526930153332,
-          "marginOfSafety": 0.1108666659109629
-        },
-        "base": {
-          "discountRate": 0.1,
-          "valuePerShare": 40.81598991352249,
-          "marginOfSafety": -0.0300382625113475
-        },
-        "cautious": {
-          "discountRate": 0.11,
-          "valuePerShare": 36.2822683118504,
-          "marginOfSafety": -0.1377787948704751
-        },
-        "very_pessimistic": {
-          "discountRate": 0.12,
-          "valuePerShare": 32.70338424065606,
-          "marginOfSafety": -0.2228283212771848
-        }
-      },
-      "metrics": {
-        "股息率": "6.7%",
-        "所有者收益率": "6.5%",
-        "三年ROE": "34.4%",
-        "护城河代理分": "70.5"
-      },
-      "valuationRepair": {
-        "asOf": "2026-07-18",
-        "generatedBy": "本地AI研究辅助：结合品牌渠道、品类份额与DCF敏感性整理",
-        "generatedByEn": "Local AI research aid: brand channels, category share and DCF sensitivity",
-        "undervaluationReasons": [
-          "市场担心耐用品消费疲弱、渠道促销和新品成功率下降，使品牌优势难以转化为增量利润。",
-          "与SEB协同和渠道网络提供一定稳定性，但家电行业竞争使毛利率和费用率承压。",
-          "基准DCF略低于当前价格，估值修复需要份额与现金转化同时改善，而不是只靠品牌叙事。"
-        ],
-        "undervaluationReasonsEn": [
-          "The market worries about weak durable-goods consumption, channel promotions and lower new-product success, making brand strength harder to monetize.",
-          "SEB cooperation and channel reach provide stability, but appliance competition pressures margins and selling expenses.",
-          "The base DCF is below the current price; re-rating needs both share stability and cash conversion, not brand narrative alone."
-        ],
-        "repairConditions": [
-          "核心品类份额稳定或提升，促销依赖下降且新品成功率改善。",
-          "渠道效率、毛利率和经营现金流同步改善。",
-          "基准DCF重新高于价格，并保持健康的分红与资本回报。"
-        ],
-        "repairConditionsEn": [
-          "Core-category share stabilizes or rises, promotion dependence falls and new-product success improves.",
-          "Channel efficiency, gross margin and operating cash flow improve together.",
-          "The base DCF moves above the price while dividends and capital returns remain healthy."
-        ],
-        "failureSignals": [
-          "品牌老化或核心品类份额连续下降。",
-          "新品长期乏力，渠道费用持续侵蚀利润。",
-          "现金流和分红承诺弱化，估值只能依赖非常乐观情景。"
-        ],
-        "failureSignalsEn": [
-          "The brand ages or core-category share keeps falling.",
-          "New products remain weak and channel expenses keep eroding profit.",
-          "Cash flow or dividend commitments weaken and the valuation depends only on the very optimistic case."
-        ],
-        "institutionReferences": [
-          {
-            "institution": "国泰海通证券",
-            "institutionEn": "GTJA Haitong Securities",
-            "rating": "增持",
-            "ratingEn": "Accumulate",
-            "market": "A股",
-            "marketEn": "A-share",
-            "targetPrice": 54.2,
-            "currency": "CNY",
-            "publishedDate": "2026-04-07",
-            "sourceUrl": "https://stock.finance.sina.com.cn/stock/go.php/vReport_Show/kind/lastest/rptid/828921874284/index.phtml",
-            "note": "2025年年报点评给予2026年20倍PE、目标价54.20元，维持增持。",
-            "noteEn": "The annual-report review uses 20x 2026E P/E and sets a CNY 54.20 target with an Accumulate rating."
-          }
-        ],
-        "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以品类份额、渠道效率和现金流供人工判断。",
-        "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on category share, channel efficiency and cash flow.",
-        "currentPrice": 42.08,
-        "baseDcfValuePerShare": 40.81598991352249,
-        "baseDcfMargin": -0.0300382625113475,
-        "optimisticDcfValuePerShare": 46.74526930153332,
-        "institutionReferencePrice": 54.2,
-        "institutionReferenceAboveOptimistic": true,
-        "valuationRule": "HOLD"
-      }
-    },
-    {
       "code": "300760.SZ",
       "name": "迈瑞医疗",
       "bucket": "ANCHOR",
@@ -622,6 +477,151 @@
         "institutionReferencePrice": 213.0,
         "institutionReferenceAboveOptimistic": true,
         "valuationRule": "HOLD"
+      }
+    },
+    {
+      "code": "000786.SZ",
+      "name": "北新建材",
+      "bucket": "ANCHOR",
+      "state": "ANCHOR",
+      "theme": "稳定现金流",
+      "industry": "建筑材料",
+      "weight": 0.1,
+      "price": 18.83,
+      "dailyReturn": -0.03237410071942459,
+      "reason": "上一交易日已公布仓位",
+      "humanMoatConfirmed": false,
+      "distribution": {
+        "skewness": 0.36204259760892943,
+        "excessKurtosis": 1.048676173628758,
+        "skewLabel": "近对称分布",
+        "kurtosisLabel": "厚尾波动型",
+        "observations": 252
+      },
+      "moat": {
+        "type": "规模成本与渠道标准",
+        "thesis": "石膏板产能布局；渠道覆盖和品牌标准可能形成运输半径内的成本及交付优势",
+        "replicationBarrier": "重资产网络；原料协同；区域配送和工程渠道难以短期复制",
+        "monitoringSignals": [
+          "区域份额",
+          "单位成本",
+          "产能利用率",
+          "现金转化",
+          "防水业务整合"
+        ],
+        "invalidationSignals": [
+          "新增产能导致价格战",
+          "渠道份额下降",
+          "成本优势消失",
+          "并购业务长期拖累现金流"
+        ],
+        "status": "DRAFT",
+        "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
+        "lastReviewDate": "2026-07-16",
+        "nextReviewDate": "2026-10-31",
+        "supportingEvidenceCount": 0,
+        "cautionEvidenceCount": 0,
+        "contradictoryEvidenceCount": 0,
+        "radar": {
+          "pendingAlertCount": 0,
+          "highAlertCount": 0,
+          "latestAlertDate": "",
+          "latestAlertTitle": "",
+          "latestAlertSource": ""
+        }
+      },
+      "valuation": {
+        "very_optimistic": {
+          "discountRate": 0.08,
+          "valuePerShare": 38.985747613665026,
+          "marginOfSafety": 1.070406139865376
+        },
+        "optimistic": {
+          "discountRate": 0.09,
+          "valuePerShare": 33.05313628333751,
+          "marginOfSafety": 0.7553444653923267
+        },
+        "base": {
+          "discountRate": 0.1,
+          "valuePerShare": 28.702932393207796,
+          "marginOfSafety": 0.5243192986302601
+        },
+        "cautious": {
+          "discountRate": 0.11,
+          "valuePerShare": 25.376623737852693,
+          "marginOfSafety": 0.3476698745540465
+        },
+        "very_pessimistic": {
+          "discountRate": 0.12,
+          "valuePerShare": 22.750861922628804,
+          "marginOfSafety": 0.2082242125665856
+        }
+      },
+      "metrics": {
+        "股息率": "4.6%",
+        "所有者收益率": "10.7%",
+        "三年ROE": "14.2%",
+        "护城河代理分": "67.6"
+      },
+      "valuationRepair": {
+        "asOf": "2026-07-18",
+        "generatedBy": "本地AI研究辅助：结合房地产暴露、规模成本与DCF敏感性整理",
+        "generatedByEn": "Local AI research aid: property exposure, scale cost and DCF sensitivity",
+        "undervaluationReasons": [
+          "房地产开工和竣工周期下行压制石膏板需求，市场担心价格战和产能利用率下降。",
+          "产能布局、渠道覆盖和品牌标准可能带来成本及交付优势，但行业需求风险会先于护城河修复反映在利润中。",
+          "基准DCF安全边际很高，但这反映了保守现金流模型下的价值空间，不代表房地产周期已经反转。"
+        ],
+        "undervaluationReasonsEn": [
+          "Falling property starts and completions pressure gypsum-board demand, while the market fears price wars and lower utilization.",
+          "Capacity, channels and brand standards may create cost and delivery advantages, but industry demand risk reaches earnings before the moat can repair.",
+          "The base DCF has a wide margin of safety, but that reflects conservative cash-flow assumptions and does not prove a property-cycle reversal."
+        ],
+        "repairConditions": [
+          "房地产竣工和基建需求企稳，石膏板销量与产能利用率改善。",
+          "区域份额和单位成本优势保持，价格战没有吞噬毛利。",
+          "现金转化持续，防水等整合业务不再拖累自由现金流。"
+        ],
+        "repairConditionsEn": [
+          "Property completions and infrastructure demand stabilize, lifting board volumes and utilization.",
+          "Regional share and unit-cost advantages hold without price wars consuming gross margin.",
+          "Cash conversion remains strong and waterproofing integration no longer drags free cash flow."
+        ],
+        "failureSignals": [
+          "房地产下行继续扩大，销量、利用率和价格同时恶化。",
+          "新增产能引发价格战，规模优势无法转化为现金。",
+          "并购业务长期占用现金，基准DCF假设需要持续下修。"
+        ],
+        "failureSignalsEn": [
+          "The property downturn widens and volume, utilization and pricing deteriorate together.",
+          "New capacity triggers a price war and scale advantages fail to convert into cash.",
+          "Acquisitions consume cash for years and the base-DCF assumptions require repeated cuts."
+        ],
+        "institutionReferences": [
+          {
+            "institution": "华泰证券",
+            "institutionEn": "Huatai Securities",
+            "rating": "增持",
+            "ratingEn": "Accumulate",
+            "market": "A股",
+            "marketEn": "A-share",
+            "targetPrice": 30.6,
+            "currency": "CNY",
+            "publishedDate": "2026-03-26",
+            "sourceUrl": "https://stock.finance.sina.com.cn/stock/go.php/vReport_Show/kind/search/rptid/827842455420/index.phtml",
+            "note": "以2026年15倍PE、折价反映短期销量和成本压力，目标价30.60元。",
+            "noteEn": "Uses 15x 2026E P/E and a discount for near-term volume and cost pressure; target CNY 30.60."
+          }
+        ],
+        "disclaimer": "这是模型辅助研究，不是自动买卖信号；北新建材的高DCF安全边际不能替代人工判断房地产周期风险。",
+        "disclaimerEn": "This is a model research aid, not an automatic trading signal; BNBM's wide DCF margin cannot replace human judgment on property-cycle risk.",
+        "currentPrice": 18.83,
+        "baseDcfValuePerShare": 28.702932393207796,
+        "baseDcfMargin": 0.5243192986302601,
+        "optimisticDcfValuePerShare": 33.05313628333751,
+        "institutionReferencePrice": 30.6,
+        "institutionReferenceAboveOptimistic": false,
+        "valuationRule": "REVIEW"
       }
     },
     {
@@ -770,40 +770,40 @@
       }
     },
     {
-      "code": "000786.SZ",
-      "name": "北新建材",
+      "code": "002032.SZ",
+      "name": "苏泊尔",
       "bucket": "ANCHOR",
       "state": "ANCHOR",
       "theme": "稳定现金流",
-      "industry": "建筑材料",
-      "weight": 0.1,
-      "price": 18.83,
-      "dailyReturn": -0.03237410071942459,
+      "industry": "家用电器",
+      "weight": 0.0648648648648648,
+      "price": 42.08,
+      "dailyReturn": -0.01359587435536802,
       "reason": "上一交易日已公布仓位",
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.36204259760892943,
-        "excessKurtosis": 1.048676173628758,
-        "skewLabel": "近对称分布",
-        "kurtosisLabel": "厚尾波动型",
+        "skewness": -1.7365262548718594,
+        "excessKurtosis": 15.286924027215825,
+        "skewLabel": "左尾风险型",
+        "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
       },
       "moat": {
-        "type": "规模成本与渠道标准",
-        "thesis": "石膏板产能布局；渠道覆盖和品牌标准可能形成运输半径内的成本及交付优势",
-        "replicationBarrier": "重资产网络；原料协同；区域配送和工程渠道难以短期复制",
+        "type": "品牌渠道与产品体系",
+        "thesis": "炊具和小家电品牌认知；渠道覆盖及与SEB协同的产品体系可能支持稳定份额",
+        "replicationBarrier": "品牌信任；线下线上渠道；供应链规模和产品开发体系需要持续投入",
         "monitoringSignals": [
-          "区域份额",
-          "单位成本",
-          "产能利用率",
-          "现金转化",
-          "防水业务整合"
+          "品类份额",
+          "新品成功率",
+          "渠道效率",
+          "关联交易质量",
+          "毛利率"
         ],
         "invalidationSignals": [
-          "新增产能导致价格战",
-          "渠道份额下降",
-          "成本优势消失",
-          "并购业务长期拖累现金流"
+          "品牌老化",
+          "核心品类份额下降",
+          "新品长期乏力",
+          "渠道费用侵蚀利润"
         ],
         "status": "DRAFT",
         "recommendedAction": "维持现有仓位上限，完成原始证据核验前不因历史财务加仓",
@@ -813,105 +813,105 @@
         "cautionEvidenceCount": 0,
         "contradictoryEvidenceCount": 0,
         "radar": {
-          "pendingAlertCount": 0,
+          "pendingAlertCount": 1,
           "highAlertCount": 0,
-          "latestAlertDate": "",
-          "latestAlertTitle": "",
-          "latestAlertSource": ""
+          "latestAlertDate": "2026-04-24",
+          "latestAlertTitle": "2026-03-31 经营现金流同比-37.5%，达到复核阈值",
+          "latestAlertSource": "QUARTERLY_FINANCIAL"
         }
       },
       "valuation": {
         "very_optimistic": {
           "discountRate": 0.08,
-          "valuePerShare": 38.985747613665026,
-          "marginOfSafety": 1.070406139865376
+          "valuePerShare": 54.83135238324875,
+          "marginOfSafety": 0.3030264349631357
         },
         "optimistic": {
           "discountRate": 0.09,
-          "valuePerShare": 33.05313628333751,
-          "marginOfSafety": 0.7553444653923267
+          "valuePerShare": 46.74526930153332,
+          "marginOfSafety": 0.1108666659109629
         },
         "base": {
           "discountRate": 0.1,
-          "valuePerShare": 28.702932393207796,
-          "marginOfSafety": 0.5243192986302601
+          "valuePerShare": 40.81598991352249,
+          "marginOfSafety": -0.0300382625113475
         },
         "cautious": {
           "discountRate": 0.11,
-          "valuePerShare": 25.376623737852693,
-          "marginOfSafety": 0.3476698745540465
+          "valuePerShare": 36.2822683118504,
+          "marginOfSafety": -0.1377787948704751
         },
         "very_pessimistic": {
           "discountRate": 0.12,
-          "valuePerShare": 22.750861922628804,
-          "marginOfSafety": 0.2082242125665856
+          "valuePerShare": 32.70338424065606,
+          "marginOfSafety": -0.2228283212771848
         }
       },
       "metrics": {
-        "股息率": "4.6%",
-        "所有者收益率": "10.7%",
-        "三年ROE": "14.2%",
-        "护城河代理分": "67.6"
+        "股息率": "6.7%",
+        "所有者收益率": "6.5%",
+        "三年ROE": "34.4%",
+        "护城河代理分": "70.5"
       },
       "valuationRepair": {
         "asOf": "2026-07-18",
-        "generatedBy": "本地AI研究辅助：结合房地产暴露、规模成本与DCF敏感性整理",
-        "generatedByEn": "Local AI research aid: property exposure, scale cost and DCF sensitivity",
+        "generatedBy": "本地AI研究辅助：结合品牌渠道、品类份额与DCF敏感性整理",
+        "generatedByEn": "Local AI research aid: brand channels, category share and DCF sensitivity",
         "undervaluationReasons": [
-          "房地产开工和竣工周期下行压制石膏板需求，市场担心价格战和产能利用率下降。",
-          "产能布局、渠道覆盖和品牌标准可能带来成本及交付优势，但行业需求风险会先于护城河修复反映在利润中。",
-          "基准DCF安全边际很高，但这反映了保守现金流模型下的价值空间，不代表房地产周期已经反转。"
+          "市场担心耐用品消费疲弱、渠道促销和新品成功率下降，使品牌优势难以转化为增量利润。",
+          "与SEB协同和渠道网络提供一定稳定性，但家电行业竞争使毛利率和费用率承压。",
+          "基准DCF略低于当前价格，估值修复需要份额与现金转化同时改善，而不是只靠品牌叙事。"
         ],
         "undervaluationReasonsEn": [
-          "Falling property starts and completions pressure gypsum-board demand, while the market fears price wars and lower utilization.",
-          "Capacity, channels and brand standards may create cost and delivery advantages, but industry demand risk reaches earnings before the moat can repair.",
-          "The base DCF has a wide margin of safety, but that reflects conservative cash-flow assumptions and does not prove a property-cycle reversal."
+          "The market worries about weak durable-goods consumption, channel promotions and lower new-product success, making brand strength harder to monetize.",
+          "SEB cooperation and channel reach provide stability, but appliance competition pressures margins and selling expenses.",
+          "The base DCF is below the current price; re-rating needs both share stability and cash conversion, not brand narrative alone."
         ],
         "repairConditions": [
-          "房地产竣工和基建需求企稳，石膏板销量与产能利用率改善。",
-          "区域份额和单位成本优势保持，价格战没有吞噬毛利。",
-          "现金转化持续，防水等整合业务不再拖累自由现金流。"
+          "核心品类份额稳定或提升，促销依赖下降且新品成功率改善。",
+          "渠道效率、毛利率和经营现金流同步改善。",
+          "基准DCF重新高于价格，并保持健康的分红与资本回报。"
         ],
         "repairConditionsEn": [
-          "Property completions and infrastructure demand stabilize, lifting board volumes and utilization.",
-          "Regional share and unit-cost advantages hold without price wars consuming gross margin.",
-          "Cash conversion remains strong and waterproofing integration no longer drags free cash flow."
+          "Core-category share stabilizes or rises, promotion dependence falls and new-product success improves.",
+          "Channel efficiency, gross margin and operating cash flow improve together.",
+          "The base DCF moves above the price while dividends and capital returns remain healthy."
         ],
         "failureSignals": [
-          "房地产下行继续扩大，销量、利用率和价格同时恶化。",
-          "新增产能引发价格战，规模优势无法转化为现金。",
-          "并购业务长期占用现金，基准DCF假设需要持续下修。"
+          "品牌老化或核心品类份额连续下降。",
+          "新品长期乏力，渠道费用持续侵蚀利润。",
+          "现金流和分红承诺弱化，估值只能依赖非常乐观情景。"
         ],
         "failureSignalsEn": [
-          "The property downturn widens and volume, utilization and pricing deteriorate together.",
-          "New capacity triggers a price war and scale advantages fail to convert into cash.",
-          "Acquisitions consume cash for years and the base-DCF assumptions require repeated cuts."
+          "The brand ages or core-category share keeps falling.",
+          "New products remain weak and channel expenses keep eroding profit.",
+          "Cash flow or dividend commitments weaken and the valuation depends only on the very optimistic case."
         ],
         "institutionReferences": [
           {
-            "institution": "华泰证券",
-            "institutionEn": "Huatai Securities",
+            "institution": "国泰海通证券",
+            "institutionEn": "GTJA Haitong Securities",
             "rating": "增持",
             "ratingEn": "Accumulate",
             "market": "A股",
             "marketEn": "A-share",
-            "targetPrice": 30.6,
+            "targetPrice": 54.2,
             "currency": "CNY",
-            "publishedDate": "2026-03-26",
-            "sourceUrl": "https://stock.finance.sina.com.cn/stock/go.php/vReport_Show/kind/search/rptid/827842455420/index.phtml",
-            "note": "以2026年15倍PE、折价反映短期销量和成本压力，目标价30.60元。",
-            "noteEn": "Uses 15x 2026E P/E and a discount for near-term volume and cost pressure; target CNY 30.60."
+            "publishedDate": "2026-04-07",
+            "sourceUrl": "https://stock.finance.sina.com.cn/stock/go.php/vReport_Show/kind/lastest/rptid/828921874284/index.phtml",
+            "note": "2025年年报点评给予2026年20倍PE、目标价54.20元，维持增持。",
+            "noteEn": "The annual-report review uses 20x 2026E P/E and sets a CNY 54.20 target with an Accumulate rating."
           }
         ],
-        "disclaimer": "这是模型辅助研究，不是自动买卖信号；北新建材的高DCF安全边际不能替代人工判断房地产周期风险。",
-        "disclaimerEn": "This is a model research aid, not an automatic trading signal; BNBM's wide DCF margin cannot replace human judgment on property-cycle risk.",
-        "currentPrice": 18.83,
-        "baseDcfValuePerShare": 28.702932393207796,
-        "baseDcfMargin": 0.5243192986302601,
-        "optimisticDcfValuePerShare": 33.05313628333751,
-        "institutionReferencePrice": 30.6,
-        "institutionReferenceAboveOptimistic": false,
-        "valuationRule": "REVIEW"
+        "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以品类份额、渠道效率和现金流供人工判断。",
+        "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on category share, channel efficiency and cash flow.",
+        "currentPrice": 42.08,
+        "baseDcfValuePerShare": 40.81598991352249,
+        "baseDcfMargin": -0.0300382625113475,
+        "optimisticDcfValuePerShare": 46.74526930153332,
+        "institutionReferencePrice": 54.2,
+        "institutionReferenceAboveOptimistic": true,
+        "valuationRule": "HOLD"
       }
     },
     {
@@ -1897,7 +1897,7 @@
       "weight": 0.025,
       "price": 96.42,
       "dailyReturn": -0.025765383449530166,
-      "reason": "已持有未来种子仓，但当前没有底部/放量确认；保留原仓位，暂停加仓和晋级，等待新的时点信号。",
+      "reason": "财务接口在 2026-08-04 刷新失败，保留最近已披露报告期 20260331；保留既有种子仓，暂停加仓/晋级，不把缺失数据当成现金收益恶化。",
       "humanMoatConfirmed": false,
       "distribution": {
         "skewness": -0.009118444167416641,
@@ -2071,7 +2071,7 @@
       "weight": 0.025,
       "price": 21.12,
       "dailyReturn": 0.01587301587301604,
-      "reason": "估值溢价超过最近两个季度利润增长允许上限；先预警并保留原仓位一个交易日，不立即卖出。",
+      "reason": "财务接口在 2026-08-04 刷新失败，保留最近已披露报告期 20260331；保留既有种子仓，暂停加仓/晋级，不把缺失数据当成现金收益恶化。",
       "humanMoatConfirmed": false,
       "distribution": {
         "skewness": 0.21485007421861094,
@@ -2217,30 +2217,17 @@
     "note": "人工护城河判断仅用于观察和预警，不是持仓或收益计算门槛；模型按目标仓位计算全部持仓收益，出现有据可查的不利证据时再触发复核。"
   },
   "allocationChange": {
-    "changed": true,
+    "changed": false,
     "activeAsOf": "2026-08-03",
     "nextAsOf": "2026-08-05",
     "effectiveLabel": "下一交易日开盘后生效",
     "marketContext": "本轮没有使用宏观大环境择时信号；变化只由个股筛选/证据状态、锚仓继承纪律、经济因子分散和现金预算约束驱动。",
     "changes": [],
-    "valuationWarnings": [
-      {
-        "code": "600312.SH",
-        "name": "平高电气",
-        "status": "WARNING",
-        "warningDate": "2026-08-04",
-        "consecutiveDays": 1,
-        "cooldownSessionsRemaining": 0,
-        "dcfMargin": -0.1659588970308373,
-        "premiumCap": 0.100792065945638,
-        "reason": "估值溢价超过最近两个季度利润增长允许上限；先预警并保留原仓位一个交易日，不立即卖出。",
-        "effect": "先预警再确认；确认后只减一档并进入冷静期，冷静期内不重复减仓；不因估值单独清仓。"
-      }
-    ]
+    "valuationWarnings": []
   },
   "moatRadar": {
     "asOf": "2026-08-04",
-    "checkedAt": "2026-08-05T00:31:22+08:00",
+    "checkedAt": "2026-08-05T19:01:08+08:00",
     "announcementStatus": "UNAVAILABLE",
     "financialStatus": "OK",
     "pendingAlerts": 3,
