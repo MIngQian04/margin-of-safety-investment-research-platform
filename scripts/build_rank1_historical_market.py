@@ -12,8 +12,9 @@ import os
 import time
 
 import pandas as pd
-import tushare as ts
 from dotenv import load_dotenv
+
+from utils.tushare_api import create_tushare_pro
 
 
 START_DATE = "20190101"
@@ -51,9 +52,7 @@ def get_pro():
             "TUSHARE_TOKEN not found in .env"
         )
 
-    ts.set_token(token)
-
-    return ts.pro_api()
+    return create_tushare_pro(token)
 
 
 def download_daily(pro, theme, code):

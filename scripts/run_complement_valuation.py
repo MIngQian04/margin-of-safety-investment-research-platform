@@ -13,13 +13,13 @@ import sys
 import time
 import pandas as pd
 from dotenv import load_dotenv
-import tushare as ts
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from selection.complement_valuation import ComplementValuationConfig, ComplementValuationEngine
+from utils.tushare_api import create_tushare_pro
 
 FINAL = Path("data/processed/selection/final_candidates.csv")
 RETURNS = Path("data/processed/selection/stock_return_matrix.csv")
@@ -51,8 +51,7 @@ def main() -> None:
     candidate_codes = [c for c in ret.columns if c != "trade_date" and c not in cycle_codes]
 
     token = get_token()
-    ts.set_token(token)
-    pro = ts.pro_api(token)
+    pro = create_tushare_pro(token)
 
     frames = []
     for code in candidate_codes:

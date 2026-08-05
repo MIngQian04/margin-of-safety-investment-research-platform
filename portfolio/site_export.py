@@ -9,6 +9,7 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from selection.moat_monitor import build_moat_monitor
+from utils.tushare_api import create_tushare_pro
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -77,11 +78,10 @@ def _refresh_benchmark_cache(nav_dates: list[str]) -> None:
     if not token:
         return
     try:
-        import tushare as ts
         # Do not use ``ts.set_token``: it persists the local credential to a
         # user-level cache.  The benchmark refresh needs the token only for
         # this in-memory request.
-        raw = ts.pro_api(token).index_daily(
+        raw = create_tushare_pro(token).index_daily(
             ts_code=BENCHMARK_CODE,
             start_date=min(nav_dates).replace("-", ""),
             end_date=max(nav_dates).replace("-", ""),

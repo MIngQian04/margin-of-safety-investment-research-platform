@@ -10,12 +10,12 @@ if str(PROJECT_ROOT) not in sys.path:
 from pathlib import Path
 import os
 import pandas as pd
-import tushare as ts
 from dotenv import load_dotenv
 
 from fundamental.tushare_financial_loader import TushareFinancialLoader
 from fundamental.point_in_time import FinancialPointInTimeStore
 from fundamental.survival_input_builder import SurvivalInputBuilder
+from utils.tushare_api import create_tushare_pro
 
 
 def load_candidates(
@@ -45,8 +45,7 @@ if __name__ == "__main__":
             "TUSHARE_TOKEN not found. Please set it in .env"
         )
 
-    ts.set_token(token)
-    pro = ts.pro_api()
+    pro = create_tushare_pro(token)
 
     decision_date = os.getenv("DECISION_DATE", "20260630")
 

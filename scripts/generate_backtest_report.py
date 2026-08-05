@@ -116,14 +116,13 @@ def fetch_csi300_from_tushare(start_date, end_date) -> pd.DataFrame | None:
         return None
 
     try:
-        import tushare as ts
+        from utils.tushare_api import create_tushare_pro
     except Exception as exc:
         warnings.warn(f"Unable to import tushare; CSI 300 skipped. Error: {exc}")
         return None
 
     try:
-        ts.set_token(token)
-        pro = ts.pro_api()
+        pro = create_tushare_pro(token)
         raw = pro.index_daily(
             ts_code="000300.SH",
             start_date=pd.Timestamp(start_date).strftime("%Y%m%d"),

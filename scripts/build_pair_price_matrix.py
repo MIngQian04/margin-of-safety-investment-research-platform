@@ -11,7 +11,8 @@ from pathlib import Path
 import os
 import pandas as pd
 from dotenv import load_dotenv
-import tushare as ts
+
+from utils.tushare_api import create_tushare_pro
 
 START_DATE = "20190101"
 END_DATE = "20260704"
@@ -90,8 +91,7 @@ def fetch_close(pro, ts_code):
 
 def main():
     token = get_token()
-    ts.set_token(token)
-    pro = ts.pro_api(token)
+    pro = create_tushare_pro(token)
 
     rank1_codes = get_rank1_codes()
     codes = sorted(set(rank1_codes + COMPLEMENT_CANDIDATES))
