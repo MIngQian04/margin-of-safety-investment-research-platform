@@ -150,7 +150,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /\.return-calendar \{[^}]*overflow-y:auto[^}]*touch-action:pan-y/);
   assert.match(css, /height:clamp\(320px,62svh,560px\)/);
   assert.match(css, /writing-mode:horizontal-tb/);
-  assert.match(css, /background:rgba\(37,36,31,\.56\)/);
+  assert.doesNotMatch(css, /\.chart-tooltip \{[^}]*background:rgba\(37,36,31/);
+  assert.match(css, /\.chart-tooltip \{[^}]*background:rgba\(250,248,243,\.88\)/);
   assert.match(css, /background:rgba\(250,248,243,\.48\)/);
   assert.match(css, /backdrop-filter:blur\(\.5px\)/);
   assert.match(css, /\.moat-dialog/);
