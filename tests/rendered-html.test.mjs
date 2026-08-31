@@ -175,8 +175,11 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.allocationChange.valuationWarnings.every((warning) => warning.code && warning.reason));
   assert.ok(data.nextHoldings.some((holding) => holding.code === "300628.SZ" && holding.weight > 0));
   assert.ok(data.nextHoldings.some((holding) => holding.code === "000651.SZ" && holding.weight > 0));
-  assert.ok(data.nextHoldings.some((holding) => holding.code === "600312.SH" && holding.weight === 0.025));
   assert.ok(data.nextHoldings.some((holding) => holding.code === "600941.SH" && holding.weight === 0.025));
+  const futureHoldings = data.nextHoldings.filter((holding) => holding.bucket === "FUTURE");
+  assert.ok(futureHoldings.length > 0);
+  assert.ok(futureHoldings.every((holding) => holding.weight > 0));
+  assert.ok(Math.abs(futureHoldings.reduce((sum, holding) => sum + holding.weight, 0) - data.summary.futureWeight) < 1e-12);
   assert.ok(!data.nextHoldings.some((holding) => holding.code === "603195.SH"));
   assert.ok(data.holdings.every((holding) => holding.price >= 0));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.dailyReturn)));
@@ -195,10 +198,16 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(Number.isInteger(data.moatRadar.pendingAlerts));
   assert.ok(Number.isFinite(data.distributionSummary.skewness));
   assert.ok(Number.isFinite(data.distributionSummary.excessKurtosis));
-  assert.equal(data.performanceMetrics.sharpe, null);
-  assert.equal(data.performanceMetrics.smartSharpe, null);
-  assert.equal(data.performanceMetrics.status, "SHORT_SAMPLE");
   assert.ok(data.performanceMetrics.observations >= 2);
+  if (data.performanceMetrics.observations < 30) {
+    assert.equal(data.performanceMetrics.sharpe, null);
+    assert.equal(data.performanceMetrics.smartSharpe, null);
+    assert.equal(data.performanceMetrics.status, "SHORT_SAMPLE");
+  } else {
+    assert.ok(Number.isFinite(data.performanceMetrics.sharpe));
+    assert.ok(Number.isFinite(data.performanceMetrics.smartSharpe));
+    assert.equal(data.performanceMetrics.status, "OK");
+  }
   assert.equal(data.performanceMetrics.annualRiskFreeRate, 0);
   assert.ok(Number.isFinite(data.dividendSummary.cumulativeCash));
   assert.ok(Number.isFinite(data.dividendSummary.reinvestedCash));
