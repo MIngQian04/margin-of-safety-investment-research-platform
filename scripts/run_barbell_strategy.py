@@ -31,9 +31,24 @@ POLICY_OUT = Path("outputs/policy-framework")
 FIN = Path("data/raw/fundamental")
 
 
+def _filter_statements_as_of(frame: pd.DataFrame, as_of: str | None) -> pd.DataFrame:
+    """Keep only statements whose publication date was known by ``as_of``."""
+    if frame is None or frame.empty or not as_of:
+        return frame
+    if "ann_date" not in frame:
+        return frame.iloc[0:0].copy()
+    announcement_date = (
+        frame["ann_date"].fillna("").astype(str).str.replace("-", "", regex=False)
+    )
+    cutoff = str(as_of).replace("-", "")
+    known = announcement_date.str.fullmatch(r"\d{8}") & announcement_date.le(cutoff)
+    return frame.loc[known].copy()
+
+
 def anchor_financial_checks(watchlist: pd.DataFrame, daily: pd.DataFrame, refresh: bool,
                             fetch_missing: bool = True, discount_rate: float = 0.10,
-                            discount_rate_step: float = 0.01) -> pd.DataFrame:
+                            discount_rate_step: float = 0.01,
+                            as_of: str | None = None) -> pd.DataFrame:
     client = TushareClient(data_dir="data/raw", max_retries=2, request_timeout_seconds=8) if refresh or fetch_missing else None
     market = daily.set_index("ts_code")
     rows = []
@@ -62,7 +77,7 @@ def anchor_financial_checks(watchlist: pd.DataFrame, daily: pd.DataFrame, refres
                             time.sleep(client.sleep_seconds * (attempt + 1) * 4)
             else:
                 frame = pd.DataFrame()
-            frames.append(frame)
+            frames.append(_filter_statements_as_of(frame, as_of))
         if any(frame.empty for frame in frames) or code not in market.index:
             rows.append({"ts_code": code, "anchor_financial_check": "NOT_FETCHED",
                          "financial_error": "; ".join(fetch_errors)})
@@ -530,6 +545,7 @@ def main() -> None:
         watchlist, daily, args.refresh_financials, fetch_missing=not args.offline,
         discount_rate=float(policy.get("dcf_base_discount_rate", 0.10)),
         discount_rate_step=float(policy.get("dcf_sensitivity_step", 0.01)),
+        as_of=as_of,
     )
     anchors = anchor_signal_table(daily, watchlist, anchor_financials, policy)
     anchors.to_csv(OUT / "anchor_screen.csv", index=False, encoding="utf-8-sig")

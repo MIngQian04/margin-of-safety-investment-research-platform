@@ -78,12 +78,15 @@ def _latest_report_metadata(frame: pd.DataFrame, as_of: str | None) -> tuple[str
 
 def _filter_statements_as_of(frame: pd.DataFrame, as_of: str | None) -> pd.DataFrame:
     """Prevent cached rows announced after the signal date from entering DCF."""
-    if frame is None or frame.empty or not as_of or "ann_date" not in frame:
+    if frame is None or frame.empty or not as_of:
         return frame
+    if "ann_date" not in frame:
+        return frame.iloc[0:0].copy()
     view = frame.copy()
     ann = view["ann_date"].fillna("").astype(str).str.replace("-", "", regex=False)
     cutoff = str(as_of).replace("-", "")
-    return view[ann.eq("") | ann.le(cutoff)].copy()
+    known = ann.str.fullmatch(r"\d{8}") & ann.le(cutoff)
+    return view.loc[known].copy()
 
 
 def get_statements(
@@ -92,6 +95,7 @@ def get_statements(
     refresh: bool,
     as_of: str | None = None,
     return_metadata: bool = False,
+    point_in_time_cache: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame] | tuple[tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame], dict]:
     """Fetch statements without destroying a valid cache on a transient failure.
 
@@ -109,7 +113,11 @@ def get_statements(
         cached = pd.read_parquet(path) if path.exists() else pd.DataFrame()
         if not refresh:
             frame = cached
-            statuses.append("CACHE_ONLY" if not frame.empty else "UNAVAILABLE")
+            statuses.append(
+                "POINT_IN_TIME_CACHE" if point_in_time_cache and not frame.empty
+                else "CACHE_ONLY" if not frame.empty
+                else "UNAVAILABLE"
+            )
         elif client is not None:
             try:
                 result = getattr(client.pro, endpoint)(ts_code=code, start_date="20190101")
@@ -141,6 +149,8 @@ def get_statements(
         status = "STALE_CACHE"
     elif all(value == "LIVE" for value in statuses):
         status = "LIVE"
+    elif all(value == "POINT_IN_TIME_CACHE" for value in statuses):
+        status = "POINT_IN_TIME_CACHE"
     else:
         status = "CACHE_ONLY"
     metadata = {
@@ -207,13 +217,15 @@ def _quarterly_profit_growth(income: pd.DataFrame, as_of: str | None = None) -> 
 
 
 def financial_checks(screen: pd.DataFrame, refresh: bool, as_of: str | None = None,
-                     discount_rate: float = 0.10, discount_rate_step: float = 0.01) -> pd.DataFrame:
+                     discount_rate: float = 0.10, discount_rate_step: float = 0.01,
+                     point_in_time_cache: bool = False) -> pd.DataFrame:
     client = TushareClient(data_dir="data/raw") if refresh else None
     rows = []
     for _, row in screen.iterrows():
         try:
             statement_result, metadata = get_statements(
                 client, row["ts_code"], refresh, as_of=as_of, return_metadata=True,
+                point_in_time_cache=point_in_time_cache,
             )
             income, cashflow, balance = statement_result
             if income.empty or cashflow.empty or balance.empty:
@@ -340,6 +352,10 @@ def write_report(result: pd.DataFrame, as_of: str) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--refresh-financials", action="store_true", help="download statements for every thesis candidate")
+    parser.add_argument(
+        "--point-in-time-cache", action="store_true",
+        help="use a previously refreshed cache, filtered by announcement date, as historically available data",
+    )
     args = parser.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     policy = yaml.safe_load(Path("config/barbell-policy.yaml").read_text(encoding="utf-8"))
@@ -349,8 +365,13 @@ def main() -> None:
     members = pd.read_csv("data/processed/metadata/sw2021_members.csv")
     names = members[["ts_code", "name", "l1_name", "l2_name", "l3_name"]].drop_duplicates("ts_code")
     daily = pd.read_csv("data/processed/portfolio/daily_basic_latest.csv")
+    as_of_raw = str(int(pd.to_numeric(daily["trade_date"], errors="coerce").max()))
+    as_of = f"{as_of_raw[:4]}-{as_of_raw[4:6]}-{as_of_raw[6:]}"
     close = pd.read_parquet("data/processed/research/close.parquet")
     volume = pd.read_parquet("data/processed/research/volume.parquet")
+    cutoff = pd.Timestamp(as_of)
+    close = close.loc[pd.to_datetime(close.index) <= cutoff]
+    volume = volume.loc[pd.to_datetime(volume.index) <= cutoff]
     timing = timing_features(close, volume, hypotheses["ts_code"].tolist())
     cycle_path = Path("outputs/sw-industry-value-screen/industry_cycle.csv")
     cycle = pd.read_csv(cycle_path)[["l1_name", "cycle_state", "cycle_score"]] if cycle_path.exists() else pd.DataFrame()
@@ -361,14 +382,13 @@ def main() -> None:
         result = result.merge(cycle, on="l1_name", how="left")
     result["valuation_gate"] = valuation_gate(result)
     result["research_tier"] = research_tier(result)
-    as_of_raw = str(int(pd.to_numeric(result["trade_date"], errors="coerce").max()))
-    as_of = f"{as_of_raw[:4]}-{as_of_raw[4:6]}-{as_of_raw[6:]}"
     financial = financial_checks(
         result,
         args.refresh_financials,
         as_of,
         discount_rate=float(policy.get("dcf_base_discount_rate", 0.10)),
         discount_rate_step=float(policy.get("dcf_sensitivity_step", 0.01)),
+        point_in_time_cache=args.point_in_time_cache,
     )
     result = result.merge(financial, on="ts_code", how="left")
     result["decision_status"] = decision_status(result)

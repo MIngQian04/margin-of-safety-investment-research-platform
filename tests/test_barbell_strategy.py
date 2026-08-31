@@ -7,11 +7,24 @@ from portfolio.barbell_strategy import (
     build_full_market_anchor_universe,
     classify_future_states,
 )
+from scripts.run_barbell_strategy import _filter_statements_as_of
 
 
 POLICY = {"anchor_target": .65, "future_total_cap": .25, "cash_floor": .10,
           "option_seed_weight": .025, "confirmed_build_weight": .05,
           "promoted_core_weight": .075, "single_theme_cap": .15}
+
+
+def test_anchor_financials_exclude_statements_published_after_signal_date():
+    statements = pd.DataFrame([
+        {"end_date": "20260331", "ann_date": "20260430", "revenue": 100},
+        {"end_date": "20260630", "ann_date": "20260825", "revenue": 120},
+        {"end_date": "20260630", "ann_date": "", "revenue": 999},
+    ])
+
+    result = _filter_statements_as_of(statements, "2026-08-24")
+
+    assert result["revenue"].tolist() == [100]
 
 
 def test_unverified_bottom_candidate_is_only_an_option_seed():

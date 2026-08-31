@@ -15,8 +15,22 @@ from data_loader.tushare_client import TushareClient
 from data_loader.dividend_store import refresh_dividend_events
 
 
-def latest_open_date(pro, as_of: str) -> str:
-    cal = pro.trade_cal(exchange="SSE", start_date="20260101", end_date=as_of, is_open="1", fields="cal_date,is_open")
+def latest_open_date(pro, as_of: str, max_retries: int = 3) -> str:
+    last_error: Exception | None = None
+    cal = None
+    for attempt in range(max_retries):
+        try:
+            cal = pro.trade_cal(
+                exchange="SSE", start_date="20260101", end_date=as_of,
+                is_open="1", fields="cal_date,is_open",
+            )
+            break
+        except Exception as exc:
+            last_error = exc
+            if attempt + 1 < max_retries:
+                time.sleep(attempt + 1)
+    if cal is None and last_error is not None:
+        raise last_error
     if cal is None or cal.empty:
         raise RuntimeError("Tushare returned no open trading date")
     return str(cal["cal_date"].astype(str).max())
@@ -45,10 +59,17 @@ def main() -> None:
     volume_path = Path("data/processed/research/volume.parquet")
     close, volume = pd.read_parquet(close_path), pd.read_parquet(volume_path)
     client = TushareClient(data_dir="data/raw")
-    end_date = latest_open_date(client.pro, args.as_of)
+    requested_end_date = latest_open_date(client.pro, args.as_of)
+    cached_end_date = pd.Timestamp(close.index.max()).strftime("%Y%m%d")
     start_date = (pd.Timestamp(close.index.max()) + pd.Timedelta(days=1)).strftime("%Y%m%d")
-    calendar = client.pro.trade_cal(exchange="SSE", start_date=start_date, end_date=end_date, is_open="1", fields="cal_date,is_open")
-    dates = [] if calendar is None else sorted(calendar["cal_date"].astype(str).tolist())
+    if start_date <= requested_end_date:
+        calendar = client.pro.trade_cal(
+            exchange="SSE", start_date=start_date, end_date=requested_end_date,
+            is_open="1", fields="cal_date,is_open",
+        )
+        dates = [] if calendar is None else sorted(calendar["cal_date"].astype(str).tolist())
+    else:
+        dates = []
     frames = []
     for date in dates:
         daily = client.pro.daily(trade_date=date)
@@ -64,8 +85,13 @@ def main() -> None:
         time.sleep(client.sleep_seconds)
     if frames:
         end_date = str(frames[-1]["trade_date"].iloc[0])
+    elif cached_end_date >= requested_end_date:
+        # Historical replay: the market matrices may already extend beyond the
+        # requested day, but daily-basic must still be restored to that day's
+        # point-in-time snapshot.
+        end_date = requested_end_date
     else:
-        end_date = pd.Timestamp(close.index.max()).strftime("%Y%m%d")
+        end_date = cached_end_date
     close = append_market_days(close, frames, "close")
     volume = append_market_days(volume, frames, "vol")
     close.to_parquet(close_path)

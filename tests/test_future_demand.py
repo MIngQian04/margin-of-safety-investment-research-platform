@@ -73,3 +73,34 @@ def test_refresh_failure_keeps_existing_statement_cache_and_marks_it_stale(tmp_p
     assert metadata["financial_report_date"] == "20260331"
     assert metadata["financial_announcement_date"] == "20260421"
     assert all(len(frame) == 1 for frame in frames)
+
+
+def test_future_financials_require_a_known_announcement_date_by_signal_date():
+    statements = pd.DataFrame([
+        {"end_date": "20260331", "ann_date": "20260430", "profit": 100},
+        {"end_date": "20260630", "ann_date": "20260825", "profit": 120},
+        {"end_date": "20260630", "ann_date": "", "profit": 999},
+    ])
+
+    result = future_screen._filter_statements_as_of(statements, "2026-08-24")
+
+    assert result["profit"].tolist() == [100]
+
+
+def test_explicit_point_in_time_cache_is_usable_after_refresh(tmp_path, monkeypatch):
+    monkeypatch.setattr(future_screen, "FIN", tmp_path)
+    cached = pd.DataFrame([{
+        "end_date": "20260331", "ann_date": "20260421", "n_income_attr_p": 10,
+    }])
+    for endpoint in ["income", "cashflow", "balancesheet"]:
+        path = tmp_path / endpoint / "A.parquet"
+        path.parent.mkdir(parents=True)
+        cached.to_parquet(path, index=False)
+
+    frames, metadata = future_screen.get_statements(
+        None, "A", refresh=False, as_of="20260727", return_metadata=True,
+        point_in_time_cache=True,
+    )
+
+    assert metadata["financial_data_status"] == "POINT_IN_TIME_CACHE"
+    assert all(len(frame) == 1 for frame in frames)
