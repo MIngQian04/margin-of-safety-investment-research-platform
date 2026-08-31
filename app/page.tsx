@@ -313,7 +313,12 @@ function ReturnCalendar({ history, language }: { history: NavPoint[]; language: 
         {[...months.entries()].map(([key, monthPoints]) => {
           const [year, month] = key.split("-").map(Number);
           const firstDay = new Date(year, month - 1, 1).getDay();
-          const cells: (NavPoint | null)[] = [...Array(firstDay).fill(null), ...monthPoints];
+          const daysInMonth = new Date(year, month, 0).getDate();
+          const pointsByDay = new Map(monthPoints.map((point) => [Number(point.date.slice(-2)), point]));
+          const cells: (NavPoint | null)[] = [
+            ...Array(firstDay).fill(null),
+            ...Array.from({ length: daysInMonth }, (_, index) => pointsByDay.get(index + 1) ?? null),
+          ];
           return (
             <section className="calendar-month" key={key} aria-label={`${year}-${String(month).padStart(2, "0")}`}>
               <h3>{language === "zh" ? `${year}年${month}月` : `${new Date(year, month - 1).toLocaleString("en", { month: "long" })} ${year}`}</h3>
@@ -351,7 +356,6 @@ function PerformanceChart({ history, benchmarkHistory = [], range, language }: {
   const top = 24;
   const bottom = 274;
   const base = points.at(0)?.nav ?? 1;
-  const personalBase = history.at(0)?.nav ?? 1;
   const returns = points.map((point) => point.nav / base - 1);
   const benchmarkByDate = new Map(benchmarkHistory.map((point) => [point.date, point]));
   const visibleBenchmarkPoints = points
@@ -379,8 +383,7 @@ function PerformanceChart({ history, benchmarkHistory = [], range, language }: {
     return value == null ? null : { x: x(index), y: y(value), point: benchmarkByDate.get(point.date)!, value };
   }).filter((point): point is { x: number; y: number; point: BenchmarkPoint; value: number } => point != null);
   const benchmarkLine = benchmarkCoordinates.map((point, index) => `${index ? "L" : "M"}${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(" ");
-  const activeIndex = hovered ?? Math.max(coordinates.length - 1, 0);
-  const active = coordinates[activeIndex];
+  const active = hovered == null ? null : coordinates[hovered];
   const yTicks = [max, (max + min) / 2, min];
 
   return (
@@ -407,7 +410,7 @@ function PerformanceChart({ history, benchmarkHistory = [], range, language }: {
       </svg>
       {active && (
         <div className="chart-tooltip" aria-live="polite">
-          <span>{active.point.date}</span><strong>{signedPct(active.value)}</strong><small>NAV {(active.point.nav / personalBase).toFixed(4)}{showBenchmark && benchmarkByDate.get(active.point.date) ? ` · ${language === "zh" ? "大盘" : "Market"} ${signedPct(benchmarkByDate.get(active.point.date)!.nav / benchmarkBase - 1)}` : ""}</small>
+          <span>{active.point.date}</span><strong>{signedPct(active.point.dailyReturn)}</strong>
         </div>
       )}
     </div>

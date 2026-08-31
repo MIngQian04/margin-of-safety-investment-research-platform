@@ -62,11 +62,11 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .calendar-intro { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:10px; color:#625f58; }
 .calendar-intro strong { color:var(--sage-dark); font-family:"Songti SC",serif; font-size:25px; font-weight:500; }
 .calendar-intro small { color:var(--muted); font-size:10px; text-align:right; }
-.calendar-months { flex:1; display:grid; grid-template-columns:repeat(auto-fit,minmax(420px,1fr)); gap:16px; min-height:0; }
-.calendar-month { min-width:0; display:flex; flex-direction:column; min-height:0; }
+.calendar-months { flex:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(420px,1fr)); align-content:start; gap:20px 16px; }
+.calendar-month { min-width:0; }
 .calendar-month h3 { margin:0 0 9px; color:#625f58; font-size:20px; font-weight:600; }
 .calendar-weekdays,.calendar-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; }
-.calendar-grid { flex:1; grid-auto-rows:minmax(47px,1fr); }
+.calendar-grid { grid-auto-rows:minmax(58px,auto); }
 .calendar-weekdays { margin-bottom:5px; color:var(--muted); font-size:13px; text-align:center; }
 .calendar-day { min-height:58px; padding:9px 9px 8px; border:1px solid rgba(183,199,178,.55); border-radius:9px; background:rgba(250,249,244,.42); }
 .calendar-day b { display:block; color:#625f58; font-size:15px; font-weight:500; }
@@ -74,7 +74,7 @@ h1 small,h2 small { display:block; margin-top:5px; color:var(--muted); font-fami
 .calendar-day small { display:block; margin-top:2px; color:var(--muted); font-size:8px; white-space:nowrap; }
 .calendar-day.positive strong { color:var(--sage-dark); }.calendar-day.negative strong { color:var(--terra); }.calendar-day.neutral strong { color:var(--muted); }
 .calendar-day.empty { border-color:transparent; background:transparent; }
-.calendar-legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; color:var(--muted); font-size:13px; }
+.calendar-legend { flex:none; display:flex; flex-wrap:wrap; gap:12px; margin-top:14px; padding-top:10px; color:var(--muted); font-size:13px; border-top:1px solid rgba(183,199,178,.48); }
 .calendar-swatch { display:inline-block; width:8px; height:8px; margin-right:4px; border-radius:50%; background:var(--muted); }.calendar-swatch.positive { background:var(--sage); }.calendar-swatch.negative { background:var(--terra); }
 .chart-grid { stroke:var(--line); stroke-width:1; }
 .chart-zero { stroke:#aab5a7; stroke-width:1.3; }
