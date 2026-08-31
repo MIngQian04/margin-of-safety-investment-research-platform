@@ -65,6 +65,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /ReturnCalendar/);
   assert.match(page, /收益日历/);
   assert.match(page, /calendar-grid/);
+  assert.match(page, /每日组合收益日历，可上下滑动/);
   assert.match(page, /useState<RangeKey>\("CALENDAR"\)/);
   assert.match(page, /view-toggle/);
   assert.match(page, /点击查看曲线|View cumulative curve/);
@@ -145,6 +146,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /\.holding-list>div,\.holding-row \{[^}]*min-height:39px/);
   assert.match(css, /\.holding-identity b,\.holding-identity small \{[^}]*white-space:nowrap/);
   assert.match(css, /\.holding-list \{[^}]*overflow-y:auto/);
+  assert.match(css, /\.chart-section \{[^}]*min-height:0[^}]*overflow:hidden/);
+  assert.match(css, /\.return-calendar \{[^}]*overflow-y:auto[^}]*touch-action:pan-y/);
+  assert.match(css, /height:clamp\(320px,62svh,560px\)/);
   assert.match(css, /writing-mode:horizontal-tb/);
   assert.match(css, /background:rgba\(37,36,31,\.56\)/);
   assert.match(css, /background:rgba\(250,248,243,\.48\)/);

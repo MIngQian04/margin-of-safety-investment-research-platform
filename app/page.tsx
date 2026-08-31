@@ -305,7 +305,7 @@ function ReturnCalendar({ history, language }: { history: NavPoint[]; language: 
   });
   const weekdays = language === "zh" ? ["日", "一", "二", "三", "四", "五", "六"] : ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   return (
-    <div className="return-calendar" aria-label={language === "zh" ? "每日组合收益日历" : "Daily portfolio return calendar"}>
+    <div className="return-calendar" tabIndex={0} aria-label={language === "zh" ? "每日组合收益日历，可上下滑动" : "Daily portfolio return calendar, scroll vertically"}>
       <div className="calendar-intro">
         <strong>{language === "zh" ? "每日收益" : "Daily returns"}</strong>
       </div>
