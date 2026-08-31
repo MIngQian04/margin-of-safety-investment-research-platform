@@ -55,8 +55,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /PORTFOLIO DISTRIBUTION/);
   assert.match(page, /chart-tooltip/);
   assert.match(page, /hovered == null \? null : coordinates\[hovered\]/);
-  assert.match(page, /signedPct\(active\.point\.dailyReturn\)/);
-  assert.doesNotMatch(page, /<span>\{active\.point\.date\}<\/span><strong>\{signedPct\(active\.value\)\}/);
+  assert.match(page, /<span>\{active\.point\.date\}<\/span><strong>\{signedPct\(active\.value\)\}/);
+  assert.doesNotMatch(page, /signedPct\(active\.point\.dailyReturn\)/);
   assert.match(page, /Margin of Safety/);
   assert.match(page, /Margin of Safety Investment Research Platform/);
   assert.match(page, /安全边际投资研究平台/);

@@ -410,7 +410,7 @@ function PerformanceChart({ history, benchmarkHistory = [], range, language }: {
       </svg>
       {active && (
         <div className="chart-tooltip" aria-live="polite">
-          <span>{active.point.date}</span><strong>{signedPct(active.point.dailyReturn)}</strong>
+          <span>{active.point.date}</span><strong>{signedPct(active.value)}</strong>
         </div>
       )}
     </div>
