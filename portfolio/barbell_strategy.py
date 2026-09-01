@@ -437,9 +437,12 @@ def classify_future_states(
 ) -> pd.DataFrame:
     """Classify forward theses without using backtest performance as a gate.
 
-    The conservative DCF is a strict entry floor.  For an already-held future
-    position, a modest valuation premium may be retained; persistent premium is
-    warned first and then reduced by one ladder step on the next session.
+    New future positions use a separate, evidence-linked valuation gate.  The
+    current owner-earnings DCF remains the business-value floor, while the very
+    pessimistic, base and very optimistic cases are treated as failure, partial
+    and success outcomes.  Their probabilities advance only with verified
+    milestones.  Existing positions retain the staged warning/reduction logic
+    so a model upgrade cannot rewrite published history in one step.
     """
     policy = policy or {}
     required = {"ts_code", "policy_status", "future_thesis_score", "valuation_gate", "financial_check",
@@ -485,8 +488,8 @@ def classify_future_states(
     invalidated = out["invalidation_status"].eq("TRIGGERED")
     policy_pass = out["policy_status"].eq("POLICY_ELIGIBLE")
     thesis_pass = pd.to_numeric(out["future_thesis_score"], errors="coerce").ge(72)
-    value_pass = (out["valuation_gate"].isin({"REASONABLE", "FAIR_TO_RICH"})
-                  & pd.to_numeric(out["dcf_margin_of_safety"], errors="coerce").ge(0))
+    legacy_value_pass = (out["valuation_gate"].isin({"REASONABLE", "FAIR_TO_RICH"})
+                         & pd.to_numeric(out["dcf_margin_of_safety"], errors="coerce").ge(0))
     data_status = out.get(
         "financial_data_status", pd.Series("LIVE", index=out.index)
     ).fillna("LIVE").astype(str).str.upper()
@@ -502,6 +505,88 @@ def classify_future_states(
     evidence_pass = out["seed_evidence_ready"]
     promotion_evidence_pass = out["promotion_evidence_ready"]
     build_ready = out["verified_milestone_count"].ge(2)
+    milestone_valuation_required = bool(policy.get("future_milestone_valuation_required", False))
+    probability_schedule = policy.get("future_milestone_probability_schedule") or [
+        {"verified_milestones": 0, "failure": 0.60, "partial": 0.30, "success": 0.10},
+        {"verified_milestones": 1, "failure": 0.45, "partial": 0.35, "success": 0.20},
+        {"verified_milestones": 2, "failure": 0.30, "partial": 0.40, "success": 0.30},
+        {"verified_milestones": 3, "failure": 0.20, "partial": 0.40, "success": 0.40},
+    ]
+    parsed_schedule: dict[int, tuple[float, float, float]] = {}
+    for item in probability_schedule:
+        if not isinstance(item, dict):
+            continue
+        try:
+            count = int(item["verified_milestones"])
+            probabilities = (
+                float(item["failure"]), float(item["partial"]), float(item["success"]),
+            )
+        except (KeyError, TypeError, ValueError):
+            continue
+        if min(probabilities) < 0 or abs(sum(probabilities) - 1.0) > 1e-9:
+            raise ValueError("future milestone probabilities must be non-negative and sum to 1")
+        parsed_schedule[count] = probabilities
+    if milestone_valuation_required and not parsed_schedule:
+        raise ValueError("future milestone valuation requires a valid probability schedule")
+
+    def milestone_probabilities(count: int) -> tuple[float, float, float]:
+        if not parsed_schedule:
+            return (np.nan, np.nan, np.nan)
+        applicable = [level for level in parsed_schedule if level <= count]
+        level = max(applicable) if applicable else min(parsed_schedule)
+        return parsed_schedule[level]
+
+    probability_rows = [milestone_probabilities(int(count)) for count in out["verified_milestone_count"]]
+    out["future_failure_probability"] = [row[0] for row in probability_rows]
+    out["future_partial_probability"] = [row[1] for row in probability_rows]
+    out["future_success_probability"] = [row[2] for row in probability_rows]
+    out["future_failure_value_per_share"] = pd.to_numeric(
+        out.get("dcf_very_pessimistic_value_per_share", pd.Series(np.nan, index=out.index)), errors="coerce"
+    )
+    out["future_partial_value_per_share"] = pd.to_numeric(
+        out.get("dcf_base_value_per_share", pd.Series(np.nan, index=out.index)), errors="coerce"
+    )
+    out["future_success_value_per_share"] = pd.to_numeric(
+        out.get("dcf_very_optimistic_value_per_share", pd.Series(np.nan, index=out.index)), errors="coerce"
+    )
+    out["future_current_business_floor"] = pd.to_numeric(
+        out.get("dcf_cautious_value_per_share", pd.Series(np.nan, index=out.index)), errors="coerce"
+    )
+    out["future_probability_weighted_value_per_share"] = (
+        out["future_failure_value_per_share"] * out["future_failure_probability"]
+        + out["future_partial_value_per_share"] * out["future_partial_probability"]
+        + out["future_success_value_per_share"] * out["future_success_probability"]
+    )
+    current_price = pd.to_numeric(out.get("close", pd.Series(np.nan, index=out.index)), errors="coerce")
+    out["future_probability_weighted_margin_of_safety"] = (
+        out["future_probability_weighted_value_per_share"] / current_price.where(current_price.gt(0)) - 1.0
+    )
+    out["future_failure_downside"] = (
+        1.0 - out["future_failure_value_per_share"] / current_price.where(current_price.gt(0))
+    ).clip(lower=0.0)
+    min_weighted_margin = float(policy.get("future_probability_weighted_min_margin", 0.30))
+    max_failure_downside = float(policy.get("future_failure_max_downside", 0.30))
+    out["future_probability_weighted_min_margin_required"] = min_weighted_margin
+    out["future_failure_max_downside_allowed"] = max_failure_downside
+    milestone_data_available = (
+        current_price.gt(0)
+        & out[[
+            "future_failure_value_per_share", "future_partial_value_per_share",
+            "future_success_value_per_share", "future_probability_weighted_value_per_share",
+        ]].notna().all(axis=1)
+    )
+    weighted_margin_pass = out["future_probability_weighted_margin_of_safety"].ge(min_weighted_margin)
+    failure_downside_pass = out["future_failure_downside"].le(max_failure_downside)
+    out["future_milestone_valuation_status"] = np.select(
+        [~milestone_data_available, ~evidence_pass, ~failure_downside_pass, ~weighted_margin_pass],
+        ["DATA_UNAVAILABLE", "EVIDENCE_NOT_READY", "FAILURE_DOWNSIDE_FAIL", "EXPECTED_VALUE_FAIL"],
+        default="PASS",
+    )
+    milestone_value_pass = (
+        out["valuation_gate"].isin({"REASONABLE", "FAIR_TO_RICH"})
+        & milestone_data_available & evidence_pass & failure_downside_pass & weighted_margin_pass
+    )
+    value_pass = milestone_value_pass if milestone_valuation_required else legacy_value_pass
     out["barbell_state"] = np.select(
         [invalidated,
          policy_pass & thesis_pass & value_pass & cash_pass & promotion_evidence_pass & milestones_pass & trend,

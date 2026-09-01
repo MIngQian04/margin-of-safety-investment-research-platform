@@ -6,6 +6,32 @@ import pandas as pd
 import portfolio.site_export as site_export
 
 
+def test_future_milestone_valuation_is_exported_separately_from_five_case_dcf():
+    detail = pd.Series({
+        "future_milestone_valuation_status": "PASS",
+        "verified_milestone_count": 2,
+        "future_current_business_floor": 80.0,
+        "future_probability_weighted_value_per_share": 130.0,
+        "future_probability_weighted_margin_of_safety": .30,
+        "future_probability_weighted_min_margin_required": .30,
+        "future_failure_downside": .20,
+        "future_failure_max_downside_allowed": .30,
+        "future_failure_probability": .30,
+        "future_failure_value_per_share": 80.0,
+        "future_partial_probability": .40,
+        "future_partial_value_per_share": 120.0,
+        "future_success_probability": .30,
+        "future_success_value_per_share": 193.3333333333,
+    })
+
+    result = site_export._future_milestone_valuation(detail)
+
+    assert result["status"] == "PASS"
+    assert result["verifiedMilestones"] == 2
+    assert result["probabilityWeightedValue"] == 130.0
+    assert result["scenarios"]["failure"]["probability"] == .30
+
+
 def test_cash_and_stock_dividends_offset_ex_date_price_drop_and_reinvest_next_session():
     with TemporaryDirectory() as directory:
         root = Path(directory)

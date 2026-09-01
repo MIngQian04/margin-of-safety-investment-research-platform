@@ -255,6 +255,37 @@ def _dcf_valuation(detail: pd.Series) -> dict | None:
     return cases or None
 
 
+def _future_milestone_valuation(detail: pd.Series) -> dict | None:
+    """Expose the evidence-linked future valuation without replacing five-case DCF."""
+    weighted_value = detail.get("future_probability_weighted_value_per_share")
+    if pd.isna(weighted_value):
+        return None
+    return {
+        "status": str(detail.get("future_milestone_valuation_status", "DATA_UNAVAILABLE")),
+        "verifiedMilestones": int(_number(detail.get("verified_milestone_count"), 0)),
+        "currentBusinessFloor": _number(detail.get("future_current_business_floor")),
+        "probabilityWeightedValue": _number(weighted_value),
+        "marginOfSafety": _number(detail.get("future_probability_weighted_margin_of_safety")),
+        "minimumMarginRequired": _number(detail.get("future_probability_weighted_min_margin_required"), .30),
+        "failureDownside": _number(detail.get("future_failure_downside")),
+        "maximumFailureDownside": _number(detail.get("future_failure_max_downside_allowed"), .30),
+        "scenarios": {
+            "failure": {
+                "probability": _number(detail.get("future_failure_probability")),
+                "valuePerShare": _number(detail.get("future_failure_value_per_share")),
+            },
+            "partial": {
+                "probability": _number(detail.get("future_partial_probability")),
+                "valuePerShare": _number(detail.get("future_partial_value_per_share")),
+            },
+            "success": {
+                "probability": _number(detail.get("future_success_probability")),
+                "valuePerShare": _number(detail.get("future_success_value_per_share")),
+            },
+        },
+    }
+
+
 def _skew_label(value: float) -> str:
     if value >= 0.5:
         return "右尾机会型"
@@ -626,9 +657,10 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
             detail = future.loc[code]
             item["price"] = _number(detail.get("close"))
             item["valuation"] = _dcf_valuation(detail)
+            item["milestoneValuation"] = _future_milestone_valuation(detail)
             item["metrics"] = {
                 "未来逻辑分": f"{_number(detail.get('future_thesis_score')):.1f}",
-                "DCF安全边际": f"{_number(detail.get('dcf_margin_of_safety')):.1%}",
+                "概率估值安全边际": f"{_number(detail.get('future_probability_weighted_margin_of_safety')):.1%}",
                 "当前状态": str(detail.get("timing_status", "—")),
             }
             item["valuationRepair"] = _valuation_repair_brief(code, detail, valuation_repair_briefs)

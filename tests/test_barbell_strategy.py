@@ -199,6 +199,91 @@ def test_option_seed_passes_when_auditable_evidence_is_ready():
     assert classify_future_states(future, pd.DataFrame([{"ts_code": "A"}]), readiness).iloc[0]["barbell_state"] == "OPTION_SEED"
 
 
+def test_future_seed_uses_probability_weighted_milestone_valuation_when_enabled():
+    future = pd.DataFrame([{
+        "ts_code": "A", "close": 80.0, "policy_status": "POLICY_ELIGIBLE",
+        "future_thesis_score": 80, "valuation_gate": "REASONABLE",
+        "financial_check": "PASS_SURVIVAL", "dcf_margin_of_safety": .10,
+        "dcf_very_pessimistic_value_per_share": 60.0,
+        "dcf_cautious_value_per_share": 75.0,
+        "dcf_base_value_per_share": 100.0,
+        "dcf_very_optimistic_value_per_share": 180.0,
+        "timing_status": "BOTTOM_VOLUME_CONFIRMATION",
+    }])
+    readiness = pd.DataFrame([{
+        "ts_code": "A", "evidence_status": "SEED_READY",
+        "seed_evidence_ready": True, "promotion_evidence_ready": True,
+    }])
+    milestones = pd.DataFrame([{
+        "ts_code": "A", "demand_status": "VERIFIED", "profit_pool_status": "VERIFIED",
+        "company_status": "VERIFIED", "invalidation_status": "NONE",
+    }])
+    policy = {
+        "future_milestone_valuation_required": True,
+        "future_probability_weighted_min_margin": .30,
+        "future_failure_max_downside": .30,
+    }
+
+    state = classify_future_states(future, milestones, readiness, policy=policy).iloc[0]
+
+    assert state["future_failure_probability"] == .20
+    assert state["future_partial_probability"] == .40
+    assert state["future_success_probability"] == .40
+    assert state["future_probability_weighted_value_per_share"] == 124.0
+    assert state["future_probability_weighted_margin_of_safety"] == .55
+    assert state["future_failure_downside"] == .25
+    assert state["future_milestone_valuation_status"] == "PASS"
+    assert state["barbell_state"] == "PROMOTED_CORE"
+
+
+def test_future_seed_waits_when_probability_weighted_margin_is_too_small():
+    future = pd.DataFrame([{
+        "ts_code": "A", "close": 100.0, "policy_status": "POLICY_ELIGIBLE",
+        "future_thesis_score": 80, "valuation_gate": "REASONABLE",
+        "financial_check": "PASS_SURVIVAL", "dcf_margin_of_safety": .10,
+        "dcf_very_pessimistic_value_per_share": 80.0,
+        "dcf_cautious_value_per_share": 90.0,
+        "dcf_base_value_per_share": 110.0,
+        "dcf_very_optimistic_value_per_share": 150.0,
+        "timing_status": "BOTTOM_HOLD_NO_ADD",
+    }])
+    readiness = pd.DataFrame([{
+        "ts_code": "A", "evidence_status": "SEED_READY", "seed_evidence_ready": True,
+    }])
+    state = classify_future_states(
+        future, pd.DataFrame([{"ts_code": "A"}]), readiness,
+        policy={"future_milestone_valuation_required": True},
+    ).iloc[0]
+
+    assert state["future_milestone_valuation_status"] == "EXPECTED_VALUE_FAIL"
+    assert state["barbell_state"] == "RESEARCH_ONLY"
+
+
+def test_future_seed_waits_when_failure_case_downside_is_too_large():
+    future = pd.DataFrame([{
+        "ts_code": "A", "close": 100.0, "policy_status": "POLICY_ELIGIBLE",
+        "future_thesis_score": 80, "valuation_gate": "REASONABLE",
+        "financial_check": "PASS_SURVIVAL", "dcf_margin_of_safety": .50,
+        "dcf_very_pessimistic_value_per_share": 50.0,
+        "dcf_cautious_value_per_share": 90.0,
+        "dcf_base_value_per_share": 250.0,
+        "dcf_very_optimistic_value_per_share": 400.0,
+        "timing_status": "BOTTOM_HOLD_NO_ADD",
+    }])
+    readiness = pd.DataFrame([{
+        "ts_code": "A", "evidence_status": "SEED_READY", "seed_evidence_ready": True,
+    }])
+    state = classify_future_states(
+        future, pd.DataFrame([{"ts_code": "A"}]), readiness,
+        policy={"future_milestone_valuation_required": True},
+    ).iloc[0]
+
+    assert state["future_probability_weighted_margin_of_safety"] > .30
+    assert state["future_failure_downside"] == .50
+    assert state["future_milestone_valuation_status"] == "FAILURE_DOWNSIDE_FAIL"
+    assert state["barbell_state"] == "RESEARCH_ONLY"
+
+
 def test_unapproved_anchor_budget_remains_cash():
     anchors = pd.DataFrame([{"ts_code": "B", "defensive_status": "WATCH"}])
     future = pd.DataFrame(columns=["barbell_state"])

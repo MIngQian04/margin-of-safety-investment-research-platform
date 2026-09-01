@@ -160,6 +160,13 @@ def build_future_research_funnel(states: pd.DataFrame) -> pd.DataFrame:
             return "THESIS_BELOW_72"
         if row.get("financial_check") != "PASS_SURVIVAL":
             return "CASH_EARNINGS_FAIL"
+        milestone_status = str(row.get("future_milestone_valuation_status", ""))
+        if milestone_status == "DATA_UNAVAILABLE":
+            return "MILESTONE_VALUATION_DATA_UNAVAILABLE"
+        if milestone_status == "FAILURE_DOWNSIDE_FAIL":
+            return "FAILURE_DOWNSIDE_TOO_HIGH"
+        if milestone_status == "EXPECTED_VALUE_FAIL":
+            return "PROBABILITY_VALUE_UNSUPPORTED"
         margin = pd.to_numeric(row.get("dcf_margin_of_safety"), errors="coerce")
         if row.get("valuation_gate") not in {"REASONABLE", "FAIR_TO_RICH"} or pd.isna(margin) or margin < 0:
             return "VALUE_UNSUPPORTED"
@@ -434,8 +441,8 @@ def write_report(portfolio: pd.DataFrame, states: pd.DataFrame, anchors: pd.Data
 ## 策略结构
 
 1. 稳定锚目标上限为 {float(policy['anchor_target']):.0%}，负责现金流、分红和等待时间。
-2. 未验证的未来公司仓位为零；通过底部价值检查后，每家公司只给 {float(policy['option_seed_weight']):.1%} 期权仓。
-3. 至少两个产业里程碑确认后升级到 {float(policy['confirmed_build_weight']):.1%}；三层证据与趋势全部确认后升级到 {float(policy['promoted_core_weight']):.1%}。证据转弱时按相同阶梯减仓。
+2. 未验证的未来公司仓位为零；新种子仓必须同时满足现有业务现金流底线、里程碑概率加权安全边际至少 {float(policy.get('future_probability_weighted_min_margin', 0.30)):.0%}、失败情景下行不超过 {float(policy.get('future_failure_max_downside', 0.30)):.0%}，通过后每家公司只给 {float(policy['option_seed_weight']):.1%} 期权仓。
+3. 至少两个产业里程碑确认后，成功概率才按预设阶梯提高，并在重新估值仍合格时升级到 {float(policy['confirmed_build_weight']):.1%}；三层证据与趋势全部确认且估值仍合格后升级到 {float(policy['promoted_core_weight']):.1%}。证据转弱时按相同阶梯减仓。
 4. 未来产业总仓不超过 {float(policy['future_total_cap']):.0%}，单一主题不超过 {float(policy['single_theme_cap']):.0%}，现金至少保留 {float(policy['cash_floor']):.0%}。
 5. 任一证伪条件触发，状态直接变为 `INVALIDATED`，目标仓位归零。
 
@@ -482,7 +489,7 @@ def write_policy_report(states: pd.DataFrame, priorities: pd.DataFrame, as_of: s
 1. 只有国家级正式规划和政府原文映射可以进入政策池。
 2. 公司必须证明业务直接暴露于规划方向；概念关联不足以通过。
 3. 政策明确但利润池弱、过度扩产或项目回款差，只能观察。
-4. 通过政策门后，继续执行现金收益、保守估值和底部择时门。
+4. 通过政策门后，继续执行现金收益、现有业务价值底线、里程碑概率加权估值和底部择时门；乐观情景不能单独触发买入。
 5. 需求、利润池和公司兑现三类里程碑全部具备带日期来源的证据，且底部放量确认后，才允许升级核心仓。
 6. 任一证伪条件触发，目标仓位归零。
 

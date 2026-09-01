@@ -109,7 +109,7 @@ DCF is not a precise target-price machine. It establishes pessimistic, cautious,
 | `CAUTIOUS` | 90% | 1% | 2.0% | 11% |
 | `VERY_PESSIMISTIC` | 80% | -2% | 1.0% | 12% |
 
-The base case remains the repeatable screening gate; the other cases expose the assumptions rather than hiding them behind one discount-rate slider.
+For anchors, the base case remains the repeatable new-entry gate; the other cases expose the assumptions rather than hiding them behind one discount-rate slider. Future-industry entries use a separate evidence-linked layer: very pessimistic, base and very optimistic DCF values become failure, partial and success outcomes; probabilities advance only when dated milestones are verified. A new seed requires at least a 30% probability-weighted margin of safety and no more than 30% downside in the failure case. An optimistic case alone can never trigger entry.
 
 <p align="center"><img src="docs/assets/en-dcf-sensitivity.png" alt="English public-site view of the five discount-rate DCF cases" width="900"></p>
 
@@ -128,9 +128,9 @@ The current policy uses a 65% anchor budget, a 25% future-demand cap, a 15% sing
 | State | Reference weight | Meaning |
 | --- | ---: | --- |
 | `RESEARCH_ONLY` | 0% | Candidate still in research. |
-| `OPTION_SEED` | 2.5% | Evidence-backed future option with timing and valuation support. |
-| `CONFIRMED_BUILD` | 5% | At least two milestone classes verified with dated evidence. |
-| `PROMOTED_CORE` | 7.5% | Three milestone classes, no unresolved contradiction and trend confirmation. |
+| `OPTION_SEED` | 2.5% | Evidence-backed future option with timing, probability-weighted margin and bounded failure downside. |
+| `CONFIRMED_BUILD` | 5% | At least two milestone classes verified; the updated probability valuation still passes. |
+| `PROMOTED_CORE` | 7.5% | Three milestone classes, no unresolved contradiction, trend confirmation and valuation still passing. |
 
 Cash is a valid output when evidence, valuation or diversification limits do not justify more exposure.
 

@@ -67,6 +67,30 @@ future_total_cap: 0.25
 cash_floor: 0.10
 dcf_base_discount_rate: 0.10
 dcf_sensitivity_step: 0.01
+# Future-industry entries use a separate evidence-linked valuation gate.  The
+# three scenario values remain grounded in current owner earnings: very
+# pessimistic = failure, base = partial success, very optimistic = success.
+# Probabilities only advance after dated milestones are verified.
+future_milestone_valuation_required: true
+future_probability_weighted_min_margin: 0.30
+future_failure_max_downside: 0.30
+future_milestone_probability_schedule:
+  - verified_milestones: 0
+    failure: 0.60
+    partial: 0.30
+    success: 0.10
+  - verified_milestones: 1
+    failure: 0.45
+    partial: 0.35
+    success: 0.20
+  - verified_milestones: 2
+    failure: 0.30
+    partial: 0.40
+    success: 0.30
+  - verified_milestones: 3
+    failure: 0.20
+    partial: 0.40
+    success: 0.40
 option_seed_weight: 0.025
 option_seed_target_min: 0.075
 option_seed_total_cap: 0.10

@@ -28,6 +28,8 @@ Future-demand scores use demand certainty, bottleneck strength, value capture, e
 
 Future milestone records remain `UNVERIFIED` unless a dated, source-backed review changes them. Scripts do not silently promote `config/future-milestones.csv`.
 
+Future-industry valuation is deliberately separate from anchor entry. The current five owner-earnings DCF cases remain the auditable cash-flow boundary. For a future candidate, the very pessimistic, base and very optimistic values are mapped to failure, partial and success outcomes. With zero, one, two or three verified milestone classes, the configured failure/partial/success probabilities are respectively 60/30/10, 45/35/20, 30/40/30 and 20/40/40. A new seed requires a probability-weighted margin of at least 30%, failure-case downside no greater than 30%, qualifying evidence and the existing survival/timing gates. This does not add unverified future revenue to cash flow; evidence changes probability, not the scenario value itself.
+
 ## Moat framework and evidence
 
 A moat card is a falsifiable business hypothesis: what advantage exists, why it is difficult to replicate, which operating outcomes should follow, what to monitor, what would contradict the thesis and when to review it. Evidence may involve brands, technology and standards, cost leadership, supply-chain control, scarce resources, licences, channels, switching costs or ecosystem position.
@@ -153,9 +155,9 @@ Future-demand candidates use the following ladder:
 | State | Target step | Gate |
 | --- | ---: | --- |
 | `RESEARCH_ONLY` | no allocation | one or more policy, thesis, value, cash-earnings, timing or evidence gates fail |
-| `OPTION_SEED` | 2.5% | seed evidence and timing gates pass |
-| `CONFIRMED_BUILD` | 5% | at least two milestone classes are verified |
-| `PROMOTED_CORE` | 7.5% | all three milestone classes, no unresolved invalidation and trend confirmation |
+| `OPTION_SEED` | 2.5% | evidence, timing, probability-weighted margin and failure-downside gates pass |
+| `CONFIRMED_BUILD` | 5% | at least two milestone classes are verified and updated valuation still passes |
+| `PROMOTED_CORE` | 7.5% | all three milestone classes, no unresolved invalidation, trend confirmation and valuation still passes |
 
 The configured future cap is 25%, the single-theme cap is 15% and the cash floor is 10%. Anchors have a 65% target budget, 15% single-name cap and sticky behavior. Existing anchors are reduced in documented steps rather than automatically replaced because a daily score moved slightly. Cash remains when qualified exposure is unavailable or capped.
 
