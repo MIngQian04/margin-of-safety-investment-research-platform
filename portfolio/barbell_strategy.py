@@ -89,6 +89,7 @@ def build_full_market_anchor_universe(
     limit = int(policy.get("anchor_financial_shortlist_size", 120))
     shortlist = passed.groupby("l1_name", group_keys=False).head(per_industry).head(limit).copy()
     shortlist["moat_approved"] = False
+    shortlist["preselection_status"] = "FINANCIAL_SHORTLIST"
     market.loc[shortlist.index, "preselection_status"] = "FINANCIAL_SHORTLIST"
     market.loc[market["preselection_status"].eq("PRELIMINARY_PASS"), "preselection_status"] = "PASS_NOT_SHORTLISTED"
     return market.sort_values("preliminary_anchor_score", ascending=False, na_position="last"), shortlist
@@ -316,6 +317,8 @@ def build_anchor_selection_state(
     old_map = {}
     if previous_state is not None and not previous_state.empty and "ts_code" in previous_state:
         old = previous_state.copy()
+        if "as_of_date" in old:
+            old = old[old["as_of_date"].astype(str).lt(str(as_of))]
         old["ts_code"] = old["ts_code"].astype(str)
         old_map = old.drop_duplicates("ts_code", keep="last").set_index("ts_code").to_dict("index")
     buffer_rank = int(policy.get("anchor_hold_rank_buffer", 10))
@@ -337,7 +340,6 @@ def build_anchor_selection_state(
             row is not None and not data_unavailable
             and str(row.get("defensive_status", "")) != "DEFENSIVE_ELIGIBLE"
             and not failed_gate.startswith("DCF_BASE_VALUE_FAIL")
-            and dcf_status not in {"PREMIUM_WITHIN_OPTIMISTIC", "OVER_OPTIMISTIC"}
         ))
         rank = int(rank_map.get(code, 0))
         incumbent_score = float(score_map.get(code, float("nan")))

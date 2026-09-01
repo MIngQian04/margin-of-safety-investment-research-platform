@@ -495,6 +495,7 @@ def test_full_market_anchor_universe_applies_first_pass_and_industry_cap():
               "anchor_preselect_per_industry": 1, "anchor_financial_shortlist_size": 10}
     funnel, shortlist = build_full_market_anchor_universe(daily, master, members, policy)
     assert len(shortlist) == 1
+    assert shortlist.iloc[0]["preselection_status"] == "FINANCIAL_SHORTLIST"
     assert funnel.set_index("ts_code").loc["C", "preselection_status"] == "DIVIDEND_FAIL"
 
 
@@ -535,6 +536,22 @@ def test_rank_replacement_requires_buffer_gap_and_three_confirmations():
     assert first.iloc[0]["review_action"] == "HOLD"
     assert second.iloc[0]["review_action"] == "HOLD"
     assert third.iloc[0]["review_action"] == "RANK_REDUCE"
+
+
+def test_explicit_preselection_failure_counts_even_when_dcf_is_over_optimistic():
+    anchors = pd.DataFrame([{
+        "ts_code": "OLD", "defensive_status": "WATCH", "anchor_score": 60,
+        "anchor_financial_check": "PASS_CASH_EARNINGS",
+        "first_failed_anchor_gate": "PRESELECTION_PB_FAIL",
+        "anchor_dcf_status": "OVER_OPTIMISTIC",
+    }])
+    previous = pd.DataFrame([{"ts_code": "OLD", "allocation_bucket": "ANCHOR", "target_weight": .05}])
+    state = build_anchor_selection_state(
+        anchors, previous, pd.DataFrame(), "2026-07-13",
+        {"anchor_hard_fail_confirmation_sessions": 2},
+    )
+    assert state.iloc[0]["hard_fail_consecutive"] == 1
+    assert state.iloc[0]["review_action"] == "HOLD"
 
 
 def test_auto_anchor_rejects_low_roe_or_unstable_owner_earnings():
