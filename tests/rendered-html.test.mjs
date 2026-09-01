@@ -68,6 +68,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /ReturnCalendar/);
   assert.match(page, /收益日历/);
   assert.match(page, /calendar-grid/);
+  assert.match(page, /leadingRowsToTrim = monthIndex === 0 \? Math\.floor\(\(firstDay \+ firstRecordedDay - 1\) \/ 7\) : 0/);
+  assert.match(page, /fullMonthCells\.slice\(leadingRowsToTrim \* 7\)/);
   assert.match(page, /pointsByDay/);
   assert.match(page, /daysInMonth/);
   assert.match(page, /每日组合收益日历，可上下滑动/);

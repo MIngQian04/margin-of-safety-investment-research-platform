@@ -310,15 +310,18 @@ function ReturnCalendar({ history, language }: { history: NavPoint[]; language: 
         <strong>{language === "zh" ? "每日收益" : "Daily returns"}</strong>
       </div>
       <div className="calendar-months">
-        {[...months.entries()].map(([key, monthPoints]) => {
+        {[...months.entries()].map(([key, monthPoints], monthIndex) => {
           const [year, month] = key.split("-").map(Number);
           const firstDay = new Date(year, month - 1, 1).getDay();
           const daysInMonth = new Date(year, month, 0).getDate();
           const pointsByDay = new Map(monthPoints.map((point) => [Number(point.date.slice(-2)), point]));
-          const cells: (NavPoint | null)[] = [
+          const fullMonthCells: (NavPoint | null)[] = [
             ...Array(firstDay).fill(null),
             ...Array.from({ length: daysInMonth }, (_, index) => pointsByDay.get(index + 1) ?? null),
           ];
+          const firstRecordedDay = Math.min(...pointsByDay.keys());
+          const leadingRowsToTrim = monthIndex === 0 ? Math.floor((firstDay + firstRecordedDay - 1) / 7) : 0;
+          const cells = fullMonthCells.slice(leadingRowsToTrim * 7);
           return (
             <section className="calendar-month" key={key} aria-label={`${year}-${String(month).padStart(2, "0")}`}>
               <h3>{language === "zh" ? `${year}年${month}月` : `${new Date(year, month - 1).toLocaleString("en", { month: "long" })} ${year}`}</h3>
