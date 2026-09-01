@@ -8,6 +8,11 @@ anchor_sticky: true
 anchor_entry_weight: 0.025
 anchor_reduction_step: 0.025
 anchor_min_weight: 0.025
+anchor_hold_rank_buffer: 10
+anchor_entry_rank: 3
+anchor_replacement_score_gap: 5.0
+anchor_replacement_confirmation_sessions: 3
+anchor_hard_fail_confirmation_sessions: 2
 anchor_valuation_cooldown_sessions: 5
 anchor_valuation_new_evidence_margin_drop: 0.05
 anchor_valuation_new_evidence_financial_drop: 0.05

@@ -3,9 +3,11 @@ import pytest
 
 from portfolio.barbell_strategy import (
     anchor_signal_table,
+    build_anchor_selection_state,
     build_barbell_weights,
     build_full_market_anchor_universe,
     classify_future_states,
+    include_held_anchors_for_review,
 )
 from scripts.run_barbell_strategy import _filter_statements_as_of
 
@@ -125,6 +127,30 @@ def test_held_seed_survives_unavailable_financial_refresh_without_exit():
     assert state["barbell_state"] == "OPTION_SEED"
     assert state["valuation_warning_status"] == "DATA_UNAVAILABLE"
     assert "保留既有种子仓" in state["state_reason"]
+
+
+def test_overdue_high_financial_review_reduces_held_future_position_one_step():
+    future = pd.DataFrame([{
+        "ts_code": "A", "policy_status": "POLICY_ELIGIBLE", "future_thesis_score": 80,
+        "valuation_gate": "REASONABLE", "financial_check": "PASS_SURVIVAL",
+        "dcf_margin_of_safety": .20, "timing_status": "BOTTOM_HOLD_NO_ADD",
+        "alert_risk_action": "FREEZE_AND_REDUCE_AFTER_CONFIRMATION",
+    }])
+    readiness = pd.DataFrame([{"ts_code": "A", "evidence_status": "SEED_READY",
+                               "seed_evidence_ready": True, "promotion_evidence_ready": True}])
+    previous = pd.DataFrame([{"ts_code": "A", "allocation_bucket": "FUTURE",
+                              "target_weight": .05, "strategy_state": "CONFIRMED_BUILD"}])
+    state = classify_future_states(
+        future, pd.DataFrame([{"ts_code": "A"}]), readiness,
+        previous_portfolio=previous, as_of="2026-07-20",
+    ).iloc[0]
+    assert state["barbell_state"] == "VALUATION_REDUCTION"
+    portfolio, _ = build_barbell_weights(
+        pd.DataFrame(columns=["defensive_status"]), pd.DataFrame([state]), POLICY,
+        previous_portfolio=previous,
+    )
+    assert portfolio.iloc[0]["target_weight"] == .025
+    assert "超过两个工作日" in portfolio.iloc[0]["reason"]
 
 
 def test_persistent_seed_premium_reduces_one_ladder_step_after_warning():
@@ -431,7 +457,7 @@ def test_sticky_anchor_does_not_replace_gree_with_a_small_score_leader():
     assert "603195.SH" not in weights
 
 
-def test_sticky_anchor_reduces_in_steps_but_never_auto_clears():
+def test_confirmed_hard_fail_reduces_in_steps_and_can_exit():
     anchors = pd.DataFrame([{
         "ts_code": "000651.SZ", "name": "格力电器", "defensive_status": "WATCH",
         "anchor_score": 20, "l1_name": "家用电器", "economic_factor": "DOMESTIC_CONSUMPTION",
@@ -440,11 +466,17 @@ def test_sticky_anchor_reduces_in_steps_but_never_auto_clears():
         "date": "2026-07-16", "ts_code": "000651.SZ", "name": "格力电器",
         "allocation_bucket": "ANCHOR", "target_weight": .064865, "close": 39.83,
     }])
-    portfolio, _ = build_barbell_weights(anchors, pd.DataFrame(columns=["barbell_state"]), POLICY, previous)
+    selection_state = pd.DataFrame([{
+        "ts_code": "000651.SZ", "review_action": "HARD_FAIL_REDUCE",
+        "failed_gate": "PRESELECTION_PB_FAIL",
+    }])
+    portfolio, _ = build_barbell_weights(
+        anchors, pd.DataFrame(columns=["barbell_state"]), POLICY, previous,
+        anchor_selection_state=selection_state,
+    )
     row = portfolio.loc[portfolio["ts_code"].eq("000651.SZ")].iloc[0]
     assert row["target_weight"] == pytest.approx(.039865)
-    assert row["target_weight"] >= POLICY.get("anchor_min_weight", .025)
-    assert "不自动清仓" in row["reason"]
+    assert "允许最终退出" in row["reason"]
 
 
 def test_full_market_anchor_universe_applies_first_pass_and_industry_cap():
@@ -464,6 +496,45 @@ def test_full_market_anchor_universe_applies_first_pass_and_industry_cap():
     funnel, shortlist = build_full_market_anchor_universe(daily, master, members, policy)
     assert len(shortlist) == 1
     assert funnel.set_index("ts_code").loc["C", "preselection_status"] == "DIVIDEND_FAIL"
+
+
+def test_held_anchor_that_fails_preselection_is_forced_into_explicit_review():
+    daily = pd.DataFrame([{
+        "ts_code": "A", "trade_date": 20260713, "pe_ttm": 10, "pb": 8,
+        "dv_ratio": 4, "total_mv": 2_000_000,
+    }])
+    master = pd.DataFrame([{"ts_code": "A", "name": "A", "list_date": "2010-01-01", "list_status": "L"}])
+    members = pd.DataFrame([{"ts_code": "A", "l1_name": "消费"}])
+    policy = {"anchor_min_dividend_yield": 2.5, "anchor_max_pe_ttm": 30, "anchor_max_pb": 6,
+              "anchor_min_market_cap_yi": 100, "anchor_min_listing_years": 5}
+    funnel, shortlist = build_full_market_anchor_universe(daily, master, members, policy)
+    previous = pd.DataFrame([{"ts_code": "A", "allocation_bucket": "ANCHOR", "target_weight": .10}])
+    review = include_held_anchors_for_review(funnel, shortlist, previous)
+    assert review.iloc[0]["preselection_status"] == "PB_FAIL"
+    financials = pd.DataFrame([{
+        "ts_code": "A", "owner_earnings_yield": .05, "normalized_owner_earnings": 10,
+        "normalized_fcf": 8, "net_cash": 1,
+    }])
+    result = anchor_signal_table(daily, review, financials, {"anchor_selection_mode": "auto"}).iloc[0]
+    assert result["first_failed_anchor_gate"] == "PRESELECTION_PB_FAIL"
+
+
+def test_rank_replacement_requires_buffer_gap_and_three_confirmations():
+    anchors = pd.DataFrame([
+        {"ts_code": "OLD", "defensive_status": "DEFENSIVE_ELIGIBLE", "anchor_score": 60,
+         "anchor_financial_check": "PASS_CASH_EARNINGS"},
+        {"ts_code": "NEW", "defensive_status": "DEFENSIVE_ELIGIBLE", "anchor_score": 70,
+         "anchor_financial_check": "PASS_CASH_EARNINGS"},
+    ])
+    previous = pd.DataFrame([{"ts_code": "OLD", "allocation_bucket": "ANCHOR", "target_weight": .05}])
+    policy = {"anchor_hold_rank_buffer": 1, "anchor_entry_rank": 1,
+              "anchor_replacement_score_gap": 5, "anchor_replacement_confirmation_sessions": 3}
+    first = build_anchor_selection_state(anchors, previous, pd.DataFrame(), "2026-07-13", policy)
+    second = build_anchor_selection_state(anchors, previous, first, "2026-07-14", policy)
+    third = build_anchor_selection_state(anchors, previous, second, "2026-07-15", policy)
+    assert first.iloc[0]["review_action"] == "HOLD"
+    assert second.iloc[0]["review_action"] == "HOLD"
+    assert third.iloc[0]["review_action"] == "RANK_REDUCE"
 
 
 def test_auto_anchor_rejects_low_roe_or_unstable_owner_earnings():

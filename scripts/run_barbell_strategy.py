@@ -16,9 +16,11 @@ import yaml
 from data_loader.tushare_client import TushareClient
 from portfolio.barbell_strategy import (
     anchor_signal_table,
+    build_anchor_selection_state,
     build_barbell_weights,
     build_full_market_anchor_universe,
     classify_future_states,
+    include_held_anchors_for_review,
 )
 from portfolio.site_export import export_portfolio_site_data, update_portfolio_nav_history
 from selection.evidence_registry import build_evidence_readiness
@@ -427,7 +429,7 @@ def write_report(portfolio: pd.DataFrame, states: pd.DataFrame, anchors: pd.Data
 
 ### 锚仓调仓纪律
 
-正常运行继承上一交易日已经公布的锚仓名称和仓位；每日评分的小幅变化不能替换既有锚仓。筛选状态需要复核时，只按 {float(policy.get('anchor_reduction_step', 0.025)):.1%} 的阶梯减仓，最低保留 {float(policy.get('anchor_min_weight', 0.025)):.1%}，不自动清仓。若价格连续高于乐观DCF，先预警、确认后只减一档，随后至少冷静 {int(policy.get('anchor_valuation_cooldown_sessions', 5))} 个交易日；再次减仓还必须出现新的财务/业绩或DCF恶化证据。新锚仓只有在现金和名额都充足时，才以 {float(policy.get('anchor_entry_weight', 0.025)):.1%} 观察仓进入，不得挤出既有锚仓。本轮没有使用宏观大环境择时信号；调仓只由个股门槛/证据状态、分散约束和现金预算驱动。
+正常运行继承上一交易日已经公布的锚仓名称和仓位；每日评分的小幅变化不能替换既有锚仓。持仓每天被强制送回完整筛选：数据缺失冻结加仓但不视作失败；硬性门槛连续 {int(policy.get('anchor_hard_fail_confirmation_sessions', 2))} 次失败后按 {float(policy.get('anchor_reduction_step', 0.025)):.1%} 逐档减仓并允许最终退出。仍合格但跌出前 {int(policy.get('anchor_hold_rank_buffer', 10))} 名的持仓，只有在前 {int(policy.get('anchor_entry_rank', 3))} 名挑战者领先至少 {float(policy.get('anchor_replacement_score_gap', 5)):.1f} 分且连续确认 {int(policy.get('anchor_replacement_confirmation_sessions', 3))} 次后才逐档让位。若价格连续高于乐观DCF，仍沿用预警、冷静期和新增恶化证据纪律。新锚仓只有在现金与名额释放后才以 {float(policy.get('anchor_entry_weight', 0.025)):.1%} 观察仓进入。本轮没有使用宏观大环境择时信号；调仓只由个股门槛/证据状态、分散约束和现金预算驱动。
 
 ## 策略结构
 
@@ -522,6 +524,20 @@ def main() -> None:
     previous_warnings = pd.read_csv(warning_path) if warning_path.exists() else pd.DataFrame()
     anchor_warning_path = OUT / "anchor_valuation_warnings.csv"
     previous_anchor_warnings = pd.read_csv(anchor_warning_path) if anchor_warning_path.exists() else pd.DataFrame()
+    alert_actions = pd.DataFrame(columns=["ts_code", "alert_risk_action"])
+    alert_path = OUT / "moat_radar_alerts.csv"
+    if alert_path.exists():
+        alerts = pd.read_csv(alert_path, encoding="utf-8-sig")
+        if {"ts_code", "review_status", "risk_action"}.issubset(alerts.columns):
+            active_alerts = alerts[alerts["review_status"].astype(str).eq("PENDING_REVIEW")].copy()
+            action_order = {"NONE": 0, "FREEZE_ADDITIONS": 1, "FREEZE_AND_REDUCE_AFTER_CONFIRMATION": 2}
+            active_alerts["_risk_order"] = active_alerts["risk_action"].map(action_order).fillna(0)
+            alert_actions = active_alerts.sort_values("_risk_order").drop_duplicates("ts_code", keep="last")[[
+                "ts_code", "risk_action"
+            ]].rename(columns={"risk_action": "alert_risk_action"})
+    if not alert_actions.empty:
+        future = future.merge(alert_actions, on="ts_code", how="left")
+    future["alert_risk_action"] = future.get("alert_risk_action", "NONE")
     evidence_readiness = build_evidence_readiness(registry, evidence, as_of)
     evidence_readiness.to_csv(OUT / "future_evidence_readiness.csv", index=False, encoding="utf-8-sig")
     states = classify_future_states(
@@ -540,6 +556,7 @@ def main() -> None:
     security_master = pd.read_csv("data/processed/metadata/security_master.csv")
     anchor_funnel, watchlist = build_full_market_anchor_universe(daily, security_master, members, policy)
     anchor_funnel.to_csv(OUT / "full_market_anchor_funnel.csv", index=False, encoding="utf-8-sig")
+    watchlist = include_held_anchors_for_review(anchor_funnel, watchlist, previous_portfolio)
     daily = daily.merge(members[["ts_code", "l1_name"]].drop_duplicates("ts_code"), on="ts_code", how="left")
     anchor_financials = anchor_financial_checks(
         watchlist, daily, args.refresh_financials, fetch_missing=not args.offline,
@@ -548,15 +565,25 @@ def main() -> None:
         as_of=as_of,
     )
     anchors = anchor_signal_table(daily, watchlist, anchor_financials, policy)
+    if not alert_actions.empty:
+        anchors = anchors.merge(alert_actions, on="ts_code", how="left")
+    anchors["alert_risk_action"] = anchors.get("alert_risk_action", "NONE")
     anchors.to_csv(OUT / "anchor_screen.csv", index=False, encoding="utf-8-sig")
+    selection_state_path = OUT / "anchor_selection_state.csv"
+    previous_selection_state = pd.read_csv(selection_state_path) if selection_state_path.exists() else pd.DataFrame()
+    selection_state = build_anchor_selection_state(
+        anchors, previous_portfolio, previous_selection_state, as_of, policy,
+    )
     portfolio, summary = build_barbell_weights(
         anchors,
         states,
         policy,
         previous_portfolio=previous_portfolio,
         anchor_valuation_warnings=previous_anchor_warnings,
+        anchor_selection_state=selection_state,
         as_of=as_of,
     )
+    selection_state.to_csv(selection_state_path, index=False, encoding="utf-8-sig")
     update_anchor_valuation_warning_history(
         anchors, previous_anchor_warnings, as_of, anchor_warning_path,
         portfolio=portfolio, previous_portfolio=previous_portfolio,

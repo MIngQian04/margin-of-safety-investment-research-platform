@@ -4,15 +4,16 @@ import numpy as np
 import pandas as pd
 
 
-# The base case remains the existing 10% conservative DCF.  Sensitivity is
-# expressed in percentage points rather than multiplicative percentages so a
-# reviewer can see exactly how much the required return moved.
-DCF_SENSITIVITY_OFFSETS = {
-    "VERY_OPTIMISTIC": -2,
-    "OPTIMISTIC": -1,
-    "BASE": 0,
-    "CAUTIOUS": 1,
-    "VERY_PESSIMISTIC": 2,
+# Each case changes both the required return and the operating assumptions.
+# ``earnings_multiplier`` is an auditable shorthand for margin and maintenance-
+# capex pressure on normalized owner earnings; it avoids pretending that the
+# same business outcome accompanies every discount rate.
+DCF_SCENARIOS = {
+    "VERY_OPTIMISTIC": {"discount_offset": -2, "growth": 0.05, "terminal_growth": 0.030, "earnings_multiplier": 1.10},
+    "OPTIMISTIC": {"discount_offset": -1, "growth": 0.04, "terminal_growth": 0.0275, "earnings_multiplier": 1.05},
+    "BASE": {"discount_offset": 0, "growth": 0.03, "terminal_growth": 0.025, "earnings_multiplier": 1.00},
+    "CAUTIOUS": {"discount_offset": 1, "growth": 0.01, "terminal_growth": 0.020, "earnings_multiplier": 0.90},
+    "VERY_PESSIMISTIC": {"discount_offset": 2, "growth": -0.02, "terminal_growth": 0.010, "earnings_multiplier": 0.80},
 }
 
 
@@ -27,14 +28,7 @@ def dcf_sensitivity(
     years: int = 5,
     discount_rate_step: float = 0.01,
 ) -> dict:
-    """Return five auditable DCF cases around the base discount rate.
-
-    The underlying earnings and cash inputs stay fixed.  Only the required
-    return moves by one percentage point per level, which makes the result a
-    valuation sensitivity rather than a hidden change to the business thesis.
-    The existing ``owner_earnings_value_per_share`` field remains the BASE case
-    for backwards-compatible screening.
-    """
+    """Return five auditable operating-and-valuation DCF scenarios."""
     base_rate = safe_num(base_discount_rate)
     step = safe_num(discount_rate_step)
     if pd.isna(base_rate):
@@ -42,19 +36,27 @@ def dcf_sensitivity(
     if pd.isna(step) or step < 0:
         step = 0.01
     result = {}
-    for label, offset in DCF_SENSITIVITY_OFFSETS.items():
-        rate = round(float(base_rate + offset * step), 6)
+    for label, assumptions in DCF_SCENARIOS.items():
+        rate = round(float(base_rate + assumptions["discount_offset"] * step), 6)
         key = label.lower()
-        result[f"dcf_{key}_discount_rate"] = rate
-        result[f"dcf_{key}_value_per_share"] = conservative_dcf(
-            normalized_owner_earnings,
+        scenario_growth = growth + (assumptions["growth"] - 0.03)
+        scenario_terminal_growth = terminal_growth + (assumptions["terminal_growth"] - 0.025)
+        multiplier = float(assumptions["earnings_multiplier"])
+        components = _dcf_components(
+            normalized_owner_earnings * multiplier,
             net_cash,
             shares,
-            growth=growth,
+            growth=scenario_growth,
             discount_rate=rate,
-            terminal_growth=terminal_growth,
+            terminal_growth=scenario_terminal_growth,
             years=years,
         )
+        result[f"dcf_{key}_discount_rate"] = rate
+        result[f"dcf_{key}_growth_rate"] = scenario_growth
+        result[f"dcf_{key}_terminal_growth_rate"] = scenario_terminal_growth
+        result[f"dcf_{key}_earnings_multiplier"] = multiplier
+        result[f"dcf_{key}_terminal_value_share"] = components["terminal_value_share"]
+        result[f"dcf_{key}_value_per_share"] = components["value_per_share"]
     return result
 
 
@@ -81,9 +83,24 @@ def conservative_dcf(
     of the most common DCF errors. Financial companies should use a dedicated
     residual-income model instead of this industrial-company DCF.
     """
+    return _dcf_components(
+        normalized_owner_earnings, net_cash, shares, growth, discount_rate,
+        terminal_growth, years,
+    )["value_per_share"]
+
+
+def _dcf_components(
+    normalized_owner_earnings: float,
+    net_cash: float,
+    shares: float,
+    growth: float,
+    discount_rate: float,
+    terminal_growth: float,
+    years: int,
+) -> dict:
     oe, cash, shares = map(safe_num, [normalized_owner_earnings, net_cash, shares])
     if pd.isna(oe) or oe <= 0 or pd.isna(shares) or shares <= 0:
-        return np.nan
+        return {"value_per_share": np.nan, "terminal_value_share": np.nan}
     g = float(np.clip(growth, -0.02, 0.06))
     r = max(float(discount_rate), terminal_growth + 0.02)
     cash = 0.0 if pd.isna(cash) else cash
@@ -92,8 +109,13 @@ def conservative_dcf(
         earning *= 1.0 + g
         pv += earning / ((1.0 + r) ** year)
     terminal = earning * (1.0 + terminal_growth) / (r - terminal_growth)
-    equity_value = pv + terminal / ((1.0 + r) ** years) + cash
-    return max(equity_value / shares, 0.0)
+    terminal_pv = terminal / ((1.0 + r) ** years)
+    enterprise_value = pv + terminal_pv
+    equity_value = enterprise_value + cash
+    return {
+        "value_per_share": max(equity_value / shares, 0.0),
+        "terminal_value_share": terminal_pv / enterprise_value if enterprise_value > 0 else np.nan,
+    }
 
 
 def owner_earnings_from_statements(

@@ -99,17 +99,17 @@ The moat view makes the thesis falsifiable: it states what is hard to copy, what
 
 DCF is not a precise target-price machine. It establishes pessimistic, cautious, base, optimistic and very optimistic boundaries so a reader can ask whether the base-case margin of safety exists, whether optimism is already priced in, whether apparent cheapness could be a value trap, and when adding, holding, pausing or reducing should be considered.
 
-`valuation/owner_earnings.py` uses annual point-in-time statements, the median of the latest three owner-earnings observations, net cash, five forecast years and a terminal value. Growth is clipped to -2%–6%, terminal growth is 2.5%, and the base discount rate is 10%.
+`valuation/owner_earnings.py` uses annual point-in-time statements, the median of the latest three owner-earnings observations, net cash, five forecast years and a terminal value. Each scenario changes normalized owner earnings (a combined margin/maintenance-capex stress), forecast growth, terminal growth and the discount rate. The output also discloses the terminal-value share.
 
-| Scenario | Discount rate |
-| --- | ---: |
-| `VERY_OPTIMISTIC` | 8% |
-| `OPTIMISTIC` | 9% |
-| `BASE` | 10% |
-| `CAUTIOUS` | 11% |
-| `VERY_PESSIMISTIC` | 12% |
+| Scenario | Owner earnings | Growth | Terminal growth | Discount rate |
+| --- | ---: | ---: | ---: | ---: |
+| `VERY_OPTIMISTIC` | 110% | 5% | 3.0% | 8% |
+| `OPTIMISTIC` | 105% | 4% | 2.75% | 9% |
+| `BASE` | 100% | 3% | 2.5% | 10% |
+| `CAUTIOUS` | 90% | 1% | 2.0% | 11% |
+| `VERY_PESSIMISTIC` | 80% | -2% | 1.0% | 12% |
 
-The base case remains the repeatable screening gate; the other rates expose the valuation range without silently changing operating inputs.
+The base case remains the repeatable screening gate; the other cases expose the assumptions rather than hiding them behind one discount-rate slider.
 
 <p align="center"><img src="docs/assets/en-dcf-sensitivity.png" alt="English public-site view of the five discount-rate DCF cases" width="900"></p>
 
@@ -117,9 +117,9 @@ The product view keeps the neutral 10% case as the mechanical gate while exposin
 
 ### Evidence radar
 
-The radar is an evidence-monitoring system. Its automated layer checks held-company announcements, regulatory/governance/operating keywords, financial and cash-flow deterioration, scheduled review deadlines and data-source health. The human layer adds institutional research, government and industry materials, competitor changes, management disclosures, technology changes and the original moat thesis.
+The radar checks quarterly financial and cash-flow deterioration plus scheduled moat-review deadlines. High alerts are due within two business sessions and medium alerts within five; overdue medium alerts freeze additions, while overdue high alerts enter the same consecutive-confirmation ladder used for staged risk reduction.
 
-The radar finds events that may challenge the investment thesis; it does not decide their meaning. A hit becomes `PENDING_REVIEW`, while `OK`, `PARTIAL`, `UNAVAILABLE` and `OFFLINE` announcement coverage remain distinct health states. Outputs are `moat_radar_alerts.csv` and `moat_radar_health.csv`.
+The radar finds evidence that may challenge the investment thesis; it does not decide the meaning. Outputs are `moat_radar_alerts.csv` and `moat_radar_health.csv`. Announcement-keyword monitoring is intentionally not part of this strategy.
 
 ### Rule-based barbell positions
 
@@ -197,7 +197,6 @@ python3 scripts/build_public_readme_snapshot.py
 When a source is unavailable, keep the cache and report unavailable data; do not convert missing data into zero risk or zero value. For cache-only checks:
 
 ```bash
-python3 scripts/run_moat_radar.py --offline
 python3 scripts/run_barbell_strategy.py --offline
 ```
 
@@ -214,7 +213,7 @@ python3 scripts/check_public_release.py
 ## Repository structure
 
 - `config/` — strategy assumptions, policy mapping, milestones and evidence ledgers.
-- `data_loader/` — Tushare clients, local market cache, announcements and dividends.
+- `data_loader/` — Tushare clients, local market cache and dividends.
 - `fundamental/` — point-in-time statements and survival-quality inputs.
 - `industry/` — industry-cycle and future-demand research.
 - `selection/` — candidate pool, policy gates, moat evidence and radar rules.
@@ -240,7 +239,7 @@ Further notes: [Architecture](docs/ARCHITECTURE.md) · [Runbook](docs/RUNBOOK.md
 - Cross-industry screening with local-cache and Tushare data paths.
 - Policy/future-demand mapping with evidence-gated position states.
 - Moat thesis registry, append-only evidence ledger and radar health output.
-- Five discount-rate DCF sensitivity around a 10% base case.
+- Five disclosed operating-and-valuation DCF scenarios around a 10% base case.
 - Sticky anchors, staged future positions, cash floor and documented manual overrides.
 - Forward NAV with T+1 targets, dividend ledger and raw-price accounting.
 - CSI 300 price-proxy comparison and public snapshot export.
@@ -248,7 +247,6 @@ Further notes: [Architecture](docs/ARCHITECTURE.md) · [Runbook](docs/RUNBOOK.md
 
 ### In progress / partial
 
-- Announcement coverage depends on Tushare `anns_d` permissions and network availability.
 - Primary-source evidence and human moat confirmations still require manual research and ledger edits.
 - Public institution references are curated configuration data, not an automatic web-research service.
 - The forward record is young; longer sample-out-of-sample evaluation and transaction-cost analysis are not presented as complete.

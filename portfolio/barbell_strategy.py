@@ -94,6 +94,36 @@ def build_full_market_anchor_universe(
     return market.sort_values("preliminary_anchor_score", ascending=False, na_position="last"), shortlist
 
 
+def include_held_anchors_for_review(
+    funnel: pd.DataFrame,
+    watchlist: pd.DataFrame,
+    previous_portfolio: pd.DataFrame | None,
+) -> pd.DataFrame:
+    """Force every held anchor through today's explicit gates.
+
+    A holding that fails the cheap first pass must not disappear from the
+    financial review frame and then be mistaken for a data outage.
+    """
+    if previous_portfolio is None or previous_portfolio.empty:
+        return watchlist.copy()
+    prior = previous_portfolio.copy()
+    if "allocation_bucket" in prior:
+        prior = prior[prior["allocation_bucket"].astype(str).eq("ANCHOR")]
+    held_codes = set(prior.get("ts_code", pd.Series(dtype=str)).dropna().astype(str))
+    present = set(watchlist.get("ts_code", pd.Series(dtype=str)).dropna().astype(str))
+    missing = held_codes - present
+    if not missing:
+        return watchlist.copy()
+    forced = funnel[funnel["ts_code"].astype(str).isin(missing)].copy()
+    if forced.empty:
+        return watchlist.copy()
+    forced["moat_approved"] = False
+    forced["forced_holding_review"] = True
+    out = watchlist.copy()
+    out["forced_holding_review"] = out.get("forced_holding_review", False)
+    return pd.concat([out, forced], ignore_index=True).drop_duplicates("ts_code", keep="first")
+
+
 def anchor_signal_table(daily_basic: pd.DataFrame, watchlist: pd.DataFrame,
                         financials: pd.DataFrame, policy: dict | None = None) -> pd.DataFrame:
     """Screen financial quality, industry position and durable pricing-power proxies."""
@@ -213,8 +243,11 @@ def anchor_signal_table(daily_basic: pd.DataFrame, watchlist: pd.DataFrame,
     approval_pass = pd.Series(True, index=out.index) if auto_mode else out["moat_approved"]
     if require_moat_proxy:
         approval_pass &= moat_pass
+    preselection_pass = pd.Series(True, index=out.index)
+    if "preselection_status" in out:
+        preselection_pass = out["preselection_status"].astype(str).eq("FINANCIAL_SHORTLIST")
     full_pass = (
-        approval_pass & dividend_pass & owner_yield_pass & cash_pass & stability_pass
+        preselection_pass & approval_pass & dividend_pass & owner_yield_pass & cash_pass & stability_pass
         & quality_pass & leverage_pass & valuation_pass & revenue_pass & margin_stability_pass
         & margin_erosion_pass & conversion_pass & payout_pass & dcf_entry_pass
     )
@@ -235,10 +268,11 @@ def anchor_signal_table(daily_basic: pd.DataFrame, watchlist: pd.DataFrame,
     )
     out["anchor_score"] = 0.65 * out["financial_anchor_score"] + 0.35 * out["moat_proxy_score"]
     out["first_failed_anchor_gate"] = np.select(
-        [~approval_pass, ~dividend_pass, ~owner_yield_pass, ~cash_pass, ~stability_pass,
+        [~preselection_pass, ~approval_pass, ~dividend_pass, ~owner_yield_pass, ~cash_pass, ~stability_pass,
          ~quality_pass, ~leverage_pass, ~valuation_pass, ~revenue_pass,
          ~margin_stability_pass, ~margin_erosion_pass, ~conversion_pass, ~payout_pass],
-        ["MOAT_PROXY_FAIL", "DIVIDEND_FAIL", "OWNER_YIELD_FAIL", "CASH_EARNINGS_FAIL",
+        ["PRESELECTION_" + out.get("preselection_status", pd.Series("FAIL", index=out.index)).astype(str),
+         "MOAT_PROXY_FAIL", "DIVIDEND_FAIL", "OWNER_YIELD_FAIL", "CASH_EARNINGS_FAIL",
          "OWNER_STABILITY_FAIL", "ROE_FAIL", "LEVERAGE_FAIL", "VALUATION_FAIL",
          "REVENUE_RESILIENCE_FAIL", "MARGIN_STABILITY_FAIL", "MARGIN_EROSION_FAIL",
          "FCF_CONVERSION_FAIL", "DIVIDEND_COVERAGE_FAIL"],
@@ -252,6 +286,86 @@ def anchor_signal_table(daily_basic: pd.DataFrame, watchlist: pd.DataFrame,
         "failed: " + out["first_failed_anchor_gate"].astype(str) if auto_mode else "requires moat evidence and financial gates",
     )
     return out.sort_values(["defensive_status", "anchor_score"], ascending=[True, False], na_position="last")
+
+
+def build_anchor_selection_state(
+    anchors: pd.DataFrame,
+    previous_portfolio: pd.DataFrame | None,
+    previous_state: pd.DataFrame | None,
+    as_of: str,
+    policy: dict,
+) -> pd.DataFrame:
+    """Persist bounded incumbent-review and challenger-confirmation streaks."""
+    prior = previous_portfolio.copy() if previous_portfolio is not None else pd.DataFrame()
+    if not prior.empty and "allocation_bucket" in prior:
+        prior = prior[prior["allocation_bucket"].astype(str).eq("ANCHOR")]
+    held_codes = set(prior.get("ts_code", pd.Series(dtype=str)).dropna().astype(str))
+    ranked = anchors[anchors["defensive_status"].eq("DEFENSIVE_ELIGIBLE")].copy()
+    ranked = ranked.sort_values(["anchor_score", "ts_code"], ascending=[False, True])
+    ranked["eligible_rank"] = range(1, len(ranked) + 1)
+    current = anchors.copy()
+    current["ts_code"] = current["ts_code"].astype(str)
+    current = current.drop_duplicates("ts_code").set_index("ts_code")
+    rank_map = ranked.set_index("ts_code")["eligible_rank"].to_dict()
+    score_map = pd.to_numeric(anchors.set_index("ts_code")["anchor_score"], errors="coerce").to_dict()
+    entrants = ranked[~ranked["ts_code"].astype(str).isin(held_codes)]
+    challenger = entrants.iloc[0] if not entrants.empty else pd.Series(dtype=object)
+    challenger_code = str(challenger.get("ts_code", ""))
+    challenger_rank = int(challenger.get("eligible_rank", 0) or 0)
+    challenger_score = float(challenger.get("anchor_score", float("nan")))
+    old_map = {}
+    if previous_state is not None and not previous_state.empty and "ts_code" in previous_state:
+        old = previous_state.copy()
+        old["ts_code"] = old["ts_code"].astype(str)
+        old_map = old.drop_duplicates("ts_code", keep="last").set_index("ts_code").to_dict("index")
+    buffer_rank = int(policy.get("anchor_hold_rank_buffer", 10))
+    entry_rank = int(policy.get("anchor_entry_rank", 3))
+    score_gap = float(policy.get("anchor_replacement_score_gap", 5.0))
+    replace_confirm = int(policy.get("anchor_replacement_confirmation_sessions", 3))
+    fail_confirm = int(policy.get("anchor_hard_fail_confirmation_sessions", 2))
+    rows = []
+    for code in sorted(held_codes):
+        row = current.loc[code] if code in current.index else None
+        old = old_map.get(code, {})
+        data_unavailable = row is None or str(row.get("anchor_financial_check", "NOT_FETCHED")) == "NOT_FETCHED"
+        failed_gate = str(row.get("first_failed_anchor_gate", "DATA_UNAVAILABLE")) if row is not None else "DATA_UNAVAILABLE"
+        overdue_high_review = row is not None and str(row.get("alert_risk_action", "")) == "FREEZE_AND_REDUCE_AFTER_CONFIRMATION"
+        if overdue_high_review:
+            failed_gate = "OVERDUE_HIGH_REVIEW"
+        dcf_status = str(row.get("anchor_dcf_status", "NOT_FETCHED")) if row is not None else "NOT_FETCHED"
+        hard_fail = bool(overdue_high_review or (
+            row is not None and not data_unavailable
+            and str(row.get("defensive_status", "")) != "DEFENSIVE_ELIGIBLE"
+            and not failed_gate.startswith("DCF_BASE_VALUE_FAIL")
+            and dcf_status not in {"PREMIUM_WITHIN_OPTIMISTIC", "OVER_OPTIMISTIC"}
+        ))
+        rank = int(rank_map.get(code, 0))
+        incumbent_score = float(score_map.get(code, float("nan")))
+        challenged = bool(
+            not hard_fail and not data_unavailable and rank > buffer_rank
+            and challenger_rank and challenger_rank <= entry_rank
+            and pd.notna(incumbent_score) and challenger_score >= incumbent_score + score_gap
+        )
+        hard_streak = int(old.get("hard_fail_consecutive", 0) or 0) + 1 if hard_fail else 0
+        challenge_streak = int(old.get("replacement_challenge_consecutive", 0) or 0) + 1 if challenged else 0
+        unavailable_streak = int(old.get("data_unavailable_consecutive", 0) or 0) + 1 if data_unavailable else 0
+        action = "HOLD"
+        if hard_streak >= fail_confirm and hard_streak % fail_confirm == 0:
+            action = "HARD_FAIL_REDUCE"
+        elif challenge_streak >= replace_confirm and challenge_streak % replace_confirm == 0:
+            action = "RANK_REDUCE"
+        rows.append({
+            "as_of_date": as_of, "ts_code": code, "eligible_rank": rank,
+            "anchor_score": incumbent_score, "failed_gate": failed_gate,
+            "hard_fail_consecutive": hard_streak,
+            "replacement_challenge_consecutive": challenge_streak,
+            "data_unavailable_consecutive": unavailable_streak,
+            "challenger_code": challenger_code if challenged else "",
+            "challenger_rank": challenger_rank if challenged else 0,
+            "challenger_score": challenger_score if challenged else float("nan"),
+            "review_action": action,
+        })
+    return pd.DataFrame(rows)
 
 
 def _anchor_weights(eligible: pd.DataFrame, policy: dict) -> pd.Series:
@@ -429,6 +543,10 @@ def classify_future_states(
          data_unavailable_reason],
         default="one or more policy, thesis, value, cash-earnings, milestone or timing gates failed",
     )
+    alert_risk_action = out.get("alert_risk_action", pd.Series("NONE", index=out.index)).fillna("NONE").astype(str)
+    alert_freeze = alert_risk_action.ne("NONE")
+    out.loc[alert_freeze, "barbell_state"] = "RESEARCH_ONLY"
+    out.loc[alert_freeze, "state_reason"] = "财务复核已逾期；在处理完成前冻结新建仓、加仓和晋级。"
 
     # A user may explicitly confirm a dated, source-backed thesis before the
     # mechanical timing gate turns positive. Keep this as an auditable manual
@@ -521,6 +639,19 @@ def classify_future_states(
         out.at[idx, "previous_strategy_state"] = prior_state
         if prior_weight <= 0 or prior_state not in {"OPTION_SEED", "CONFIRMED_BUILD", "PROMOTED_CORE"}:
             continue
+        risk_action = str(alert_risk_action.loc[idx])
+        if risk_action == "FREEZE_AND_REDUCE_AFTER_CONFIRMATION":
+            out.at[idx, "barbell_state"] = "VALUATION_REDUCTION"
+            out.at[idx, "valuation_warning_status"] = "ALERT_REVIEW_OVERDUE"
+            out.at[idx, "valuation_warning_reason"] = "高优先级财报复核超过两个工作日仍未完成；按未来仓阶梯降低一档风险预算。"
+            out.at[idx, "state_reason"] = out.at[idx, "valuation_warning_reason"]
+            continue
+        if risk_action == "FREEZE_ADDITIONS":
+            out.at[idx, "barbell_state"] = prior_state
+            out.at[idx, "valuation_warning_status"] = "ALERT_REVIEW_OVERDUE"
+            out.at[idx, "valuation_warning_reason"] = "中优先级财报复核超过五个工作日仍未完成；保留现有仓位但冻结加仓和晋级。"
+            out.at[idx, "state_reason"] = out.at[idx, "valuation_warning_reason"]
+            continue
         # Timing is an entry/addition gate, not an exit gate for an already
         # held seed.  Keep the existing ladder step when price/volume
         # confirmation is absent, while freezing additions and promotion.
@@ -579,6 +710,7 @@ def build_barbell_weights(
     policy: dict,
     previous_portfolio: pd.DataFrame | None = None,
     anchor_valuation_warnings: pd.DataFrame | None = None,
+    anchor_selection_state: pd.DataFrame | None = None,
     as_of: str | None = None,
 ) -> tuple[pd.DataFrame, dict]:
     """Allocate anchors, small option seeds and promoted cores; leave the rest in cash.
@@ -621,6 +753,11 @@ def build_barbell_weights(
         anchor_warning_map = warning_frame.sort_values(["ts_code", "warning_date"]).drop_duplicates(
             "ts_code", keep="last"
         ).set_index("ts_code").to_dict("index")
+    selection_state_map = {}
+    if anchor_selection_state is not None and not anchor_selection_state.empty and "ts_code" in anchor_selection_state:
+        state_frame = anchor_selection_state.copy()
+        state_frame["ts_code"] = state_frame["ts_code"].astype(str)
+        selection_state_map = state_frame.drop_duplicates("ts_code", keep="last").set_index("ts_code").to_dict("index")
     as_of_text = str(as_of or "")
     manual_overrides = {}
     for item in policy.get("manual_anchor_overrides", []) or []:
@@ -678,6 +815,8 @@ def build_barbell_weights(
             dcf_status = str(current.get("anchor_dcf_status", "NOT_FETCHED")) if current is not None else "NOT_FETCHED"
             dcf_data_present = bool(current.get("anchor_dcf_data_present", dcf_status != "NOT_FETCHED")) if current is not None else False
             warning = anchor_warning_map.get(code, {})
+            selection_review = selection_state_map.get(code, {})
+            selection_action = str(selection_review.get("review_action", "HOLD"))
             manual_override = manual_overrides.get(code)
             warning_persisted = (
                 dcf_status == "OVER_OPTIMISTIC"
@@ -722,6 +861,12 @@ def build_barbell_weights(
             elif dcf_status == "NOT_FETCHED" and dcf_data_present:
                 weight = previous_weight
                 reason = "DCF敏感性数据未取回，保留上一交易日锚仓；缺失数据不能解释为估值通过或护城河失效。"
+            elif selection_action == "HARD_FAIL_REDUCE":
+                weight = max(previous_weight - reduction_step, 0.0)
+                reason = f"硬性筛选门连续复核失败（{selection_review.get('failed_gate', 'UNKNOWN')}）；按一档减仓，允许最终退出，不再用最低仓位永久托底。"
+            elif selection_action == "RANK_REDUCE":
+                weight = max(previous_weight - reduction_step, 0.0)
+                reason = f"持仓跌出保留排名缓冲，且{selection_review.get('challenger_code', '候选股')}连续达到排名与分差门槛；按一档减仓，空出名额后再让挑战者进入。"
             elif dcf_status == "PREMIUM_WITHIN_OPTIMISTIC":
                 weight = previous_weight
                 reason = "基准DCF略高于当前价格，但乐观情景仍有估值支撑；保留原仓位、暂停加仓，不因一天溢价直接替换。"
@@ -750,11 +895,12 @@ def build_barbell_weights(
                 weight = previous_weight
                 reason = "上一交易日锚仓保留：基本面、基准DCF和护城河代理没有硬性退出条件，避免因每日评分波动频繁换仓。"
             else:
-                weight = max(previous_weight - reduction_step, minimum_weight)
-                reason = "当前筛选状态需人工复核，按锚仓减仓阶梯下调；不自动清仓、不把新标的直接换入。"
-            rows.append(_anchor_row(code, current, prior_row, weight, reason))
-            selected_anchor_codes.add(code)
-            anchor_used += weight
+                weight = previous_weight
+                reason = "当前筛选状态已明确进入连续复核；首次失败只冻结加仓，达到确认次数后才按一档减仓。"
+            if weight > 1e-12:
+                rows.append(_anchor_row(code, current, prior_row, weight, reason))
+                selected_anchor_codes.add(code)
+                anchor_used += weight
 
         # Only unused anchor capacity and unused name slots may fund a new entry.
         # Existing names are never displaced just because a newcomer scores a few
@@ -791,7 +937,7 @@ def build_barbell_weights(
                 code = str(candidate["ts_code"])
                 rows.append(_anchor_row(
                     code, candidate, None, allowed,
-                    "现金预算内新增观察锚仓；不替换既有锚仓，仍需持续的一手护城河证据复核。",
+                    "现金与名额均已释放，候选股通过入围排名、分差和连续复核后以观察锚仓进入。",
                 ))
                 selected_anchor_codes.add(code)
                 anchor_used += allowed

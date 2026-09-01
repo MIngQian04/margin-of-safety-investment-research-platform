@@ -40,7 +40,7 @@ def test_owner_earnings_exposes_pricing_power_and_cash_conversion_metrics():
     assert result["normalized_fcf_conversion"] > .8
 
 
-def test_owner_earnings_exposes_five_discount_rate_sensitivities():
+def test_owner_earnings_exposes_five_operating_and_valuation_scenarios():
     income = pd.DataFrame({
         "end_date": ["20221231", "20231231", "20241231"],
         "ann_date": ["20230331", "20240331", "20250331"],
@@ -77,4 +77,9 @@ def test_owner_earnings_exposes_five_discount_rate_sensitivities():
     ]]
     assert rates == [0.08, 0.09, 0.10, 0.11, 0.12]
     assert values[0] > values[1] > values[2] > values[3] > values[4]
+    assert result["dcf_very_optimistic_growth_rate"] == .05
+    assert abs(result["dcf_very_pessimistic_growth_rate"] + .02) < 1e-12
+    assert result["dcf_very_optimistic_earnings_multiplier"] == 1.10
+    assert result["dcf_very_pessimistic_earnings_multiplier"] == .80
+    assert 0 < result["dcf_base_terminal_value_share"] < 1
     assert result["owner_earnings_value_per_share"] == result["dcf_base_value_per_share"]

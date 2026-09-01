@@ -9,13 +9,7 @@ import pandas as pd
 ALERT_COLUMNS = [
     "alert_id", "ts_code", "name", "alert_date", "alert_source", "alert_level",
     "category", "trigger", "title", "source_url", "review_status", "suggested_action",
-]
-
-ANNOUNCEMENT_RULES = [
-    ("HIGH", "REGULATORY_OR_SURVIVAL", ("立案调查", "行政处罚", "重大违法", "终止上市", "被申请破产", "债务逾期")),
-    ("HIGH", "MOAT_OR_EARNINGS_RISK", ("产品召回", "核心技术人员离职", "大额减值", "业绩预亏", "重大诉讼")),
-    ("MEDIUM", "GOVERNANCE_CHANGE", ("实际控制人变更", "董事长辞职", "总经理辞职", "问询函", "监管函")),
-    ("MEDIUM", "BUSINESS_CHANGE", ("业绩预告", "业绩快报", "诉讼", "仲裁", "重大合同", "中标", "关联交易", "收购", "出售资产", "担保", "减持", "质押")),
+    "review_due_date", "review_overdue", "risk_action",
 ]
 
 
@@ -30,40 +24,26 @@ def _alerts(rows: list[dict]) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=ALERT_COLUMNS).drop_duplicates("alert_id", keep="last")
 
 
-def build_announcement_alerts(announcements: pd.DataFrame, as_of: str) -> pd.DataFrame:
-    rows: list[dict] = []
-    cutoff = pd.Timestamp(as_of).normalize()
-    for announcement in announcements.to_dict("records"):
-        date = pd.to_datetime(announcement.get("ann_date"), errors="coerce")
-        if pd.isna(date) or date.normalize() > cutoff:
-            continue
-        title = str(announcement.get("title", "")).strip()
-        matched = None
-        for level, category, keywords in ANNOUNCEMENT_RULES:
-            trigger = next((keyword for keyword in keywords if keyword in title), None)
-            if trigger:
-                matched = (level, category, trigger)
-                break
-        if not matched:
-            continue
-        level, category, trigger = matched
-        code = str(announcement.get("ts_code", ""))
-        date_text = date.strftime("%Y-%m-%d")
-        rows.append({
-            "alert_id": _alert_id("ANNOUNCEMENT", code, date_text, title, announcement.get("url", "")),
-            "ts_code": code,
-            "name": str(announcement.get("name", "")),
-            "alert_date": date_text,
-            "alert_source": "COMPANY_ANNOUNCEMENT",
-            "alert_level": level,
-            "category": category,
-            "trigger": trigger,
-            "title": title,
-            "source_url": str(announcement.get("url", "")),
-            "review_status": "PENDING_REVIEW",
-            "suggested_action": "暂停加仓，打开公告原文核查其是否改变护城河机制",
-        })
-    return _alerts(rows)
+def apply_review_sla(alerts: pd.DataFrame, as_of: str) -> pd.DataFrame:
+    """Attach review deadlines and deterministic overdue risk actions."""
+    if alerts.empty:
+        return pd.DataFrame(columns=ALERT_COLUMNS)
+    out = alerts.copy()
+    sessions = {"HIGH": 2, "MEDIUM": 5, "LOW": 10}
+    dates = pd.to_datetime(out["alert_date"], errors="coerce")
+    out["review_due_date"] = [
+        (date + pd.offsets.BDay(sessions.get(str(level), 5))).strftime("%Y-%m-%d")
+        if pd.notna(date) else ""
+        for date, level in zip(dates, out["alert_level"])
+    ]
+    today = pd.Timestamp(as_of).normalize()
+    due = pd.to_datetime(out["review_due_date"], errors="coerce")
+    pending = out["review_status"].astype(str).eq("PENDING_REVIEW")
+    out["review_overdue"] = pending & due.notna() & due.lt(today)
+    out["risk_action"] = "NONE"
+    out.loc[out["review_overdue"] & out["alert_level"].eq("MEDIUM"), "risk_action"] = "FREEZE_ADDITIONS"
+    out.loc[out["review_overdue"] & out["alert_level"].eq("HIGH"), "risk_action"] = "FREEZE_AND_REDUCE_AFTER_CONFIRMATION"
+    return out.reindex(columns=ALERT_COLUMNS)
 
 
 def _statement(path: Path, as_of: pd.Timestamp) -> pd.DataFrame:

@@ -4,26 +4,22 @@ from pathlib import Path
 
 import pandas as pd
 
-from selection.moat_radar import build_announcement_alerts, build_financial_alerts
+from selection.moat_radar import apply_review_sla, build_financial_alerts
 
 
 class MoatRadarTests(unittest.TestCase):
-    def test_keyword_creates_review_candidate_not_moat_verdict(self):
-        announcements = pd.DataFrame([{
-            "ann_date": "2026-07-15", "ts_code": "600000.SH", "name": "样本",
-            "title": "关于收到行政处罚决定书的公告", "url": "https://example.com/a.pdf",
+    def test_high_financial_alert_has_two_session_sla_and_overdue_action(self):
+        alerts = pd.DataFrame([{
+            "alert_id": "a", "ts_code": "600000.SH", "name": "样本",
+            "alert_date": "2026-07-13", "alert_source": "QUARTERLY_FINANCIAL",
+            "alert_level": "HIGH", "category": "CASHFLOW_DETERIORATION",
+            "trigger": "经营现金流同比", "title": "下降", "source_url": "",
+            "review_status": "PENDING_REVIEW", "suggested_action": "复核",
         }])
-        alerts = build_announcement_alerts(announcements, "2026-07-15")
-        self.assertEqual(alerts.iloc[0]["alert_level"], "HIGH")
-        self.assertEqual(alerts.iloc[0]["review_status"], "PENDING_REVIEW")
-        self.assertNotIn("WEAKENED", alerts.to_string())
-
-    def test_benign_announcement_does_not_trigger(self):
-        announcements = pd.DataFrame([{
-            "ann_date": "2026-07-15", "ts_code": "600000.SH", "name": "样本",
-            "title": "2025年度权益分派实施公告", "url": "https://example.com/a.pdf",
-        }])
-        self.assertTrue(build_announcement_alerts(announcements, "2026-07-15").empty)
+        result = apply_review_sla(alerts, "2026-07-16").iloc[0]
+        self.assertEqual(result["review_due_date"], "2026-07-15")
+        self.assertTrue(result["review_overdue"])
+        self.assertEqual(result["risk_action"], "FREEZE_AND_REDUCE_AFTER_CONFIRMATION")
 
     def test_same_period_financial_decline_only_triggers_review(self):
         with tempfile.TemporaryDirectory() as directory:

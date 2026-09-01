@@ -245,6 +245,10 @@ def _dcf_valuation(detail: pd.Series) -> dict | None:
             continue
         cases[scenario] = {
             "discountRate": _number(rate),
+            "growthRate": None if pd.isna(detail.get(f"dcf_{scenario}_growth_rate")) else _number(detail.get(f"dcf_{scenario}_growth_rate")),
+            "terminalGrowthRate": None if pd.isna(detail.get(f"dcf_{scenario}_terminal_growth_rate")) else _number(detail.get(f"dcf_{scenario}_terminal_growth_rate")),
+            "earningsMultiplier": None if pd.isna(detail.get(f"dcf_{scenario}_earnings_multiplier")) else _number(detail.get(f"dcf_{scenario}_earnings_multiplier")),
+            "terminalValueShare": None if pd.isna(detail.get(f"dcf_{scenario}_terminal_value_share")) else _number(detail.get(f"dcf_{scenario}_terminal_value_share")),
             "valuePerShare": _number(value),
             "marginOfSafety": _number(margin),
         }
@@ -762,12 +766,11 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
         "moatRadar": {
             "asOf": str(moat_health.get("as_of_date", summary["as_of_date"])),
             "checkedAt": str(moat_health.get("checked_at", "")),
-            "announcementStatus": str(moat_health.get("announcement_status", "NOT_RUN")),
             "financialStatus": str(moat_health.get("financial_status", "NOT_RUN")),
             "pendingAlerts": int(_number(moat_health.get("pending_alerts", 0))),
             "highAlerts": int(_number(moat_health.get("high_alerts", 0))),
-            "announcementRowsInWindow": int(_number(moat_health.get("announcement_rows_in_window", 0))),
-            "note": "规则命中只生成待人工复核事件，不会自动改变护城河结论或触发交易",
+            "overdueAlerts": int(_number(moat_health.get("overdue_alerts", 0))),
+            "note": "财报与复核期限命中会生成有截止日的人工复核事件；高优先级逾期在连续确认后逐档降低风险预算",
         },
         "distributionSummary": distribution_summary,
         "performanceMetrics": performance_metrics,
