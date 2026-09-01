@@ -33,7 +33,11 @@ type Holding = {
     disclaimer: string;
     disclaimerEn?: string;
   };
-  valuation?: Record<string, { discountRate: number; valuePerShare: number; marginOfSafety: number }> | null;
+  valuation?: Record<string, {
+    discountRate: number; growthRate?: number | null; terminalGrowthRate?: number | null;
+    earningsMultiplier?: number | null; terminalValueShare?: number | null;
+    valuePerShare: number; marginOfSafety: number;
+  }> | null;
   distribution: {
     skewness: number;
     excessKurtosis: number;
@@ -102,11 +106,10 @@ type PortfolioData = {
   moatRadar: {
     asOf: string;
     checkedAt: string;
-    announcementStatus: "OK" | "PARTIAL" | "UNAVAILABLE" | "OFFLINE" | "NOT_RUN";
     financialStatus: "OK" | "PARTIAL" | "NOT_RUN";
     pendingAlerts: number;
     highAlerts: number;
-    announcementRowsInWindow: number;
+    overdueAlerts: number;
     note: string;
   };
   holdings: Holding[];
@@ -442,6 +445,8 @@ export default function Home() {
   const [allocationBoard, setAllocationBoard] = useState(0);
   const allocationCarouselRef = useRef<HTMLDivElement>(null);
   const [accountCapital, setAccountCapital] = useState(100000);
+  const [accountCash, setAccountCash] = useState(100000);
+  const [executionAsOf, setExecutionAsOf] = useState("");
   const [executionRecords, setExecutionRecords] = useState<Record<string, ExecutionRecord>>({});
   const [executionLoaded, setExecutionLoaded] = useState(false);
 
@@ -470,14 +475,16 @@ export default function Home() {
     try {
       const stored = JSON.parse(window.localStorage.getItem(executionLedgerKey) ?? "{}");
       if (Number.isFinite(stored.capital) && stored.capital > 0) setAccountCapital(stored.capital);
+      if (Number.isFinite(stored.cash) && stored.cash >= 0) setAccountCash(stored.cash);
+      if (typeof stored.asOf === "string") setExecutionAsOf(stored.asOf);
       if (stored.records && typeof stored.records === "object") setExecutionRecords(stored.records);
     } catch { /* Start with an empty browser-local execution ledger. */ }
     setExecutionLoaded(true);
   }, []);
 
   useEffect(() => {
-    if (executionLoaded) window.localStorage.setItem(executionLedgerKey, JSON.stringify({ capital: accountCapital, records: executionRecords }));
-  }, [accountCapital, executionLoaded, executionRecords]);
+    if (executionLoaded) window.localStorage.setItem(executionLedgerKey, JSON.stringify({ capital: accountCapital, cash: accountCash, asOf: executionAsOf, records: executionRecords }));
+  }, [accountCapital, accountCash, executionAsOf, executionLoaded, executionRecords]);
 
   useEffect(() => {
     window.localStorage.setItem(languageKey, language);
@@ -566,9 +573,13 @@ export default function Home() {
   const updateExecution = (code: string, field: keyof ExecutionRecord, value: string) => {
     const number = Math.max(0, Number(value) || 0);
     setExecutionRecords((current) => ({ ...current, [code]: { quantity: 0, averagePrice: 0, fee: 0, modelOpenPrice: 0, ...current[code], [field]: number } }));
+    setExecutionAsOf(data.returnDate);
   };
   const actualCost = Object.values(executionRecords).reduce((total, item) => total + item.quantity * item.averagePrice + item.fee, 0);
   const actualMarketValue = rankedHoldings.reduce((total, holding) => total + (executionRecords[holding.code]?.quantity ?? 0) * holding.price, 0);
+  const hasActualPortfolio = Object.values(executionRecords).some((item) => item.quantity > 0 && item.averagePrice > 0);
+  const actualEquity = accountCash + actualMarketValue;
+  const displayedUnitNav = hasActualPortfolio && accountCapital > 0 ? actualEquity / accountCapital : personalUnitNav;
   const acknowledgeAllocationChange = () => {
     window.localStorage.setItem(allocationChangeAckKey, `${data.allocationChange.activeAsOf}:${data.allocationChange.nextAsOf}`);
     setShowAllocationChanges(false);
@@ -600,7 +611,7 @@ export default function Home() {
         <header className="topbar">
           <div><p className="kicker">FORWARD BARBELL · RETURN {data.returnDate}</p><h1 className="site-title">{t("安全边际投资研究平台", "Margin of Safety Investment Research Platform")}</h1></div>
           <div className="top-actions">
-            <span>{t("单位净值", "Unit NAV")} {personalUnitNav.toFixed(4)}<small className="dividend-meta">{t("分红", "Dividends")} {data.dividendSummary.cumulativeCash.toFixed(4)} · {t("已复投", "Reinvested")} {data.dividendSummary.reinvestedCash.toFixed(4)} · {t("待复投", "Pending")} {(data.dividendSummary.pendingCash + data.dividendSummary.receivableCash).toFixed(4)}</small></span>
+            <span>{hasActualPortfolio ? t("实际账户净值", "Actual account NAV") : t("模型单位净值", "Model unit NAV")} {displayedUnitNav.toFixed(4)}<small className="dividend-meta">{hasActualPortfolio ? t(`按 ${executionAsOf || data.returnDate} 补录成交与现金`, `Fills and cash recorded ${executionAsOf || data.returnDate}`) : `${t("分红", "Dividends")} ${data.dividendSummary.cumulativeCash.toFixed(4)} · ${t("已复投", "Reinvested")} ${data.dividendSummary.reinvestedCash.toFixed(4)}`}</small></span>
             <button className="start-date-button" onClick={() => { setDraftStartDate(personalStart?.date ?? latest?.date ?? data.asOf); setShowStartSettings(true); }}>
               {t("我的起始日", "My Start")} {personalStart?.date ?? "—"}<small>{t("个人累计", "Personal Return")} {signedPct(personalReturn)}</small>
             </button>
@@ -702,7 +713,7 @@ export default function Home() {
               <article><p className="kicker">02 · TWO BOARDS</p><h3>{t("当日与明日不是一回事", "Today's board vs next board")}</h3><ul><li>{t("当日收益仓位：用于解释已经发生的收益。", "Today's return basis: explains the return that already happened.")}</li><li>{t("明日执行：收盘后发布的 T+1 目标，参考收盘价不是成交价。", "Next execution: the post-close T+1 target; the reference close is not a fill.")}</li><li>{t("明日目标要到下一交易日开盘后才生效。", "The next target becomes effective only after the next session opens.")}</li></ul></article>
               <article><p className="kicker">03 · PORTFOLIO LOGIC</p><h3>{t("模型为什么这样配", "Why the model allocates this way")}</h3><ul><li>{t("锚仓：当前现金流、估值和行业位置较稳定的候选。", "Anchors: candidates with steadier current cash economics, valuation and industry position.")}</li><li>{t("种子仓：未来产业的小额期权仓，按证据里程碑逐级调整。", "Seeds: small future-industry options adjusted through evidence milestones.")}</li><li>{t("现金：没有足够确定性时保留预算，不为满仓降低标准。", "Cash: budget held back when certainty is insufficient; standards are not lowered to force full investment.")}</li></ul></article>
               <article><p className="kicker">04 · HUMAN REVIEW</p><h3>{t("人工判断看什么", "What human review is for")}</h3><ul><li>{t("人工未确认不阻止持仓，也不从模型收益中剔除。", "An unreviewed moat does not block a holding or remove it from model returns.")}</li><li>{t("人工重点判断行业未来、利润改善概率和风险是否被市场提前定价。", "Human judgment focuses on industry outlook, probability of profit improvement and whether risks are already priced in.")}</li><li>{t("点击个股可看护城河、低估原因、修复条件、预期转恶因素和机构参考。", "Click a stock to see its moat, discount reasons, repair conditions, downside outlook and public references.")}</li></ul></article>
-              <article><p className="kicker">05 · MY FILLS</p><h3>{t("实际成交单独记录", "Record your fills separately")}</h3><ul><li>{t("模型开盘代理只是可复现基准，不保证订单成交。", "The model open proxy is a reproducible benchmark, not a guaranteed fill.")}</li><li>{t("填写实际均价、数量和手续费后，才计算实际权重和滑点。", "Actual weight and slippage are calculated only after entering average price, quantity and fees.")}</li><li>{t("未成交或部分成交不会改写公共模型净值。", "Unfilled or partial orders never rewrite the public model NAV.")}</li></ul></article>
+              <article><p className="kicker">05 · MY FILLS</p><h3>{t("实际成交单独记录", "Record your fills separately")}</h3><ul><li>{t("模型开盘代理只是可复现基准，不保证订单成交。", "The model open proxy is a reproducible benchmark, not a guaranteed fill.")}</li><li>{t("第二天填写实际均价、数量、手续费和成交后现金，个人账户净值会按真实持仓更新。", "On the next day, enter fills, quantities, fees and post-trade cash so personal account NAV follows actual holdings.")}</li><li>{t("未成交或部分成交只改变个人账户净值，不会改写公共模型净值。", "Unfilled or partial orders affect only personal account NAV and never rewrite public model NAV.")}</li></ul></article>
               <article><p className="kicker">06 · ALERTS & LIMITS</p><h3>{t("预警不等于自动交易", "Alerts are not automatic trades")}</h3><ul><li>{t("调仓弹窗解释变化原因，但目标仓位只从下一交易日生效。", "The allocation popup explains changes, but targets take effect only on the next session.")}</li><li>{t("护城河雷达命中只生成待复核；接口不可用也不代表没有风险。", "Radar hits create review items; an unavailable interface is not a clean bill of health.")}</li><li>{t("网站用于研究和记录，不连接券商、不自动下单。", "This site is for research and records; it does not connect to a broker or place orders.")}</li></ul></article>
             </div>
             <div className="help-flow"><strong>{t("推荐使用顺序", "Recommended order")}</strong><span>{t("① 看累计和今日收益 → ② 左右滑动比较当日/明日 → ③ 点个股看护城河 → ④ 打开实际成交填写账户数据 → ⑤ 人工决定是否微调仓位", "① Check cumulative and today's return → ② swipe between today's and next boards → ③ open a stock's moat file → ④ enter your account fills → ⑤ decide whether to fine-tune weights")}</span></div>
@@ -764,7 +775,8 @@ export default function Home() {
             <div className="moat-dialog-head"><div><p className="kicker">MODEL SIGNAL · PERSONAL FILLS</p><h2 id="execution-dialog-title">{t("模型信号与实际成交", "Model Signal & My Fills")}</h2></div><button className="moat-close" aria-label={t("关闭成交账本", "Close fill ledger")} onClick={() => setShowExecutionLedger(false)}>×</button></div>
             <p className="dialog-note">{t("收盘后只发布 T+1 目标仓位，参考收盘价不代表成交。模型用下一交易日官方开盘价作统一执行代理，但开盘价也不保证你的订单能成交；实际均价、数量和手续费必须按账户记录填写，未成交或部分成交不会改写模型净值。", "After close, targets are T+1 signals and the shown close is not a fill. The next official open is only a reproducible model execution proxy, not a guaranteed fill for your order. Enter actual average price, quantity and fees from your account; unfilled or partial orders never rewrite model NAV.")}</p>
             <label className="date-field">{t("本期账户资金", "Capital for this execution")}<input type="number" min={minimumAccountCapital} value={accountCapital} onChange={(event) => setAccountCapital(Math.max(minimumAccountCapital, Number(event.target.value) || 0))} /><small className="capital-floor-note">{t(`最低账户金额 ${money(minimumAccountCapital)}：按 ${capitalFloorHolding?.name ?? "最贵目标股"} 目标仓位至少买 100 股；未含手续费、滑点和开盘跳空缓冲。`, `Minimum account capital ${money(minimumAccountCapital)}: enough to buy one A-share board lot (100 shares) of ${capitalFloorHolding ? companyEnglish[capitalFloorHolding.code] ?? capitalFloorHolding.name : "the most capital-intensive target"} at its target weight; excludes fees, slippage and gap buffer.`)}</small></label>
-            <div className="execution-summary"><span>{t("实际市值", "Market value")} <b>{money(actualMarketValue)}</b></span><span>{t("成交后现金", "Cash after fills")} <b>{money(accountCapital - actualCost)}</b></span><span>{t("实际仓位", "Actual invested")} <b>{pct(accountCapital > 0 ? actualMarketValue / accountCapital : 0)}</b></span></div>
+            <label className="date-field">{t("实际账户现金（成交后按券商余额填写）", "Actual account cash after fills")}<input type="number" min="0" step="0.01" value={accountCash} onChange={(event) => { setAccountCash(Math.max(0, Number(event.target.value) || 0)); setExecutionAsOf(data.returnDate); }} /><small className="capital-floor-note">{t(`系统估算本轮买入成本 ${money(actualCost)}；真实净值只使用你填写的现金、数量和最新收盘价。`, `Estimated purchase cost ${money(actualCost)}; actual NAV uses only your entered cash, quantities and latest closes.`)}</small></label>
+            <div className="execution-summary"><span>{t("实际市值", "Market value")} <b>{money(actualMarketValue)}</b></span><span>{t("实际总资产", "Actual equity")} <b>{money(actualEquity)}</b></span><span>{t("实际单位净值", "Actual unit NAV")} <b>{accountCapital > 0 ? (actualEquity / accountCapital).toFixed(4) : "—"}</b></span></div>
             <div className="execution-list">
               {rankedHoldings.map((holding) => {
                 const record = executionRecords[holding.code] ?? { quantity: 0, averagePrice: 0, fee: 0, modelOpenPrice: 0 };
@@ -838,21 +850,21 @@ export default function Home() {
                 <span>{t(`发现 ${selectedHolding.moat.radar.pendingAlertCount} 条待人工复核事件`, `${selectedHolding.moat.radar.pendingAlertCount} events pending human review`)}<small>{selectedHolding.moat.radar.highAlertCount} {t("条高优先级", "high priority")}</small></span>
                 <strong>{language === "zh" ? selectedHolding.moat.radar.latestAlertTitle : englishAlert(selectedHolding.moat.radar.latestAlertTitle)}<small>{selectedHolding.moat.radar.latestAlertDate} · {selectedHolding.moat.radar.latestAlertSource}</small></strong>
               </div>
-            ) : data.moatRadar.announcementStatus === "UNAVAILABLE" || data.moatRadar.announcementStatus === "NOT_RUN" ? (
+            ) : data.moatRadar.financialStatus === "PARTIAL" || data.moatRadar.financialStatus === "NOT_RUN" ? (
               <div className="moat-radar-alert unavailable" role="status">
-                <span>{t("公告雷达未确认", "Radar unavailable")}</span>
-                <strong>{t("当前不能据此判断“没有风险事件”", "Missing data is not a clean signal.")}</strong>
+                <span>{t("财务复核覆盖不完整", "Financial review coverage incomplete")}</span>
+                <strong>{t("缺失数据不会被解释成没有风险", "Missing data is not treated as a clean signal.")}</strong>
               </div>
             ) : (
               <div className="moat-radar-alert clear" role="status">
-                <span>{t("本次扫描未发现规则触发事件", "No rule-triggered event in this scan")}</span>
+                <span>{t("本次财报与复核期限未触发事件", "No financial or review-deadline event")}</span>
                 <strong>{t("这不代表护城河已经得到证明", "This is not proof that the moat is intact.")}</strong>
               </div>
             )}
             {selectedHolding.valuation && (
-              <article className="dcf-sensitivity" aria-label={t("DCF五档折现率敏感性", "Five-level DCF discount-rate sensitivity")}>
-                <div className="dcf-sensitivity-head"><div><p className="kicker">DCF SENSITIVITY</p><h3>{t("五档折现率敏感性", "Five discount-rate cases")}</h3></div><small>{t("基准门槛仍使用中性档；这里只展示估值区间", "The base gate remains neutral; this shows the valuation range")}</small></div>
-                <div className="dcf-sensitivity-grid">{Object.entries(selectedHolding.valuation).map(([key, value]) => <div key={key} className={key === "base" ? "is-base" : ""}><span>{dcfCaseLabels[key]?.[language === "zh" ? "cn" : "en"] ?? key}</span><b>{pct(value.discountRate)}</b><strong>{money(value.valuePerShare)}</strong><em>{signedPct(value.marginOfSafety)}</em></div>)}</div>
+              <article className="dcf-sensitivity" aria-label={t("DCF五档经营与估值情景", "Five operating and valuation DCF cases")}> 
+                <div className="dcf-sensitivity-head"><div><p className="kicker">DCF SCENARIOS</p><h3>{t("五档经营与估值情景", "Five operating and valuation cases")}</h3></div><small>{t("同时改变现金收益、增长、折现率与永续增长", "Owner earnings, growth, discount rate and terminal growth all change")}</small></div>
+                <div className="dcf-sensitivity-grid">{Object.entries(selectedHolding.valuation).map(([key, value]) => <div key={key} className={key === "base" ? "is-base" : ""}><span>{dcfCaseLabels[key]?.[language === "zh" ? "cn" : "en"] ?? key}</span><b>{pct(value.discountRate)} · g {value.growthRate == null ? "—" : pct(value.growthRate)}</b><strong>{money(value.valuePerShare)}</strong><em>{signedPct(value.marginOfSafety)}{value.terminalValueShare == null ? "" : ` · TV ${pct(value.terminalValueShare)}`}</em></div>)}</div>
               </article>
             )}
             <div className="moat-dialog-body">

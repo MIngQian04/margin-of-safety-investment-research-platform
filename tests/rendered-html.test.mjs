@@ -111,7 +111,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /latest\.nav \/ personalStart\.nav - 1/);
   assert.match(page, /data\.navHistory\.filter\(\(point\) => point\.date >= personalStart\.date\)/);
   assert.match(page, /PerformanceChart history=\{chartHistory\}/);
-  assert.match(page, /t\("单位净值", "Unit NAV"\)/);
+  assert.match(page, /实际账户净值/);
+  assert.match(page, /模型单位净值/);
   assert.match(page, /dividendSummary\.cumulativeCash/);
   assert.match(page, /已复投/);
   assert.match(page, /策略净值|Strategy NAV/);
@@ -129,7 +130,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /开盘价未确认：不计算滑点/);
   assert.match(page, /"603195\.SH": "Bull Group"/);
   assert.match(page, /待人工复核事件/);
-  assert.match(page, /公告雷达未确认/);
+  assert.match(page, /财务复核覆盖不完整/);
+  assert.match(page, /实际账户现金/);
   assert.match(page, /这不代表护城河已经得到证明/);
   assert.doesNotMatch(page, /正在积累该周期记录|记录积累中|Building this range|记录积累中 · Building/);
   assert.match(css, /\.confirm-dialog/);
@@ -210,7 +212,8 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.holdings.every((holding) => holding.moat.nextReviewDate));
   assert.ok(data.nextHoldings.some((holding) => holding.code === "000651.SZ" && holding.moat.thesis));
   assert.ok(data.holdings.every((holding) => Number.isInteger(holding.moat.radar.pendingAlertCount)));
-  assert.ok(data.moatRadar.announcementStatus);
+  assert.ok(data.moatRadar.financialStatus);
+  assert.ok(Number.isInteger(data.moatRadar.overdueAlerts));
   assert.ok(Number.isInteger(data.moatRadar.pendingAlerts));
   assert.ok(Number.isFinite(data.distributionSummary.skewness));
   assert.ok(Number.isFinite(data.distributionSummary.excessKurtosis));
