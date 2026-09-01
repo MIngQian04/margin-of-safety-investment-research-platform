@@ -157,6 +157,10 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(css, /writing-mode:horizontal-tb/);
   assert.doesNotMatch(css, /\.chart-tooltip \{[^}]*background:rgba\(37,36,31/);
   assert.match(css, /\.chart-tooltip \{[^}]*background:rgba\(250,248,243,\.88\)/);
+  assert.match(css, /\.language-en \.top-actions \{[^}]*grid-template-columns:minmax\(260px,1fr\) auto auto auto auto auto/);
+  assert.match(css, /\.language-en \.holding-values \{[^}]*grid-template-columns:52px 50px 44px/);
+  assert.match(css, /\.sheet \{[^}]*min-width:0/);
+  assert.match(css, /\.main-grid\{grid-template-columns:minmax\(0,1fr\);overflow:visible\}/);
   assert.match(css, /background:rgba\(250,248,243,\.48\)/);
   assert.match(css, /backdrop-filter:blur\(\.5px\)/);
   assert.match(css, /\.moat-dialog/);
