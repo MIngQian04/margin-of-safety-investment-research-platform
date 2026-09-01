@@ -8,7 +8,7 @@ The system first establishes valuation boundaries through normalized owner earni
 
 The project is deterministic Python plus human research records today. Optional LLM-assisted research is a future idea, not a runtime dependency.
 
-**中文版本：** [README.zh-CN.md](README.zh-CN.md) · **Public site:** [ming-daily-portfolio.qianmin968641.chatgpt.site](https://ming-daily-portfolio.qianmin968641.chatgpt.site)
+**中文版本：** [README.zh-CN.md](README.zh-CN.md) · **Public site:** [ming-a-share-barbell.mqian10.chatgpt.site](https://ming-a-share-barbell.mqian10.chatgpt.site)
 
 > **Research project only.** It does not connect to a broker or place orders.
 
@@ -149,7 +149,7 @@ The chart is a live forward record from the same unit start date, not a legacy b
 
 ## Product screenshots and public website
 
-Open the [read-only public site](https://ming-daily-portfolio.qianmin968641.chatgpt.site) to inspect the latest published snapshot. The separate `portfolio-site/` project presents model NAV, the current-return board, the next-session target board, full holdings, moat files, DCF sensitivity, valuation-repair summaries, curated public-institution references, radar health and browser-local actual-fill records. It never places a brokerage order.
+Open the [read-only public site](https://ming-a-share-barbell.mqian10.chatgpt.site) to inspect the latest published snapshot. The separate `portfolio-site/` project presents model NAV, the current-return board, the next-session target board, full holdings, moat files, DCF sensitivity, valuation-repair summaries, curated public-institution references, radar health and browser-local actual-fill records. It never places a brokerage order.
 
 <p align="center"><img src="docs/assets/en-overview.png" alt="English public-site overview with NAV, return curve and current holdings" width="100%"></p>
 

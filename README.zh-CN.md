@@ -8,7 +8,7 @@
 
 仓库当前是确定性的 Python 流水线与人工研究记录；LLM 辅助研究属于未来设想，不是运行时依赖。
 
-**English:** [README.md](README.md) · **公开网站：** [ming-daily-portfolio.qianmin968641.chatgpt.site](https://ming-daily-portfolio.qianmin968641.chatgpt.site)
+**English:** [README.md](README.md) · **公开网站：** [ming-a-share-barbell.mqian10.chatgpt.site](https://ming-a-share-barbell.mqian10.chatgpt.site)
 
 > **仅供研究。** 不连接券商，不自动下单。
 
@@ -149,7 +149,7 @@ DCF 在本项目中不是为了给出一个看似精准的目标价，而是建�
 
 ## 公开网站与产品截图
 
-打开[公开只读网站](https://ming-daily-portfolio.qianmin968641.chatgpt.site)查看最新发布快照。独立的 `portfolio-site/` 项目展示模型 NAV、当日收益板、明日目标板、完整持仓、个股护城河档案、DCF 敏感性、估值修复摘要、配置中的公开机构参考、雷达健康和浏览器本地实际成交记录；它不会连接券商或自动下单。
+打开[公开只读网站](https://ming-a-share-barbell.mqian10.chatgpt.site)查看最新发布快照。独立的 `portfolio-site/` 项目展示模型 NAV、当日收益板、明日目标板、完整持仓、个股护城河档案、DCF 敏感性、估值修复摘要、配置中的公开机构参考、雷达健康和浏览器本地实际成交记录；它不会连接券商或自动下单。
 
 <p align="center"><img src="docs/assets/zh-overview.png" alt="中文公开网站总览：NAV、收益曲线与当日持仓" width="100%"></p>
 
