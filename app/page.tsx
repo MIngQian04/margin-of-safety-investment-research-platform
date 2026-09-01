@@ -38,6 +38,17 @@ type Holding = {
     earningsMultiplier?: number | null; terminalValueShare?: number | null;
     valuePerShare: number; marginOfSafety: number;
   }> | null;
+  milestoneValuation?: {
+    status: "PASS" | "DATA_UNAVAILABLE" | "EVIDENCE_NOT_READY" | "FAILURE_DOWNSIDE_FAIL" | "EXPECTED_VALUE_FAIL";
+    verifiedMilestones: number;
+    currentBusinessFloor: number;
+    probabilityWeightedValue: number;
+    marginOfSafety: number;
+    minimumMarginRequired: number;
+    failureDownside: number;
+    maximumFailureDownside: number;
+    scenarios: Record<"failure" | "partial" | "success", { probability: number; valuePerShare: number }>;
+  } | null;
   distribution: {
     skewness: number;
     excessKurtosis: number;
@@ -186,6 +197,11 @@ const dcfCaseLabels: Record<string, { cn: string; en: string }> = {
   base: { cn: "基准", en: "Base" },
   cautious: { cn: "谨慎", en: "Cautious" },
   very_pessimistic: { cn: "非常悲观", en: "Very pessimistic" },
+};
+const futureCaseLabels: Record<string, { cn: string; en: string }> = {
+  failure: { cn: "失败", en: "Failure" },
+  partial: { cn: "部分兑现", en: "Partial" },
+  success: { cn: "成功", en: "Success" },
 };
 
 const personalStartKey = "moat-value-personal-start-date-v1";
@@ -865,6 +881,14 @@ export default function Home() {
               <article className="dcf-sensitivity" aria-label={t("DCF五档经营与估值情景", "Five operating and valuation DCF cases")}> 
                 <div className="dcf-sensitivity-head"><div><p className="kicker">DCF SCENARIOS</p><h3>{t("五档经营与估值情景", "Five operating and valuation cases")}</h3></div><small>{t("同时改变现金收益、增长、折现率与永续增长", "Owner earnings, growth, discount rate and terminal growth all change")}</small></div>
                 <div className="dcf-sensitivity-grid">{Object.entries(selectedHolding.valuation).map(([key, value]) => <div key={key} className={key === "base" ? "is-base" : ""}><span>{dcfCaseLabels[key]?.[language === "zh" ? "cn" : "en"] ?? key}</span><b>{pct(value.discountRate)} · g {value.growthRate == null ? "—" : pct(value.growthRate)}</b><strong>{money(value.valuePerShare)}</strong><em>{signedPct(value.marginOfSafety)}{value.terminalValueShare == null ? "" : ` · TV ${pct(value.terminalValueShare)}`}</em></div>)}</div>
+              </article>
+            )}
+            {selectedHolding.bucket === "FUTURE" && selectedHolding.milestoneValuation && (
+              <article className="dcf-sensitivity milestone-valuation" aria-label={t("未来产业里程碑概率估值", "Future-industry milestone probability valuation")}>
+                <div className="dcf-sensitivity-head"><div><p className="kicker">MILESTONE VALUATION</p><h3>{t("里程碑概率估值", "Milestone probability valuation")}</h3></div><small>{t(`已验证 ${selectedHolding.milestoneValuation.verifiedMilestones}/3 项；只有证据兑现才提高成功概率`, `${selectedHolding.milestoneValuation.verifiedMilestones}/3 verified; success probability rises only with evidence`)}</small></div>
+                <div className="milestone-summary"><span>{t("概率加权价值", "Probability-weighted value")}<strong>{money(selectedHolding.milestoneValuation.probabilityWeightedValue)}</strong></span><span>{t("安全边际", "Margin of safety")}<strong>{signedPct(selectedHolding.milestoneValuation.marginOfSafety)}</strong></span><span>{t("失败情景下行", "Failure-case downside")}<strong>{pct(selectedHolding.milestoneValuation.failureDownside)}</strong></span></div>
+                <div className="dcf-sensitivity-grid milestone-grid">{Object.entries(selectedHolding.milestoneValuation.scenarios).map(([key, value]) => <div key={key}><span>{futureCaseLabels[key]?.[language === "zh" ? "cn" : "en"] ?? key}</span><b>{t("概率", "Probability")} {pct(value.probability)}</b><strong>{money(value.valuePerShare)}</strong></div>)}</div>
+                <p className="milestone-rule">{t(`准入要求：安全边际至少 ${pct(selectedHolding.milestoneValuation.minimumMarginRequired)}，失败情景下行不超过 ${pct(selectedHolding.milestoneValuation.maximumFailureDownside)}。当前状态：${selectedHolding.milestoneValuation.status}。`, `Entry requires at least ${pct(selectedHolding.milestoneValuation.minimumMarginRequired)} margin and no more than ${pct(selectedHolding.milestoneValuation.maximumFailureDownside)} failure-case downside. Current status: ${selectedHolding.milestoneValuation.status}.`)}</p>
               </article>
             )}
             <div className="moat-dialog-body">
