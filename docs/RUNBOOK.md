@@ -32,6 +32,27 @@ python scripts/run_complement_valuation.py
 python scripts/run_current_cycle_decision.py
 ```
 
+## 3a. Verified forward-barbell daily publication
+
+Use the single daily entry point for scheduled or manual publication work. It
+uses the current Shanghai date by default, skips a session already present in
+the committed website snapshot, and fails before publication if market,
+financial, NAV-history, T+1 weight or CSI 300 checks are incomplete:
+
+```bash
+python3 scripts/run_daily_portfolio_update.py --verify
+```
+
+For a bounded historical recovery, pass the Shanghai calendar date explicitly:
+
+```bash
+python3 scripts/run_daily_portfolio_update.py --as-of YYYYMMDD --verify
+```
+
+The command prepares and validates local artifacts only. GitHub synchronization
+and Sites publication remain explicit automation steps so source and deployment
+credentials are never stored in the repository.
+
 ## 4. Important outputs
 
 ```text

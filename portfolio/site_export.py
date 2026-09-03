@@ -573,6 +573,11 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
     anchors = pd.read_csv(output_dir / "anchor_screen.csv").set_index("ts_code")
     future = pd.read_csv(output_dir / "future_states.csv").set_index("ts_code")
     valuation_warnings = pd.read_csv(VALUATION_WARNINGS_PATH) if VALUATION_WARNINGS_PATH.exists() else pd.DataFrame()
+    if not valuation_warnings.empty and "as_of_date" in valuation_warnings:
+        latest_warning_date = valuation_warnings["as_of_date"].astype(str).max()
+        valuation_warnings = valuation_warnings[
+            valuation_warnings["as_of_date"].astype(str).eq(latest_warning_date)
+        ].copy()
     if not valuation_warnings.empty and "status" in valuation_warnings:
         valuation_warnings = valuation_warnings[valuation_warnings["status"].isin({"WARNING", "EXIT_DUE"})].copy()
     moat_registry = pd.read_csv(MOAT_REGISTRY_PATH)
@@ -670,7 +675,7 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
     active_codes = set(previous_rows["ts_code"].astype(str)) if not previous_rows.empty else next_codes
     by_code = {item["code"]: item for item in holdings}
     active_holdings = []
-    for code in active_codes:
+    for code in sorted(active_codes):
         if code not in by_code:
             continue
         item = dict(by_code[code])

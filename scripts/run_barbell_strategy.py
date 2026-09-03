@@ -183,6 +183,19 @@ def build_future_research_funnel(states: pd.DataFrame) -> pd.DataFrame:
     )
 
 
+def _write_dated_history(
+    previous: pd.DataFrame, current: pd.DataFrame, as_of: str, destination: Path,
+) -> None:
+    history = previous.copy() if previous is not None else pd.DataFrame()
+    if history.empty or "as_of_date" not in history:
+        history = pd.DataFrame(columns=current.columns)
+    else:
+        history = history[history["as_of_date"].astype(str).ne(as_of)].copy()
+    pd.concat([history, current], ignore_index=True).to_csv(
+        destination, index=False, encoding="utf-8-sig"
+    )
+
+
 def update_valuation_warning_history(
     states: pd.DataFrame, previous_warnings: pd.DataFrame, as_of: str, destination: Path,
 ) -> pd.DataFrame:
@@ -190,6 +203,8 @@ def update_valuation_warning_history(
     prior = {}
     if previous_warnings is not None and not previous_warnings.empty and "ts_code" in previous_warnings:
         frame = previous_warnings.copy()
+        if "as_of_date" in frame:
+            frame = frame[frame["as_of_date"].astype(str).lt(as_of)].copy()
         frame["ts_code"] = frame["ts_code"].astype(str)
         frame["warning_date"] = frame["warning_date"].astype(str) if "warning_date" in frame else ""
         prior = frame.drop_duplicates("ts_code", keep="last").set_index("ts_code").to_dict("index")
@@ -218,7 +233,7 @@ def update_valuation_warning_history(
             "reason": row.get("valuation_warning_reason", ""),
         })
     result = pd.DataFrame(rows)
-    result.to_csv(destination, index=False, encoding="utf-8-sig")
+    _write_dated_history(previous_warnings, result, as_of, destination)
     return result
 
 
@@ -235,14 +250,19 @@ def update_anchor_valuation_warning_history(
     prior = {}
     if previous_warnings is not None and not previous_warnings.empty and "ts_code" in previous_warnings:
         frame = previous_warnings.copy()
+        if "as_of_date" in frame:
+            frame = frame[frame["as_of_date"].astype(str).lt(as_of)].copy()
         frame["ts_code"] = frame["ts_code"].astype(str)
         frame["warning_date"] = frame["warning_date"].astype(str) if "warning_date" in frame else ""
         prior = frame.drop_duplicates("ts_code", keep="last").set_index("ts_code").to_dict("index")
     rows = []
     current_weights = {}
+    current_reasons = {}
     previous_weights = {}
     if portfolio is not None and not portfolio.empty and "ts_code" in portfolio:
         current_weights = portfolio.set_index(portfolio["ts_code"].astype(str))["target_weight"].astype(float).to_dict()
+        if "reason" in portfolio:
+            current_reasons = portfolio.set_index(portfolio["ts_code"].astype(str))["reason"].astype(str).to_dict()
     if previous_portfolio is not None and not previous_portfolio.empty and "ts_code" in previous_portfolio:
         previous_weights = previous_portfolio.set_index(previous_portfolio["ts_code"].astype(str))["target_weight"].astype(float).to_dict()
     for _, row in anchors.iterrows():
@@ -254,9 +274,17 @@ def update_anchor_valuation_warning_history(
         previous_cooldown = int(float(previous.get("cooldown_sessions_remaining", 0) or 0))
         previous_reductions = int(float(previous.get("reduction_count", 0) or 0))
         last_reduction_date = str(previous.get("last_reduction_date", ""))
+        valuation_reduction = any(
+            current_reasons.get(code, "").startswith(prefix)
+            for prefix in (
+                "价格连续高于乐观DCF情景",
+                "冷静期结束且出现新的DCF/现金收益恶化证据",
+            )
+        )
         reduced_now = (
             code in current_weights and code in previous_weights
             and current_weights[code] < previous_weights[code] - 1e-12
+            and valuation_reduction
         )
         if over_optimistic:
             consecutive = int(previous.get("consecutive_days", 0)) + 1 if previous_status == "WARNING" and previous_date < as_of else 1
@@ -312,7 +340,7 @@ def update_anchor_valuation_warning_history(
             ),
         })
     result = pd.DataFrame(rows)
-    result.to_csv(destination, index=False, encoding="utf-8-sig")
+    _write_dated_history(previous_warnings, result, as_of, destination)
     return result
 
 
@@ -529,8 +557,16 @@ def main() -> None:
                 previous_portfolio = history[history["date"].eq(prior_dates[-1])].copy()
     warning_path = OUT / "future_valuation_warnings.csv"
     previous_warnings = pd.read_csv(warning_path) if warning_path.exists() else pd.DataFrame()
+    if not previous_warnings.empty and "as_of_date" in previous_warnings:
+        previous_warnings = previous_warnings[
+            previous_warnings["as_of_date"].astype(str).lt(as_of)
+        ].copy()
     anchor_warning_path = OUT / "anchor_valuation_warnings.csv"
     previous_anchor_warnings = pd.read_csv(anchor_warning_path) if anchor_warning_path.exists() else pd.DataFrame()
+    if not previous_anchor_warnings.empty and "as_of_date" in previous_anchor_warnings:
+        previous_anchor_warnings = previous_anchor_warnings[
+            previous_anchor_warnings["as_of_date"].astype(str).lt(as_of)
+        ].copy()
     alert_actions = pd.DataFrame(columns=["ts_code", "alert_risk_action"])
     alert_path = OUT / "moat_radar_alerts.csv"
     if alert_path.exists():
@@ -590,7 +626,15 @@ def main() -> None:
         anchor_selection_state=selection_state,
         as_of=as_of,
     )
-    selection_state.to_csv(selection_state_path, index=False, encoding="utf-8-sig")
+    selection_state_history = previous_selection_state.copy()
+    if not selection_state_history.empty and "as_of_date" in selection_state_history:
+        selection_state_history = selection_state_history[
+            selection_state_history["as_of_date"].astype(str).ne(as_of)
+        ].copy()
+    selection_state_history = pd.concat(
+        [selection_state_history, selection_state], ignore_index=True
+    )
+    selection_state_history.to_csv(selection_state_path, index=False, encoding="utf-8-sig")
     update_anchor_valuation_warning_history(
         anchors, previous_anchor_warnings, as_of, anchor_warning_path,
         portfolio=portfolio, previous_portfolio=previous_portfolio,

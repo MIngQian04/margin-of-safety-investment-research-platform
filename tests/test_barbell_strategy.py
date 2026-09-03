@@ -9,7 +9,48 @@ from portfolio.barbell_strategy import (
     classify_future_states,
     include_held_anchors_for_review,
 )
-from scripts.run_barbell_strategy import _filter_statements_as_of
+from scripts.run_barbell_strategy import (
+    _filter_statements_as_of,
+    update_anchor_valuation_warning_history,
+)
+
+
+def test_hard_fail_reduction_does_not_advance_valuation_cooldown(tmp_path):
+    anchors = pd.DataFrame([{
+        "ts_code": "A", "name": "Anchor", "anchor_dcf_status": "OVER_OPTIMISTIC",
+        "dcf_base_margin_of_safety": -0.2, "dcf_optimistic_margin_of_safety": -0.1,
+        "financial_as_of": "20260630", "normalized_owner_earnings": 10.0,
+        "normalized_fcf": 9.0,
+    }])
+    previous_warnings = pd.DataFrame([{
+        "ts_code": "A", "as_of_date": "2026-09-02",
+        "warning_date": "2026-09-02", "status": "WARNING",
+        "consecutive_days": 1, "cooldown_sessions_remaining": 5,
+        "reduction_count": 1, "last_reduction_date": "2026-09-02",
+    }])
+    previous_portfolio = pd.DataFrame([{
+        "ts_code": "A", "target_weight": 0.10,
+    }])
+    portfolio = pd.DataFrame([{
+        "ts_code": "A", "target_weight": 0.075,
+        "reason": "锚定资产硬门槛连续失败两次，下调一档",
+    }])
+
+    result = update_anchor_valuation_warning_history(
+        anchors, previous_warnings, "2026-09-03", tmp_path / "warnings.csv",
+        portfolio=portfolio, previous_portfolio=previous_portfolio,
+    )
+
+    assert result.iloc[0]["reduction_count"] == 1
+    assert result.iloc[0]["cooldown_sessions_remaining"] == 4
+
+    repeated = update_anchor_valuation_warning_history(
+        anchors, pd.read_csv(tmp_path / "warnings.csv"), "2026-09-03",
+        tmp_path / "warnings.csv", portfolio=portfolio,
+        previous_portfolio=previous_portfolio,
+    )
+    assert repeated.iloc[0]["consecutive_days"] == result.iloc[0]["consecutive_days"]
+    assert repeated.iloc[0]["cooldown_sessions_remaining"] == 4
 
 
 POLICY = {"anchor_target": .65, "future_total_cap": .25, "cash_floor": .10,
