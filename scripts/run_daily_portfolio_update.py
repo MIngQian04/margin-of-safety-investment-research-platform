@@ -12,12 +12,18 @@ script so credentials are never persisted in the repository.
 from __future__ import annotations
 
 import argparse
+import fcntl
 import json
 import math
+import socket
 import subprocess
 import sys
+import time
+import traceback
+from contextlib import contextmanager
 from datetime import date, datetime
 from pathlib import Path
+from typing import Iterator
 from zoneinfo import ZoneInfo
 
 import pandas as pd
@@ -31,10 +37,76 @@ FUTURE_CANDIDATES = PROJECT_ROOT / "outputs" / "future-demand-screen" / "future_
 HOLDINGS_HISTORY = PROJECT_ROOT / "outputs" / "barbell-strategy" / "portfolio_holdings_history.csv"
 NAV_HISTORY = PROJECT_ROOT / "outputs" / "barbell-strategy" / "portfolio_nav_history.csv"
 TARGET_PORTFOLIO = PROJECT_ROOT / "outputs" / "barbell-strategy" / "target_portfolio.csv"
+UPDATE_LOCK = PROJECT_ROOT / "work" / "daily-portfolio-update.lock"
+PROVIDER_HOST = "api.tushare.pro"
+
+CURRENT_STAGE = "startup"
 
 
 class PublicationValidationError(RuntimeError):
     """Raised when a generated snapshot is not safe to publish."""
+
+
+class ProviderNetworkUnavailableError(RuntimeError):
+    """Raised before mutation when the market-data provider cannot be resolved."""
+
+
+def emit_status(status: str, **details: object) -> None:
+    print(json.dumps({"status": status, **details}, ensure_ascii=False, sort_keys=True), flush=True)
+
+
+def enter_stage(stage: str) -> None:
+    global CURRENT_STAGE
+    CURRENT_STAGE = stage
+    emit_status("STAGE_STARTED", stage=stage, terminal=False)
+
+
+@contextmanager
+def exclusive_update_lock(lock_path: Path = UPDATE_LOCK) -> Iterator[bool]:
+    """Allow only one daily update process to mutate local strategy state."""
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a+", encoding="utf-8") as handle:
+        try:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            yield False
+            return
+        try:
+            yield True
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def require_provider_network(
+    host: str = PROVIDER_HOST,
+    attempts: int = 3,
+    delay_seconds: float = 5.0,
+) -> None:
+    """Wait briefly for DNS before starting any market-data mutation."""
+    if attempts < 1:
+        raise ValueError("attempts must be positive")
+    last_error: OSError | None = None
+    for attempt in range(1, attempts + 1):
+        try:
+            socket.getaddrinfo(host, 443, type=socket.SOCK_STREAM)
+            emit_status(
+                "NETWORK_READY", host=host, attempt=attempt, terminal=False
+            )
+            return
+        except OSError as exc:
+            last_error = exc
+            emit_status(
+                "NETWORK_WAIT",
+                host=host,
+                attempt=attempt,
+                attempts=attempts,
+                terminal=False,
+            )
+            if attempt < attempts:
+                time.sleep(delay_seconds)
+    raise ProviderNetworkUnavailableError(
+        f"provider DNS unavailable after {attempts} attempts: {host}"
+    ) from last_error
 
 
 def run(command: list[str], cwd: Path = PROJECT_ROOT) -> None:
@@ -243,44 +315,93 @@ def default_as_of() -> str:
     return datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y%m%d")
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Prepare one verified daily portfolio publication.")
-    parser.add_argument("--as-of", default=default_as_of(), help="Shanghai calendar date, YYYYMMDD")
-    parser.add_argument("--verify", action="store_true", help="run the complete Python and website release checks")
-    args = parser.parse_args()
+def run_update(args: argparse.Namespace) -> int:
+    enter_stage("provider_network_preflight")
+    require_provider_network()
 
+    enter_stage("market_refresh")
     published = load_published_site_data()
     run([sys.executable, "scripts/refresh_rotation_market_data.py", "--as-of", args.as_of])
+
+    enter_stage("market_validation")
     market_date, universe_count = inspect_market_snapshot(pd.read_csv(DAILY_BASIC), published)
     if market_date <= str(published.get("asOf", "")):
-        print(json.dumps({
-            "status": "NO_NEW_SESSION",
-            "publishedDate": published.get("asOf"),
-            "latestCompleteMarketDate": market_date,
-            "universeScanned": universe_count,
-        }, ensure_ascii=False, sort_keys=True))
+        emit_status(
+            "NO_NEW_SESSION",
+            publishedDate=published.get("asOf"),
+            latestCompleteMarketDate=market_date,
+            universeScanned=universe_count,
+            terminal=True,
+        )
         return 0
 
     raw_market_date = market_date.replace("-", "")
+
+    enter_stage("published_history_reconciliation")
     reconcile_published_execution_history(published)
+
+    enter_stage("moat_radar")
     run([sys.executable, "scripts/run_moat_radar.py", "--as-of", raw_market_date])
+
+    enter_stage("future_financials")
     run([sys.executable, "scripts/run_future_demand_screen.py", "--refresh-financials"])
     validate_future_financials(pd.read_csv(FUTURE_CANDIDATES))
+
+    enter_stage("strategy")
     run([sys.executable, "scripts/run_barbell_strategy.py"])
+
+    enter_stage("public_snapshot")
     run([sys.executable, "scripts/build_public_readme_snapshot.py"])
 
+    enter_stage("publication_validation")
     result = validate_publication(load_json(SITE_DATA), published, market_date)
     result["universeScanned"] = universe_count
 
     if args.verify:
+        enter_stage("release_verification")
         run([sys.executable, "-m", "pytest", "-q"])
         run([sys.executable, "-m", "compileall", "-q", "portfolio", "scripts", "valuation", "tests"])
         run([sys.executable, "scripts/check_public_release.py"])
         run(["npm", "test"], cwd=SITE_ROOT)
         result["verification"] = "PASSED"
 
-    print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+    emit_status(**result, terminal=True)
     return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Prepare one verified daily portfolio publication.")
+    parser.add_argument("--as-of", default=default_as_of(), help="Shanghai calendar date, YYYYMMDD")
+    parser.add_argument("--verify", action="store_true", help="run the complete Python and website release checks")
+    args = parser.parse_args()
+
+    with exclusive_update_lock() as acquired:
+        if not acquired:
+            emit_status(
+                "UPDATE_ALREADY_RUNNING",
+                stage="startup",
+                terminal=True,
+            )
+            return 75
+
+        emit_status(
+            "UPDATE_STARTED",
+            asOf=args.as_of,
+            terminal=False,
+        )
+        try:
+            return run_update(args)
+        except Exception as exc:
+            traceback.print_exc()
+            details: dict[str, object] = {
+                "stage": CURRENT_STAGE,
+                "errorType": type(exc).__name__,
+                "terminal": True,
+            }
+            if isinstance(exc, subprocess.CalledProcessError):
+                details["returnCode"] = exc.returncode
+            emit_status("UPDATE_FAILED", **details)
+            return 1
 
 
 if __name__ == "__main__":

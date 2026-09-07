@@ -1,12 +1,16 @@
 import copy
+import socket
 
 import pandas as pd
 import pytest
 
 from scripts.run_daily_portfolio_update import (
+    ProviderNetworkUnavailableError,
     PublicationValidationError,
+    exclusive_update_lock,
     inspect_market_snapshot,
     reconcile_published_execution_history,
+    require_provider_network,
     validate_future_financials,
     validate_publication,
 )
@@ -137,3 +141,40 @@ def test_validate_future_financials_requires_live_rows():
         validate_future_financials(pd.DataFrame({
             "ts_code": ["600941.SH"], "financial_data_status": ["STALE_CACHE"],
         }))
+
+
+def test_provider_network_preflight_retries_until_dns_recovers(monkeypatch):
+    attempts = []
+
+    def resolve(*_args, **_kwargs):
+        attempts.append(1)
+        if len(attempts) < 3:
+            raise socket.gaierror("offline")
+        return [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 443))]
+
+    monkeypatch.setattr("scripts.run_daily_portfolio_update.socket.getaddrinfo", resolve)
+    monkeypatch.setattr("scripts.run_daily_portfolio_update.time.sleep", lambda _seconds: None)
+
+    require_provider_network(attempts=3, delay_seconds=0)
+
+    assert len(attempts) == 3
+
+
+def test_provider_network_preflight_fails_before_update_when_offline(monkeypatch):
+    def resolve(*_args, **_kwargs):
+        raise socket.gaierror("offline")
+
+    monkeypatch.setattr("scripts.run_daily_portfolio_update.socket.getaddrinfo", resolve)
+    monkeypatch.setattr("scripts.run_daily_portfolio_update.time.sleep", lambda _seconds: None)
+
+    with pytest.raises(ProviderNetworkUnavailableError, match="provider DNS unavailable"):
+        require_provider_network(attempts=2, delay_seconds=0)
+
+
+def test_exclusive_update_lock_rejects_overlapping_process(tmp_path):
+    lock_path = tmp_path / "daily-update.lock"
+
+    with exclusive_update_lock(lock_path) as first_acquired:
+        with exclusive_update_lock(lock_path) as second_acquired:
+            assert first_acquired is True
+            assert second_acquired is False
