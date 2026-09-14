@@ -1,5 +1,5 @@
 {
-  "snapshot_date": "2026-09-11",
+  "snapshot_date": "2026-09-14",
   "securities_scanned": 5550,
   "financial_reviewed": 6,
   "financial_complete": 6,
@@ -8,9 +8,9 @@
   "dcf_valuations_generated": 6,
   "moat_registry_records": 10,
   "forward_nav_start_date": "2026-07-15",
-  "forward_nav_end_date": "2026-09-11",
+  "forward_nav_end_date": "2026-09-14",
   "radar_health_available": true,
-  "radar_health_as_of": "2026-09-11",
+  "radar_health_as_of": "2026-09-14",
   "screening_funnel": {
     "scanned": 5550,
     "financial_reviewed_and_valuation_ready": 6,
