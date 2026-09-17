@@ -23,6 +23,24 @@ OUT = Path("outputs/future-demand-screen")
 FIN = Path("data/raw/fundamental")
 
 
+def _fetch_statement_with_retries(client: TushareClient, endpoint: str, code: str) -> pd.DataFrame:
+    """Fetch one statement endpoint with the client's bounded retry policy."""
+    attempts = max(1, int(client.max_retries))
+    last_error: Exception | None = None
+    for attempt in range(1, attempts + 1):
+        try:
+            result = getattr(client.pro, endpoint)(ts_code=code, start_date="20190101")
+            frame = pd.DataFrame() if result is None else result
+            if frame.empty:
+                raise RuntimeError(f"{endpoint} returned no rows")
+            return frame
+        except Exception as exc:
+            last_error = exc
+            if attempt < attempts:
+                time.sleep(client.sleep_seconds * 3 * attempt)
+    raise RuntimeError(f"{endpoint} failed after {attempts} attempts: {last_error}") from last_error
+
+
 def timing_features(close: pd.DataFrame, volume: pd.DataFrame, codes: list[str]) -> pd.DataFrame:
     rows = []
     for code in codes:
@@ -120,10 +138,7 @@ def get_statements(
             )
         elif client is not None:
             try:
-                result = getattr(client.pro, endpoint)(ts_code=code, start_date="20190101")
-                frame = pd.DataFrame() if result is None else result
-                if frame.empty:
-                    raise RuntimeError(f"{endpoint} returned no rows")
+                frame = _fetch_statement_with_retries(client, endpoint, code)
                 path.parent.mkdir(parents=True, exist_ok=True)
                 frame.to_parquet(path, index=False)
                 statuses.append("LIVE")

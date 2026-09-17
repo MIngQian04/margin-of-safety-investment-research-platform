@@ -65,6 +65,7 @@ def test_refresh_failure_keeps_existing_statement_cache_and_marks_it_stale(tmp_p
     class Client:
         pro = BrokenPro()
         sleep_seconds = 0
+        max_retries = 3
 
     frames, metadata = future_screen.get_statements(
         Client(), "A", refresh=True, as_of="20260727", return_metadata=True,
@@ -72,6 +73,38 @@ def test_refresh_failure_keeps_existing_statement_cache_and_marks_it_stale(tmp_p
     assert metadata["financial_data_status"] == "STALE_CACHE"
     assert metadata["financial_report_date"] == "20260331"
     assert metadata["financial_announcement_date"] == "20260421"
+    assert all(len(frame) == 1 for frame in frames)
+
+
+def test_statement_refresh_retries_transient_endpoint_failure(tmp_path, monkeypatch):
+    monkeypatch.setattr(future_screen, "FIN", tmp_path)
+
+    class FlakyPro:
+        def __init__(self):
+            self.calls = {}
+
+        def __getattr__(self, name):
+            def call(**_kwargs):
+                self.calls[name] = self.calls.get(name, 0) + 1
+                if name == "balancesheet" and self.calls[name] == 1:
+                    raise TimeoutError("temporary timeout")
+                return pd.DataFrame([{
+                    "end_date": "20251231", "ann_date": "20260320", "value": 1,
+                }])
+            return call
+
+    class Client:
+        pro = FlakyPro()
+        sleep_seconds = 0
+        max_retries = 3
+
+    frames, metadata = future_screen.get_statements(
+        Client(), "A", refresh=True, as_of="20260727", return_metadata=True,
+    )
+
+    assert metadata["financial_data_status"] == "LIVE"
+    assert metadata["financial_data_error"] == ""
+    assert Client.pro.calls == {"income": 1, "cashflow": 1, "balancesheet": 2}
     assert all(len(frame) == 1 for frame in frames)
 
 
