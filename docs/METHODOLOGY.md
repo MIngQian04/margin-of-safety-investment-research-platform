@@ -28,7 +28,7 @@ Future-demand scores use demand certainty, bottleneck strength, value capture, e
 
 Future milestone records remain `UNVERIFIED` unless a dated, source-backed review changes them. Scripts do not silently promote `config/future-milestones.csv`.
 
-Future-industry valuation is deliberately separate from anchor entry. The current five owner-earnings DCF cases remain the auditable cash-flow boundary. For a future candidate, the very pessimistic, base and very optimistic values are mapped to failure, partial and success outcomes. With zero, one, two or three verified milestone classes, the configured failure/partial/success probabilities are respectively 60/30/10, 45/35/20, 30/40/30 and 20/40/40. A new seed requires a probability-weighted margin of at least 30%, failure-case downside no greater than 30%, qualifying evidence and the existing survival/timing gates. This does not add unverified future revenue to cash flow; evidence changes probability, not the scenario value itself.
+Future-industry valuation is deliberately separate from anchor entry. The current five owner-earnings DCF cases remain the auditable cash-flow boundary. For a future candidate, the very pessimistic, base and very optimistic values are mapped to failure, partial and success outcomes. With zero, one, two or three verified milestone classes, the configured failure/partial/success probabilities are respectively 60/30/10, 45/35/20, 30/40/30 and 20/40/40. A new seed requires a probability-weighted margin of at least 30%, failure-case downside no greater than 30%, qualifying forward-thesis evidence, financial survival, timing, and an auditable moat review. This does not add unverified future revenue to cash flow; evidence changes probability, not the scenario value itself.
 
 ## Moat framework and evidence
 
@@ -42,7 +42,7 @@ Trusted evidence types are company filings, government primary material and firs
 - `WEAKENED` when contradiction evidence is present;
 - `REVIEW_DUE` when the scheduled review date has passed.
 
-Financial results can validate the economic output of a moat, but financial metrics alone cannot promote a draft card. `config/moat-human-review.csv` records a human boolean for review status; that boolean is not a model allocation gate. Every mechanism must include value-capture evidence and disconfirming signals; no ranked company is confirmed solely because a machine proxy passed.
+Financial results can validate the economic output of a moat, but financial metrics alone cannot promote a draft card. `config/moat-review.csv` stores auditable human or AI reviews. AI may perform the review only when the record identifies the model and reviewer, gives dated review and expiry fields, states a conclusion, and cites current primary moat-evidence IDs. A new future seed requires a current moat card, at least one traceable primary supporting item, no caution or contradictory evidence, and a `CONFIRMED` review. Existing unconfirmed future holdings freeze additions and promotion, then lose one 2.5% ladder step per completed session after the grace deadline.
 
 The radar separately scans announcement and financial anomalies. Its alerts are `PENDING_REVIEW`, and its health file distinguishes `OK`, `PARTIAL`, `UNAVAILABLE` and `OFFLINE` coverage. No alert is an automatic order instruction.
 
@@ -155,7 +155,7 @@ Future-demand candidates use the following ladder:
 | State | Target step | Gate |
 | --- | ---: | --- |
 | `RESEARCH_ONLY` | no allocation | one or more policy, thesis, value, cash-earnings, timing or evidence gates fail |
-| `OPTION_SEED` | 2.5% | evidence, timing, probability-weighted margin and failure-downside gates pass |
+| `OPTION_SEED` | 2.5% | forward evidence, auditable moat review, timing, probability-weighted margin and failure-downside gates pass |
 | `CONFIRMED_BUILD` | 5% | at least two milestone classes are verified and updated valuation still passes |
 | `PROMOTED_CORE` | 7.5% | all three milestone classes, no unresolved invalidation, trend confirmation and valuation still passes |
 

@@ -430,6 +430,7 @@ def classify_future_states(
     future: pd.DataFrame,
     milestones: pd.DataFrame,
     evidence_readiness: pd.DataFrame | None = None,
+    moat_readiness: pd.DataFrame | None = None,
     previous_portfolio: pd.DataFrame | None = None,
     valuation_warnings: pd.DataFrame | None = None,
     as_of: str | None = None,
@@ -480,9 +481,37 @@ def classify_future_states(
         out["evidence_status"] = "LEGACY_NOT_ENFORCED"
         out["seed_evidence_ready"] = True
         out["promotion_evidence_ready"] = True
+    moat_gate_enabled = moat_readiness is not None and bool(
+        policy.get("future_moat_gate_required", True)
+    )
+    if moat_gate_enabled:
+        if "ts_code" not in moat_readiness or "moat_gate_status" not in moat_readiness:
+            raise ValueError("moat readiness requires ts_code and moat_gate_status")
+        moat_fields = [
+            column for column in [
+                "ts_code", "moat_gate_status", "moat_entry_ready", "moat_status",
+                "moat_supporting_evidence_count", "moat_caution_evidence_count",
+                "moat_contradictory_evidence_count", "moat_review_status",
+                "moat_reviewer_type", "moat_reviewer_id", "moat_reviewer_model",
+                "moat_reviewed_date", "moat_review_next_date",
+                "moat_review_source_evidence_ids", "moat_review_conclusion",
+            ] if column in moat_readiness
+        ]
+        out = out.merge(moat_readiness[moat_fields], on="ts_code", how="left")
+        out["moat_gate_status"] = out["moat_gate_status"].fillna("MOAT_NOT_REGISTERED")
+        out["moat_entry_ready"] = out["moat_entry_ready"].fillna(False).astype(bool)
+        out["moat_contradictory_evidence_count"] = pd.to_numeric(
+            out.get(
+                "moat_contradictory_evidence_count",
+                pd.Series(0, index=out.index),
+            ), errors="coerce"
+        ).fillna(0).astype(int)
+    else:
+        out["moat_gate_status"] = "LEGACY_NOT_ENFORCED"
+        out["moat_entry_ready"] = True
+        out["moat_contradictory_evidence_count"] = 0
     for col in MILESTONE_COLUMNS:
         out[col] = out[col].fillna("UNVERIFIED").astype(str).str.upper()
-    out["invalidation_status"] = out["invalidation_status"].fillna("NONE").astype(str).str.upper()
     milestones_pass = out[MILESTONE_COLUMNS].eq("VERIFIED").all(axis=1)
     out["verified_milestone_count"] = out[MILESTONE_COLUMNS].eq("VERIFIED").sum(axis=1)
     invalidated = out["invalidation_status"].eq("TRIGGERED")
@@ -504,6 +533,10 @@ def classify_future_states(
     trend = out["timing_status"].eq("BOTTOM_VOLUME_CONFIRMATION")
     evidence_pass = out["seed_evidence_ready"]
     promotion_evidence_pass = out["promotion_evidence_ready"]
+    moat_pass = out["moat_entry_ready"]
+    moat_contradicted = out["moat_contradictory_evidence_count"].gt(0) | out.get(
+        "moat_status", pd.Series("", index=out.index)
+    ).fillna("").astype(str).str.upper().eq("WEAKENED")
     build_ready = out["verified_milestone_count"].ge(2)
     milestone_valuation_required = bool(policy.get("future_milestone_valuation_required", False))
     probability_schedule = policy.get("future_milestone_probability_schedule") or [
@@ -589,13 +622,14 @@ def classify_future_states(
     value_pass = milestone_value_pass if milestone_valuation_required else legacy_value_pass
     out["barbell_state"] = np.select(
         [invalidated,
-         policy_pass & thesis_pass & value_pass & cash_pass & promotion_evidence_pass & milestones_pass & trend,
-         policy_pass & thesis_pass & value_pass & cash_pass & evidence_pass & build_ready & (bottom | trend),
-         policy_pass & thesis_pass & value_pass & cash_pass & evidence_pass & (bottom | trend)],
+         policy_pass & thesis_pass & value_pass & cash_pass & moat_pass & promotion_evidence_pass & milestones_pass & trend,
+         policy_pass & thesis_pass & value_pass & cash_pass & moat_pass & evidence_pass & build_ready & (bottom | trend),
+         policy_pass & thesis_pass & value_pass & cash_pass & moat_pass & evidence_pass & (bottom | trend)],
         ["INVALIDATED", "PROMOTED_CORE", "CONFIRMED_BUILD", "OPTION_SEED"],
         default="RESEARCH_ONLY",
     )
     evidence_failed = evidence_gate_enabled & ~evidence_pass
+    moat_failed = moat_gate_enabled & ~moat_pass
     out["financial_data_status"] = data_status
     out["financial_data_error"] = financial_error
     out["financial_data_unavailable"] = data_unavailable
@@ -620,12 +654,14 @@ def classify_future_states(
          out["barbell_state"].eq("PROMOTED_CORE"),
          out["barbell_state"].eq("CONFIRMED_BUILD"),
          out["barbell_state"].eq("OPTION_SEED"),
+         moat_failed,
          evidence_failed,
          data_unavailable],
         ["invalidation trigger recorded",
          "national policy + thesis + value + cash earnings + seed evidence + 3 milestones + bottom-volume trend confirmed",
          "national policy + thesis + value + cash earnings + seed evidence + at least 2 milestones confirmed; staged build/reduction weight",
-         "national policy + thesis + value + cash earnings + auditable seed evidence + bottom/trend position; promotion gates not complete",
+         "national policy + thesis + value + cash earnings + auditable moat and seed evidence + bottom/trend position; promotion gates not complete",
+         "moat evidence gate failed: " + out["moat_gate_status"].astype(str),
          "seed evidence gate failed: " + out["evidence_status"].astype(str),
          data_unavailable_reason],
         default="one or more policy, thesis, value, cash-earnings, milestone or timing gates failed",
@@ -658,7 +694,7 @@ def classify_future_states(
     out["manual_override"] = False
     for idx, row in out.iterrows():
         override = manual_overrides.get(str(row.get("ts_code", "")))
-        if override is None or bool(invalidated.loc[idx]):
+        if override is None or bool(invalidated.loc[idx]) or (moat_gate_enabled and not bool(moat_pass.loc[idx])):
             continue
         out.at[idx, "barbell_state"] = override["strategy_state"]
         out.at[idx, "state_reason"] = override["reason"]
@@ -682,6 +718,17 @@ def classify_future_states(
     out["valuation_warning_reason"] = ""
     out["previous_target_weight"] = 0.0
     out["previous_strategy_state"] = ""
+    effective_date = pd.to_datetime(
+        policy.get("future_moat_gate_effective_date", as_of or ""), errors="coerce"
+    )
+    grace_sessions = max(0, int(policy.get("future_moat_review_grace_sessions", 0)))
+    moat_review_due = (
+        effective_date + pd.offsets.BDay(grace_sessions)
+        if pd.notna(effective_date) else pd.NaT
+    )
+    out["moat_review_due_date"] = (
+        moat_review_due.strftime("%Y-%m-%d") if pd.notna(moat_review_due) else ""
+    )
 
     prior = pd.DataFrame()
     if previous_portfolio is not None and not previous_portfolio.empty:
@@ -725,6 +772,26 @@ def classify_future_states(
         out.at[idx, "previous_target_weight"] = prior_weight
         out.at[idx, "previous_strategy_state"] = prior_state
         if prior_weight <= 0 or prior_state not in {"OPTION_SEED", "CONFIRMED_BUILD", "PROMOTED_CORE"}:
+            continue
+        if moat_gate_enabled and not bool(moat_pass.loc[idx]):
+            today = pd.to_datetime(as_of, errors="coerce")
+            review_expired = pd.notna(today) and pd.notna(moat_review_due) and today > moat_review_due
+            if bool(moat_contradicted.loc[idx]) or review_expired:
+                out.at[idx, "barbell_state"] = "VALUATION_REDUCTION"
+                out.at[idx, "valuation_warning_status"] = "MOAT_REVIEW_EXIT_DUE"
+                reason = (
+                    "护城河出现有效反证；按未来仓阶梯降低一档风险预算。"
+                    if bool(moat_contradicted.loc[idx]) else
+                    f"护城河确认未在 {out.at[idx, 'moat_review_due_date']} 前完成；按未来仓阶梯降低一档风险预算。"
+                )
+            else:
+                out.at[idx, "barbell_state"] = prior_state
+                out.at[idx, "valuation_warning_status"] = "MOAT_REVIEW_REQUIRED"
+                reason = (
+                    f"既有未来仓尚未通过可审计护城河确认；冻结加仓和晋级，须在 {out.at[idx, 'moat_review_due_date']} 前完成复核，否则按阶梯退出。"
+                )
+            out.at[idx, "valuation_warning_reason"] = reason
+            out.at[idx, "state_reason"] = reason
             continue
         risk_action = str(alert_risk_action.loc[idx])
         if risk_action == "FREEZE_AND_REDUCE_AFTER_CONFIRMATION":

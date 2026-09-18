@@ -240,6 +240,106 @@ def test_option_seed_passes_when_auditable_evidence_is_ready():
     assert classify_future_states(future, pd.DataFrame([{"ts_code": "A"}]), readiness).iloc[0]["barbell_state"] == "OPTION_SEED"
 
 
+def test_new_option_seed_requires_confirmed_moat_readiness():
+    future = pd.DataFrame([{
+        "ts_code": "A", "policy_status": "POLICY_ELIGIBLE", "future_thesis_score": 80,
+        "valuation_gate": "REASONABLE", "financial_check": "PASS_SURVIVAL",
+        "dcf_margin_of_safety": .1, "timing_status": "BOTTOM_HOLD_NO_ADD",
+    }])
+    evidence = pd.DataFrame([{
+        "ts_code": "A", "evidence_status": "SEED_READY", "seed_evidence_ready": True,
+        "promotion_evidence_ready": True,
+    }])
+    moat = pd.DataFrame([{
+        "ts_code": "A", "moat_gate_status": "REVIEW_NOT_CONFIRMED",
+        "moat_entry_ready": False, "moat_status": "INTACT",
+        "moat_contradictory_evidence_count": 0,
+    }])
+
+    state = classify_future_states(
+        future, pd.DataFrame([{"ts_code": "A"}]), evidence, moat,
+        policy={"future_moat_gate_required": True},
+    ).iloc[0]
+
+    assert state["barbell_state"] == "RESEARCH_ONLY"
+    assert state["state_reason"] == "moat evidence gate failed: REVIEW_NOT_CONFIRMED"
+
+
+def test_existing_unconfirmed_seed_is_frozen_during_moat_review_window():
+    future = pd.DataFrame([{
+        "ts_code": "A", "policy_status": "POLICY_ELIGIBLE", "future_thesis_score": 80,
+        "valuation_gate": "REASONABLE", "financial_check": "PASS_SURVIVAL",
+        "dcf_margin_of_safety": .1, "timing_status": "BOTTOM_HOLD_NO_ADD",
+    }])
+    evidence = pd.DataFrame([{
+        "ts_code": "A", "evidence_status": "SEED_READY", "seed_evidence_ready": True,
+        "promotion_evidence_ready": True,
+    }])
+    moat = pd.DataFrame([{
+        "ts_code": "A", "moat_gate_status": "REVIEW_NOT_CONFIRMED",
+        "moat_entry_ready": False, "moat_status": "INTACT",
+        "moat_contradictory_evidence_count": 0,
+    }])
+    previous = pd.DataFrame([{
+        "ts_code": "A", "allocation_bucket": "FUTURE", "target_weight": .025,
+        "strategy_state": "OPTION_SEED",
+    }])
+    policy = {
+        "future_moat_gate_required": True,
+        "future_moat_gate_effective_date": "2026-09-18",
+        "future_moat_review_grace_sessions": 5,
+    }
+
+    state = classify_future_states(
+        future, pd.DataFrame([{"ts_code": "A"}]), evidence, moat,
+        previous_portfolio=previous, as_of="2026-09-21", policy=policy,
+    ).iloc[0]
+
+    assert state["barbell_state"] == "OPTION_SEED"
+    assert state["valuation_warning_status"] == "MOAT_REVIEW_REQUIRED"
+    assert state["moat_review_due_date"] == "2026-09-25"
+
+
+def test_existing_unconfirmed_seed_reduces_after_moat_review_deadline():
+    future = pd.DataFrame([{
+        "ts_code": "A", "name": "A", "theme": "x", "policy_status": "POLICY_ELIGIBLE",
+        "future_thesis_score": 80, "valuation_gate": "REASONABLE",
+        "financial_check": "PASS_SURVIVAL", "dcf_margin_of_safety": .1,
+        "timing_status": "BOTTOM_HOLD_NO_ADD",
+    }])
+    evidence = pd.DataFrame([{
+        "ts_code": "A", "evidence_status": "SEED_READY", "seed_evidence_ready": True,
+        "promotion_evidence_ready": True,
+    }])
+    moat = pd.DataFrame([{
+        "ts_code": "A", "moat_gate_status": "REVIEW_NOT_CONFIRMED",
+        "moat_entry_ready": False, "moat_status": "INTACT",
+        "moat_contradictory_evidence_count": 0,
+    }])
+    previous = pd.DataFrame([{
+        "ts_code": "A", "allocation_bucket": "FUTURE", "target_weight": .025,
+        "strategy_state": "OPTION_SEED",
+    }])
+    policy = {
+        **POLICY, "future_moat_gate_required": True,
+        "future_moat_gate_effective_date": "2026-09-18",
+        "future_moat_review_grace_sessions": 5,
+    }
+
+    state = classify_future_states(
+        future, pd.DataFrame([{"ts_code": "A"}]), evidence, moat,
+        previous_portfolio=previous, as_of="2026-09-28", policy=policy,
+    )
+    portfolio, _ = build_barbell_weights(
+        pd.DataFrame(columns=["defensive_status"]), state, policy,
+        previous_portfolio=previous,
+    )
+
+    assert state.iloc[0]["barbell_state"] == "VALUATION_REDUCTION"
+    assert state.iloc[0]["valuation_warning_status"] == "MOAT_REVIEW_EXIT_DUE"
+    assert portfolio.empty
+
+
 def test_future_seed_uses_probability_weighted_milestone_valuation_when_enabled():
     future = pd.DataFrame([{
         "ts_code": "A", "close": 80.0, "policy_status": "POLICY_ELIGIBLE",

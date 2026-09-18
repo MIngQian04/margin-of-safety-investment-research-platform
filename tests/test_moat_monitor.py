@@ -1,6 +1,6 @@
 import pandas as pd
 
-from selection.moat_monitor import build_moat_monitor
+from selection.moat_monitor import build_moat_monitor, build_moat_readiness
 
 
 def registry() -> pd.DataFrame:
@@ -20,6 +20,18 @@ def evidence(direction="SUPPORTS") -> pd.DataFrame:
         "source_type": "COMPANY_FILING", "source_url": "https://example.com/a",
         "direction": direction, "next_review_date": "2026-10-31",
     }])
+
+
+def review(**overrides) -> pd.DataFrame:
+    row = {
+        "ts_code": "A", "review_status": "CONFIRMED", "reviewer_type": "AI",
+        "reviewer_id": "codex-research-review", "reviewer_model": "gpt-5",
+        "reviewed_date": "2026-07-15", "next_review_date": "2026-10-31",
+        "source_evidence_ids": "E1", "conclusion": "The documented barrier is intact.",
+        "note": "Auditable AI review",
+    }
+    row.update(overrides)
+    return pd.DataFrame([row])
 
 
 def test_draft_is_not_misrepresented_as_verified_moat():
@@ -49,3 +61,30 @@ def test_overdue_review_freezes_additions():
     result = build_moat_monitor(card, evidence(), "2026-07-16").iloc[0]
     assert result["moat_status"] == "REVIEW_DUE"
     assert "暂停加仓" in result["recommended_action"]
+
+
+def test_ai_review_can_confirm_moat_when_it_cites_active_primary_evidence():
+    result = build_moat_readiness(registry(), evidence(), review(), "2026-07-16").iloc[0]
+
+    assert bool(result["moat_entry_ready"])
+    assert result["moat_gate_status"] == "READY"
+    assert result["moat_reviewer_type"] == "AI"
+    assert result["moat_review_source_evidence_ids"] == "E1"
+
+
+def test_ai_review_cannot_confirm_without_valid_cited_evidence():
+    result = build_moat_readiness(
+        registry(), evidence(), review(source_evidence_ids="UNKNOWN"), "2026-07-16"
+    ).iloc[0]
+
+    assert not bool(result["moat_entry_ready"])
+    assert result["moat_gate_status"] == "REVIEW_EVIDENCE_INVALID"
+
+
+def test_contradictory_moat_evidence_blocks_even_a_confirmed_ai_review():
+    ledger = pd.concat([evidence(), evidence("CONTRADICTS")], ignore_index=True)
+    ledger.loc[1, "evidence_id"] = "E2"
+    result = build_moat_readiness(registry(), ledger, review(), "2026-07-16").iloc[0]
+
+    assert not bool(result["moat_entry_ready"])
+    assert result["moat_gate_status"] == "MOAT_WEAKENED"

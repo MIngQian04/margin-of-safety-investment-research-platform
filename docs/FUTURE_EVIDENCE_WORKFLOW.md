@@ -1,13 +1,20 @@
 # 未来产业证据工作流
 
 这套工作流决定一家公司能否从 `RESEARCH_ONLY` 升级到 2.5% 的
-`OPTION_SEED`。未来逻辑分、政策对齐、低估值和底部位置都不能替代证据门。
+`OPTION_SEED`。未来逻辑分、政策对齐、低估值和底部位置都不能替代未来论证证据门或护城河审核门。
 
-## 三个文件
+## 未来论证文件
 
 - `config/future-thesis-registry.csv`：一家公司一张论证卡，保存需求假设、利润池假设、公司暴露假设、失效条件和下一次复核日期。
 - `config/future-evidence-ledger.csv`：只追加、不覆盖的事实账本。一条证据只表达一个可核验判断。
 - `outputs/barbell-strategy/future_evidence_readiness.csv`：每次组合运行自动生成的证据门结果。
+
+护城河门另使用：
+
+- `config/moat-thesis-registry.csv`：可证伪的护城河档案与复核日期；
+- `config/moat-evidence-ledger.csv`：只追加的一手护城河支持、谨慎与反对证据；
+- `config/moat-review.csv`：人工或 AI 的可审计审核记录；
+- `outputs/barbell-strategy/future_moat_readiness.csv`：每日生成的最终护城河准入状态。
 
 ## 种子仓硬门槛
 
@@ -26,6 +33,10 @@
 - 没有当前有效的 `CONTRADICTS` 反对证据。
 
 任何一项不满足，状态保持 `RESEARCH_ONLY`，仓位为零。
+
+此外，新种子仓还必须同时满足：护城河档案当前有效；至少一项公司公告、政府或行业一手支持证据当前有效且可追溯；没有 `CAUTION` 或 `CONTRADICTS`；以及人工或 AI 审核为 `CONFIRMED`。AI 审核必须记录模型、审核者标识、日期、复核期限、证据 ID 和结论，不能自动把未来需求证据当成护城河证明。
+
+既有未确认未来仓从 2026-09-18 起获得五个交易日的复核窗口，期间冻结加仓和晋级；2026-09-25 后仍未通过时，每个完整交易日降低一个 2.5% 仓位阶梯，直至退出。出现有效护城河反证时不等待宽限期。
 
 ## 允许值
 

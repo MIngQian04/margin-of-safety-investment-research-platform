@@ -94,6 +94,13 @@ future_milestone_probability_schedule:
 option_seed_weight: 0.025
 option_seed_target_min: 0.075
 option_seed_total_cap: 0.10
+# New future seeds require a current moat thesis, traceable primary support,
+# no caution/contradiction, and a dated human or AI confirmation that cites the
+# active moat-evidence IDs. Existing unconfirmed holdings get a bounded review
+# window, then lose one 2.5% ladder step per completed session until exited.
+future_moat_gate_required: true
+future_moat_gate_effective_date: 2026-09-18
+future_moat_review_grace_sessions: 5
 seed_valuation_premium_factor: 0.80
 seed_loss_to_profit_premium_factor: 1.00
 seed_valuation_warning_days: 1

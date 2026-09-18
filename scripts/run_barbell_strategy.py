@@ -24,6 +24,7 @@ from portfolio.barbell_strategy import (
 )
 from portfolio.site_export import export_portfolio_site_data, update_portfolio_nav_history
 from selection.evidence_registry import build_evidence_readiness
+from selection.moat_monitor import build_moat_readiness
 from selection.policy_alignment import apply_policy_alignment
 from valuation.owner_earnings import owner_earnings_from_statements
 
@@ -544,6 +545,9 @@ def main() -> None:
     milestones = pd.read_csv("config/future-milestones.csv")
     registry = pd.read_csv("config/future-thesis-registry.csv")
     evidence = pd.read_csv("config/future-evidence-ledger.csv")
+    moat_registry = pd.read_csv("config/moat-thesis-registry.csv")
+    moat_evidence = pd.read_csv("config/moat-evidence-ledger.csv")
+    moat_reviews = pd.read_csv("config/moat-review.csv")
     as_of_raw = str(int(pd.to_numeric(daily["trade_date"], errors="coerce").max()))
     as_of = f"{as_of_raw[:4]}-{as_of_raw[4:6]}-{as_of_raw[6:]}"
     previous_portfolio = pd.DataFrame()
@@ -583,8 +587,12 @@ def main() -> None:
     future["alert_risk_action"] = future.get("alert_risk_action", "NONE")
     evidence_readiness = build_evidence_readiness(registry, evidence, as_of)
     evidence_readiness.to_csv(OUT / "future_evidence_readiness.csv", index=False, encoding="utf-8-sig")
+    moat_readiness = build_moat_readiness(
+        moat_registry, moat_evidence, moat_reviews, as_of,
+    )
+    moat_readiness.to_csv(OUT / "future_moat_readiness.csv", index=False, encoding="utf-8-sig")
     states = classify_future_states(
-        future, milestones, evidence_readiness,
+        future, milestones, evidence_readiness, moat_readiness,
         previous_portfolio=previous_portfolio,
         valuation_warnings=previous_warnings,
         as_of=as_of,

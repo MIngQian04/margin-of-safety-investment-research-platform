@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 from dotenv import load_dotenv
 
-from selection.moat_monitor import build_moat_monitor
+from selection.moat_monitor import build_moat_monitor, build_moat_readiness
 from utils.tushare_api import create_tushare_pro
 
 
@@ -18,7 +18,7 @@ RISK_FREE_RATE_ANNUAL = 0.0
 DIVIDEND_EVENTS_PATH = PROJECT_ROOT / "data/processed/portfolio/dividend_events.csv"
 MOAT_REGISTRY_PATH = PROJECT_ROOT / "config/moat-thesis-registry.csv"
 MOAT_EVIDENCE_PATH = PROJECT_ROOT / "config/moat-evidence-ledger.csv"
-HUMAN_MOAT_REVIEW_PATH = PROJECT_ROOT / "config/moat-human-review.csv"
+MOAT_REVIEW_PATH = PROJECT_ROOT / "config/moat-review.csv"
 MOAT_ALERTS_PATH = PROJECT_ROOT / "outputs/barbell-strategy/moat_radar_alerts.csv"
 MOAT_HEALTH_PATH = PROJECT_ROOT / "outputs/barbell-strategy/moat_radar_health.csv"
 VALUATION_WARNINGS_PATH = PROJECT_ROOT / "outputs/barbell-strategy/future_valuation_warnings.csv"
@@ -172,21 +172,6 @@ def _allocation_change_reason(change_type: str, bucket: str, detail: str = "") -
 
 def _number(value, default=0.0):
     return default if pd.isna(value) else float(value)
-
-
-def _load_human_moat_review() -> dict[str, bool]:
-    """Load the explicit human yes/no review status; missing rows stay false."""
-    if not HUMAN_MOAT_REVIEW_PATH.exists():
-        return {}
-    review = pd.read_csv(HUMAN_MOAT_REVIEW_PATH)
-    if "ts_code" not in review or "confirmed" not in review:
-        return {}
-    values = review[["ts_code", "confirmed"]].copy()
-    values["ts_code"] = values["ts_code"].astype(str)
-    values["confirmed"] = values["confirmed"].astype(str).str.strip().str.lower().isin(
-        {"true", "yes", "y", "1", "是", "已确认"}
-    )
-    return values.drop_duplicates("ts_code", keep="last").set_index("ts_code")["confirmed"].to_dict()
 
 
 def _load_valuation_repair_briefs() -> dict:
@@ -582,9 +567,12 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
         valuation_warnings = valuation_warnings[valuation_warnings["status"].isin({"WARNING", "EXIT_DUE"})].copy()
     moat_registry = pd.read_csv(MOAT_REGISTRY_PATH)
     moat_evidence = pd.read_csv(MOAT_EVIDENCE_PATH)
-    human_moat_review = _load_human_moat_review()
+    moat_reviews = pd.read_csv(MOAT_REVIEW_PATH)
     valuation_repair_briefs = _load_valuation_repair_briefs()
     moat_monitor = build_moat_monitor(moat_registry, moat_evidence, str(summary["as_of_date"])).set_index("ts_code")
+    moat_readiness = build_moat_readiness(
+        moat_registry, moat_evidence, moat_reviews, str(summary["as_of_date"])
+    ).set_index("ts_code")
     moat_alerts = pd.read_csv(MOAT_ALERTS_PATH) if MOAT_ALERTS_PATH.exists() else pd.DataFrame()
     if not moat_alerts.empty:
         moat_alerts = moat_alerts[moat_alerts["review_status"].eq("PENDING_REVIEW")].copy()
@@ -607,6 +595,10 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
     holdings = []
     for row in export_rows.to_dict("records"):
         code = str(row["ts_code"])
+        moat_review_confirmed = bool(
+            moat_readiness.loc[code].get("moat_entry_ready", False)
+            if code in moat_readiness.index else False
+        )
         item = {
             "code": code,
             "name": row["name"],
@@ -618,7 +610,8 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
             "price": 0.0,
             "dailyReturn": latest_returns.get(code, 0.0),
             "reason": str(row.get("reason", "")),
-            "humanMoatConfirmed": bool(human_moat_review.get(code, False)),
+            "moatReviewConfirmed": moat_review_confirmed,
+            "humanMoatConfirmed": moat_review_confirmed,
             "distribution": stock_distribution.get(code, _distribution_metrics(pd.Series(dtype=float))),
         }
         company_alerts = moat_alerts[moat_alerts["ts_code"].astype(str).eq(code)].copy() if not moat_alerts.empty else pd.DataFrame()
@@ -626,6 +619,7 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
             company_alerts = company_alerts.sort_values(["alert_date", "alert_level"], ascending=[False, True])
         latest_alert = company_alerts.iloc[0] if not company_alerts.empty else pd.Series(dtype=object)
         moat = moat_monitor.loc[code] if code in moat_monitor.index else pd.Series(dtype=object)
+        moat_review = moat_readiness.loc[code] if code in moat_readiness.index else pd.Series(dtype=object)
         item["moat"] = {
             "type": str(moat.get("moat_type", "档案待补全")),
             "thesis": str(moat.get("moat_thesis", "该持仓尚未建立护城河假设；不得据此推断护城河存在。")),
@@ -639,6 +633,19 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
             "supportingEvidenceCount": int(moat.get("supporting_evidence_count", 0)),
             "cautionEvidenceCount": int(moat.get("caution_evidence_count", 0)),
             "contradictoryEvidenceCount": int(moat.get("contradictory_evidence_count", 0)),
+            "review": {
+                "gateStatus": str(moat_review.get("moat_gate_status", "MOAT_NOT_REGISTERED")),
+                "confirmed": bool(moat_review.get("moat_entry_ready", False)),
+                "reviewerType": str(moat_review.get("moat_reviewer_type", "")),
+                "reviewerId": str(moat_review.get("moat_reviewer_id", "")),
+                "reviewerModel": str(moat_review.get("moat_reviewer_model", "")),
+                "reviewedDate": str(moat_review.get("moat_reviewed_date", "")),
+                "nextReviewDate": str(moat_review.get("moat_review_next_date", "")),
+                "sourceEvidenceIds": [
+                    value for value in str(moat_review.get("moat_review_source_evidence_ids", "")).split("|") if value
+                ],
+                "conclusion": str(moat_review.get("moat_review_conclusion", "")),
+            },
             "radar": {
                 "pendingAlertCount": int(len(company_alerts)),
                 "highAlertCount": int(company_alerts["alert_level"].eq("HIGH").sum()) if not company_alerts.empty else 0,
@@ -717,7 +724,7 @@ def export_portfolio_site_data(output_dir: Path, destination: Path) -> Path:
         "modelDailyReturn": model_active_return,
         "confirmedDailyReturn": confirmed_active_return if confirmed_active_weight > 0 else None,
         "grayDailyReturn": gray_active_return if gray_active_weight > 0 else None,
-        "note": "人工护城河判断仅用于观察和预警，不是持仓或收益计算门槛；模型按目标仓位计算全部持仓收益，出现有据可查的不利证据时再触发复核。",
+        "note": "护城河确认可由人工或AI完成，但必须引用当前有效的一手证据并留下审核记录；它是新未来种子仓的硬门槛，既有未确认未来仓在限期内冻结加仓和晋级，逾期后按阶梯退出。",
     }
     active_cash_weight = max(0.0, 1.0 - sum(float(item["weight"]) for item in active_holdings))
     changes = []

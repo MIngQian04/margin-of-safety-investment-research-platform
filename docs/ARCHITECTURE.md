@@ -30,10 +30,10 @@ flowchart TD
 | Dividends and stock distributions | Tushare `dividend` endpoint plus dividend cache | forward NAV dividend ledger |
 | National policy and industry mapping | `config/policy-priorities.csv`, `policy-candidate-map.csv` and policy module | research scope and future-demand candidates |
 | Future thesis evidence | `future-thesis-registry.csv`, `future-evidence-ledger.csv`, `future-milestones.csv` | evidence-gated future states |
-| Moat evidence | `moat-thesis-registry.csv`, `moat-evidence-ledger.csv`, `moat-human-review.csv` | moat status, review and website detail |
+| Moat evidence | `moat-thesis-registry.csv`, `moat-evidence-ledger.csv`, `moat-review.csv` | hard gate for new future seeds, staged review/exit for existing future holdings, and website detail |
 | Curated valuation aid | `config/valuation-repair-briefs.json` | website research aid and institution references |
 
-The repository does not contain an LLM API client. “Local AI research aid” is a static/configuration-backed label for the generated briefs.
+The repository does not contain an LLM API client. AI moat review is performed outside the daily runner and persisted as a dated, source-linked audit record; the runner validates that record but never self-confirms a moat during market refresh.
 
 ## Core modules
 
