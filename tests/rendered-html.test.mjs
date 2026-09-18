@@ -45,7 +45,9 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.match(page, /distributionAsOf/);
   assert.match(page, /allocation-change-ack-v1/);
   assert.match(page, /humanMoatConfirmed/);
-  assert.match(page, /待观察·未人工确认/);
+  assert.match(page, /moatReviewConfirmed/);
+  assert.match(page, /待审核·禁止新建种子仓/);
+  assert.match(page, /护城河审核（人工或AI）/);
   assert.match(page, /低估原因与估值修复条件/);
   assert.match(page, /PUBLIC INSTITUTION REFERENCES/);
   assert.match(page, /明日仓位已更新/);

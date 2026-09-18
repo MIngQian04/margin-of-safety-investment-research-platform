@@ -11,6 +11,7 @@ type Holding = {
   price: number;
   dailyReturn: number;
   reason?: string;
+  moatReviewConfirmed?: boolean;
   humanMoatConfirmed: boolean;
   valuationRepair?: {
     asOf: string;
@@ -69,6 +70,17 @@ type Holding = {
     supportingEvidenceCount: number;
     cautionEvidenceCount: number;
     contradictoryEvidenceCount: number;
+    review?: {
+      gateStatus: string;
+      confirmed: boolean;
+      reviewerType: string;
+      reviewerId: string;
+      reviewerModel: string;
+      reviewedDate: string;
+      nextReviewDate: string;
+      sourceEvidenceIds: string[];
+      conclusion: string;
+    };
     radar: {
       pendingAlertCount: number;
       highAlertCount: number;
@@ -583,9 +595,10 @@ export default function Home() {
   const benchmarkVisible = chartHistory.filter((point) => data.benchmark.history.some((benchmarkPoint) => benchmarkPoint.date === point.date)).length > 1;
   const activeMoatCopy = selectedHolding ? moatEnglish[selectedHolding.code] : null;
   const displayCompany = (holding: Holding) => language === "zh" ? holding.name : companyEnglish[holding.code] ?? holding.name;
-  const humanReviewLabel = (holding: Holding) => holding.humanMoatConfirmed
-    ? t("人工已确认", "Human confirmed")
-    : t("待观察·未人工确认", "Monitoring · not reviewed");
+  const moatReviewPassed = (holding: Holding) => holding.moatReviewConfirmed ?? holding.humanMoatConfirmed;
+  const humanReviewLabel = (holding: Holding) => moatReviewPassed(holding)
+    ? t("可审计审核已通过", "Auditable review passed")
+    : t("待审核·禁止新建种子仓", "Review pending · no new seed");
   const updateExecution = (code: string, field: keyof ExecutionRecord, value: string) => {
     const number = Math.max(0, Number(value) || 0);
     setExecutionRecords((current) => ({ ...current, [code]: { quantity: 0, averagePrice: 0, fee: 0, modelOpenPrice: 0, ...current[code], [field]: number } }));
@@ -842,12 +855,12 @@ export default function Home() {
               <span>{moatStatus[selectedHolding.moat.status][language === "zh" ? "cn" : "en"]}</span>
               <b>{t("下次复核", "Next review")} {selectedHolding.moat.nextReviewDate}</b>
             </div>
-            <div className={`human-review-wrap ${selectedHolding.humanMoatConfirmed ? "" : "pending"}`}>
-              {!selectedHolding.humanMoatConfirmed && <span className="human-review-alert" aria-hidden="true" title={t("待人工判断", "Human review pending")}>!</span>}
-              <button type="button" className={`human-review-status ${selectedHolding.humanMoatConfirmed ? "confirmed" : "gray"}`} onClick={() => setShowValuationResearch((current) => !current)} aria-expanded={showValuationResearch}><span>{t("人工护城河判断", "Human moat judgment")}</span><strong>{humanReviewLabel(selectedHolding)}</strong><small>{selectedHolding.humanMoatConfirmed ? t("人工判断仅用于记录和后续预警，不改变模型已计算的持仓收益。点击查看估值复核。", "Human review is informational and supports future alerts; it does not change model holdings or returns. Click for valuation review.") : t("尚未判断；这不会阻止当前持仓或模型收益，只在出现不利证据时触发后续预警。点击查看低估原因、修复条件和机构估值参考。", "Not yet reviewed; this does not block the current holding or model return. It only supports future alerts when adverse evidence appears. Click to review undervaluation reasons, repair conditions and institution references.")}</small></button>
+            <div className={`human-review-wrap ${moatReviewPassed(selectedHolding) ? "" : "pending"}`}>
+              {!moatReviewPassed(selectedHolding) && <span className="human-review-alert" aria-hidden="true" title={t("待可审计审核", "Auditable review pending")}>!</span>}
+              <button type="button" className={`human-review-status ${moatReviewPassed(selectedHolding) ? "confirmed" : "gray"}`} onClick={() => setShowValuationResearch((current) => !current)} aria-expanded={showValuationResearch}><span>{t("护城河审核（人工或AI）", "Moat review (human or AI)")}</span><strong>{humanReviewLabel(selectedHolding)}</strong><small>{moatReviewPassed(selectedHolding) ? t("审核必须引用当前有效的一手证据并保留审核者、日期和复核期限；它是新未来种子仓的硬门槛。点击查看估值复核。", "The review must cite current primary evidence and retain reviewer, date and expiry; it is a hard gate for new future seeds. Click for valuation review.") : t("未通过审核时不得新建、加仓或晋级未来种子仓；既有未确认仓只在限期复核窗口内保留，逾期后按阶梯退出。点击查看估值研究。", "Without a passed review, future seeds cannot be opened, added to or promoted. Existing unconfirmed positions remain only during the review window, then exit by ladder step. Click for valuation research.")}</small></button>
             </div>
             {selectedHolding.valuationRepair?.institutionReferenceAboveOptimistic && (
-              <div className="valuation-rule-hold" role="status"><span>{t("估值规则动作", "Valuation rule")}</span><strong>{t("安全边际充足", "Margin supported")}</strong><small>{t(`最低机构参考价 ${money(selectedHolding.valuationRepair.institutionReferencePrice ?? 0)} 高于乐观DCF ${money(selectedHolding.valuationRepair.optimisticDcfValuePerShare ?? 0)}；估值规则允许继续持有，护城河判断仍单独用于观察和预警。`, `The lowest linked institution reference ${money(selectedHolding.valuationRepair.institutionReferencePrice ?? 0)} is above the optimistic DCF ${money(selectedHolding.valuationRepair.optimisticDcfValuePerShare ?? 0)}; valuation supports holding, while moat review remains a separate monitoring and alert layer.`)}</small></div>
+              <div className="valuation-rule-hold" role="status"><span>{t("估值规则动作", "Valuation rule")}</span><strong>{t("安全边际充足", "Margin supported")}</strong><small>{t(`最低机构参考价 ${money(selectedHolding.valuationRepair.institutionReferencePrice ?? 0)} 高于乐观DCF ${money(selectedHolding.valuationRepair.optimisticDcfValuePerShare ?? 0)}；这只能支持估值判断，不能替代新种子仓所需的护城河审核。`, `The lowest linked institution reference ${money(selectedHolding.valuationRepair.institutionReferencePrice ?? 0)} is above the optimistic DCF ${money(selectedHolding.valuationRepair.optimisticDcfValuePerShare ?? 0)}; this supports valuation only and cannot replace the moat review required for a new seed.`)}</small></div>
             )}
             {showValuationResearch && selectedHolding.valuationRepair && (
               <section className="valuation-repair" aria-label={t("估值修复辅助研究", "Valuation repair research aid")}>
