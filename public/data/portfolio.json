@@ -1,19 +1,19 @@
 {
-  "asOf": "2026-09-22",
-  "returnDate": "2026-09-22",
-  "generatedAt": "2026-09-22T09:48:24-04:00",
+  "asOf": "2026-09-23",
+  "returnDate": "2026-09-23",
+  "generatedAt": "2026-09-23T05:07:07-04:00",
   "summary": {
     "anchorWeight": 0.3648648648648647,
     "futureWeight": 0.025,
     "cashWeight": 0.6101351351351353,
     "activeCashWeight": 0.6101351351351353,
-    "universeScanned": 5554,
-    "financialReviewed": 199,
-    "financialComplete": 199,
+    "universeScanned": 5556,
+    "financialReviewed": 200,
+    "financialComplete": 200,
     "anchorEligible": 15
   },
-  "activeAsOf": "2026-09-21",
-  "distributionAsOf": "2026-09-21",
+  "activeAsOf": "2026-09-22",
+  "distributionAsOf": "2026-09-22",
   "holdings": [
     {
       "code": "000651.SZ",
@@ -23,14 +23,14 @@
       "theme": "稳定现金流",
       "industry": "家用电器",
       "weight": 0.0398648648648648,
-      "price": 38.18,
-      "dailyReturn": 0.00473684210526315,
+      "price": 38.36,
+      "dailyReturn": 0.004714510214772094,
       "reason": "上一交易日已公布仓位",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.005272654326029586,
-        "excessKurtosis": 5.5227280078983405,
+        "skewness": -0.0017687410487182101,
+        "excessKurtosis": 5.509872819529049,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
@@ -88,7 +88,7 @@
           "earningsMultiplier": 1.1,
           "terminalValueShare": 0.7955512515886384,
           "valuePerShare": 147.45059682576564,
-          "marginOfSafety": 2.861985249496219
+          "marginOfSafety": 2.8438633166257987
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -97,7 +97,7 @@
           "earningsMultiplier": 1.05,
           "terminalValueShare": 0.7491645686751456,
           "valuePerShare": 109.80003832475822,
-          "marginOfSafety": 1.875852234802468
+          "marginOfSafety": 1.8623576205619976
         },
         "base": {
           "discountRate": 0.1,
@@ -106,7 +106,7 @@
           "earningsMultiplier": 1.0,
           "terminalValueShare": 0.7046832515657075,
           "valuePerShare": 85.20559522633499,
-          "marginOfSafety": 1.2316813836127554
+          "marginOfSafety": 1.22120946888256
         },
         "cautious": {
           "discountRate": 0.11,
@@ -115,7 +115,7 @@
           "earningsMultiplier": 0.9,
           "terminalValueShare": 0.6503538413800464,
           "valuePerShare": 61.08424036058996,
-          "marginOfSafety": 0.5999015285644307
+          "marginOfSafety": 0.5923941699840969
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -124,7 +124,7 @@
           "earningsMultiplier": 0.8,
           "terminalValueShare": 0.5800460207811095,
           "valuePerShare": 42.10593292474707,
-          "marginOfSafety": 0.1028269493123905
+          "marginOfSafety": 0.0976520574751582
         }
       },
       "metrics": {
@@ -185,9 +185,9 @@
         ],
         "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以渠道、现金转化和多元化回报供人工判断。",
         "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on channels, cash conversion and diversification returns.",
-        "currentPrice": 38.18,
+        "currentPrice": 38.36,
         "baseDcfValuePerShare": 85.20559522633499,
-        "baseDcfMargin": 1.2316813836127554,
+        "baseDcfMargin": 1.22120946888256,
         "optimisticDcfValuePerShare": 109.80003832475822,
         "institutionReferencePrice": 54.1,
         "institutionReferenceAboveOptimistic": false,
@@ -203,13 +203,13 @@
       "industry": "建筑材料",
       "weight": 0.1,
       "price": 16.05,
-      "dailyReturn": -0.013521819299323834,
+      "dailyReturn": 0.0,
       "reason": "上一交易日已公布仓位",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": -0.014147048422711188,
-        "excessKurtosis": 1.8720249880904651,
+        "skewness": -0.012793384068601896,
+        "excessKurtosis": 1.8732806749395365,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
@@ -381,14 +381,14 @@
       "theme": "稳定现金流",
       "industry": "通信",
       "weight": 0.0499999999999999,
-      "price": 41.74,
-      "dailyReturn": 0.007239382239382364,
+      "price": 41.52,
+      "dailyReturn": -0.005270723526593191,
       "reason": "上一交易日已公布仓位",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.5383099016095704,
-        "excessKurtosis": 4.878654817936786,
+        "skewness": 0.535708457672412,
+        "excessKurtosis": 4.904539879778534,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
@@ -446,7 +446,7 @@
           "earningsMultiplier": 1.1,
           "terminalValueShare": 0.7955512515886384,
           "valuePerShare": 52.076041225044854,
-          "marginOfSafety": 0.247629162075823
+          "marginOfSafety": 0.2542399138979974
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -455,7 +455,7 @@
           "earningsMultiplier": 1.05,
           "terminalValueShare": 0.7491645686751456,
           "valuePerShare": 38.5336874549566,
-          "marginOfSafety": -0.0768163043853235
+          "marginOfSafety": -0.0719246759403516
         },
         "base": {
           "discountRate": 0.1,
@@ -464,7 +464,7 @@
           "earningsMultiplier": 1.0,
           "terminalValueShare": 0.7046832515657075,
           "valuePerShare": 29.68742693512284,
-          "marginOfSafety": -0.2887535473137796
+          "marginOfSafety": -0.2849849004064827
         },
         "cautious": {
           "discountRate": 0.11,
@@ -473,7 +473,7 @@
           "earningsMultiplier": 0.9,
           "terminalValueShare": 0.6503538413800465,
           "valuePerShare": 21.01132931502993,
-          "marginOfSafety": -0.4966140557012476
+          "marginOfSafety": -0.4939467891370442
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -482,7 +482,7 @@
           "earningsMultiplier": 0.8,
           "terminalValueShare": 0.5800460207811095,
           "valuePerShare": 14.1851104357853,
-          "marginOfSafety": -0.6601554759035625
+          "marginOfSafety": -0.6583547582903349
         }
       },
       "metrics": {
@@ -543,9 +543,9 @@
         ],
         "disclaimer": "这是模型辅助研究，不是自动买卖信号；当前没有整理公开机构目标价，需由人工补充和核验。",
         "disclaimerEn": "This is a model research aid, not an automatic trading signal; no public institution target has been compiled here and human verification is required.",
-        "currentPrice": 41.74,
+        "currentPrice": 41.52,
         "baseDcfValuePerShare": 29.68742693512284,
-        "baseDcfMargin": -0.2887535473137796,
+        "baseDcfMargin": -0.2849849004064827,
         "optimisticDcfValuePerShare": 38.5336874549566,
         "institutionReferencePrice": 42.5,
         "institutionReferenceAboveOptimistic": true,
@@ -560,14 +560,14 @@
       "theme": "稳定现金流",
       "industry": "医药生物",
       "weight": 0.125,
-      "price": 156.68,
-      "dailyReturn": -0.008668142992723893,
+      "price": 155.46,
+      "dailyReturn": -0.007786571355629324,
       "reason": "上一交易日已公布仓位",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.6159818484309613,
-        "excessKurtosis": 0.44186022614780596,
+        "skewness": 0.6256415164324168,
+        "excessKurtosis": 0.4700534839278907,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "常态尾部",
         "observations": 252
@@ -625,7 +625,7 @@
           "earningsMultiplier": 1.1,
           "terminalValueShare": 0.7955512515886383,
           "valuePerShare": 249.07636241789223,
-          "marginOfSafety": 0.5897138270225444
+          "marginOfSafety": 0.6021893890254228
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -634,7 +634,7 @@
           "earningsMultiplier": 1.05,
           "terminalValueShare": 0.7491645686751457,
           "valuePerShare": 187.24603435441713,
-          "marginOfSafety": 0.1950857439010538
+          "marginOfSafety": 0.204464391833379
         },
         "base": {
           "discountRate": 0.1,
@@ -643,7 +643,7 @@
           "earningsMultiplier": 1.0,
           "terminalValueShare": 0.7046832515657074,
           "valuePerShare": 146.85666044185507,
-          "marginOfSafety": -0.062696831491862
+          "marginOfSafety": -0.0553411781689497
         },
         "cautious": {
           "discountRate": 0.11,
@@ -652,7 +652,7 @@
           "earningsMultiplier": 0.9,
           "terminalValueShare": 0.6503538413800465,
           "valuePerShare": 107.24419932405752,
-          "marginOfSafety": -0.3155208110540112
+          "marginOfSafety": -0.310149238877798
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -661,7 +661,7 @@
           "earningsMultiplier": 0.8,
           "terminalValueShare": 0.5800460207811095,
           "valuePerShare": 76.07773004535457,
-          "marginOfSafety": -0.5144387921537237
+          "marginOfSafety": -0.5106282642135946
         }
       },
       "metrics": {
@@ -722,9 +722,9 @@
         ],
         "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以装机、续购、海外合规和现金流供人工判断。",
         "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on installations, renewals, overseas compliance and cash flow.",
-        "currentPrice": 156.68,
+        "currentPrice": 155.46,
         "baseDcfValuePerShare": 146.85666044185507,
-        "baseDcfMargin": -0.062696831491862,
+        "baseDcfMargin": -0.0553411781689497,
         "optimisticDcfValuePerShare": 187.24603435441713,
         "institutionReferencePrice": 213.0,
         "institutionReferenceAboveOptimistic": true,
@@ -739,14 +739,14 @@
       "theme": "稳定现金流",
       "industry": "美容护理",
       "weight": 0.025,
-      "price": 93.35,
-      "dailyReturn": -0.005221653878943022,
+      "price": 93.47,
+      "dailyReturn": 0.0012854847348688914,
       "reason": "上一交易日已公布仓位",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.6203691937329487,
-        "excessKurtosis": 2.574419331438679,
+        "skewness": 0.6158889445977607,
+        "excessKurtosis": 2.570771369219819,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
@@ -795,7 +795,7 @@
           "earningsMultiplier": 1.1,
           "terminalValueShare": 0.7955512515886384,
           "valuePerShare": 154.90518091471586,
-          "marginOfSafety": 0.6594020451496077
+          "marginOfSafety": 0.6572716477449005
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -804,7 +804,7 @@
           "earningsMultiplier": 1.05,
           "terminalValueShare": 0.7491645686751457,
           "valuePerShare": 114.93335029056765,
-          "marginOfSafety": 0.2312088943820851
+          "marginOfSafety": 0.229628226067911
         },
         "base": {
           "discountRate": 0.1,
@@ -813,7 +813,7 @@
           "earningsMultiplier": 1.0,
           "terminalValueShare": 0.7046832515657075,
           "valuePerShare": 88.82258452864345,
-          "marginOfSafety": -0.0484993623069796
+          "marginOfSafety": -0.049720931543346
         },
         "cautious": {
           "discountRate": 0.11,
@@ -822,7 +822,7 @@
           "earningsMultiplier": 0.9,
           "terminalValueShare": 0.6503538413800464,
           "valuePerShare": 63.21407433635143,
-          "marginOfSafety": -0.3228272700980028
+          "marginOfSafety": -0.323696647733482
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -831,7 +831,7 @@
           "earningsMultiplier": 0.8,
           "terminalValueShare": 0.5800460207811095,
           "valuePerShare": 43.06569618312355,
-          "marginOfSafety": -0.5386642080008189
+          "marginOfSafety": -0.5392564867537868
         }
       },
       "metrics": {
@@ -848,9 +848,9 @@
         "repairConditions": [],
         "failureSignals": [],
         "institutionReferences": [],
-        "currentPrice": 93.35,
+        "currentPrice": 93.47,
         "baseDcfValuePerShare": 88.82258452864345,
-        "baseDcfMargin": -0.0484993623069796,
+        "baseDcfMargin": -0.049720931543346,
         "optimisticDcfValuePerShare": 114.93335029056765,
         "institutionReferencePrice": null,
         "institutionReferenceAboveOptimistic": false,
@@ -867,14 +867,14 @@
       "theme": "十五五六网",
       "industry": "通信",
       "weight": 0.025,
-      "price": 96.45,
-      "dailyReturn": 0.004582855952504961,
+      "price": 96.4,
+      "dailyReturn": -0.0005184033177811909,
       "reason": "上一交易日已公布仓位",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": -0.01091520986287311,
-        "excessKurtosis": 1.8547249733400806,
+        "skewness": -0.01882588399199949,
+        "excessKurtosis": 1.890255712214314,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
@@ -932,7 +932,7 @@
           "earningsMultiplier": null,
           "terminalValueShare": null,
           "valuePerShare": 199.5473160813045,
-          "marginOfSafety": 1.068919814217776
+          "marginOfSafety": 1.069992905407723
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -941,7 +941,7 @@
           "earningsMultiplier": null,
           "terminalValueShare": null,
           "valuePerShare": 148.395725946722,
-          "marginOfSafety": 0.538576733506708
+          "marginOfSafety": 0.539374750484668
         },
         "base": {
           "discountRate": 0.1,
@@ -950,7 +950,7 @@
           "earningsMultiplier": null,
           "terminalValueShare": null,
           "valuePerShare": 114.9820151534227,
-          "marginOfSafety": 0.1921411628141285
+          "marginOfSafety": 0.1927594932927665
         },
         "cautious": {
           "discountRate": 0.11,
@@ -959,7 +959,7 @@
           "earningsMultiplier": null,
           "terminalValueShare": null,
           "valuePerShare": 82.21103627005779,
-          "marginOfSafety": -0.1476305207873739
+          "marginOfSafety": -0.1471884204350851
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -968,7 +968,7 @@
           "earningsMultiplier": null,
           "terminalValueShare": null,
           "valuePerShare": 56.42733897429627,
-          "marginOfSafety": -0.4149576052431698
+          "marginOfSafety": -0.4146541600176736
         }
       },
       "milestoneValuation": {
@@ -976,9 +976,9 @@
         "verifiedMilestones": 0,
         "currentBusinessFloor": 82.21103627005779,
         "probabilityWeightedValue": 88.30573953873503,
-        "marginOfSafety": -0.0844402328798856,
+        "marginOfSafety": -0.0839653574820018,
         "minimumMarginRequired": 0.3,
-        "failureDownside": 0.4149576052431698,
+        "failureDownside": 0.4146541600176736,
         "maximumFailureDownside": 0.3,
         "scenarios": {
           "failure": {
@@ -1082,9 +1082,9 @@
         ],
         "disclaimer": "机构目标价是公开预测，不是事实或保证；不同货币、估值方法和发布日期不可直接横向比较。该卡只辅助人工判断，不自动改变confirmed、护城河状态、仓位或收益。",
         "disclaimerEn": "Institution targets are public forecasts, not facts or guarantees; currencies, methods and dates are not directly comparable. This panel only assists human review and never changes confirmation, moat status, weights or returns.",
-        "currentPrice": 96.45,
+        "currentPrice": 96.4,
         "baseDcfValuePerShare": 114.9820151534227,
-        "baseDcfMargin": 0.1921411628141285,
+        "baseDcfMargin": 0.1927594932927665,
         "optimisticDcfValuePerShare": 148.395725946722,
         "institutionReferencePrice": 112.0,
         "institutionReferenceAboveOptimistic": false,
@@ -1099,14 +1099,14 @@
       "theme": "稳定现金流",
       "industry": "美容护理",
       "weight": 0.025,
-      "price": 56.48,
-      "dailyReturn": -0.007206890490420226,
+      "price": 56.79,
+      "dailyReturn": 0.005488668555240883,
       "reason": "上一交易日已公布仓位",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 1.094336107000537,
-        "excessKurtosis": 4.0566554681546805,
+        "skewness": 1.085745343520269,
+        "excessKurtosis": 4.059455843882782,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
@@ -1155,7 +1155,7 @@
           "earningsMultiplier": 1.1,
           "terminalValueShare": 0.7955512515886384,
           "valuePerShare": 103.55157496200007,
-          "marginOfSafety": 0.8334202365793215
+          "marginOfSafety": 0.8234121317485485
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -1164,7 +1164,7 @@
           "earningsMultiplier": 1.05,
           "terminalValueShare": 0.7491645686751456,
           "valuePerShare": 79.03287768333422,
-          "marginOfSafety": 0.3993073244216398
+          "marginOfSafety": 0.3916689150085266
         },
         "base": {
           "discountRate": 0.1,
@@ -1173,7 +1173,7 @@
           "earningsMultiplier": 1.0,
           "terminalValueShare": 0.7046832515657075,
           "valuePerShare": 63.01654939828426,
-          "marginOfSafety": 0.1157321069101322
+          "marginOfSafety": 0.1096416516690308
         },
         "cautious": {
           "discountRate": 0.11,
@@ -1182,7 +1182,7 @@
           "earningsMultiplier": 0.9,
           "terminalValueShare": 0.6503538413800464,
           "valuePerShare": 47.30830438277799,
-          "marginOfSafety": -0.162388378491891
+          "marginOfSafety": -0.16696065534816
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -1191,12 +1191,12 @@
           "earningsMultiplier": 0.8,
           "terminalValueShare": 0.5800460207811095,
           "valuePerShare": 34.94930113270842,
-          "marginOfSafety": -0.3812092575653608
+          "marginOfSafety": -0.3845870552437327
         }
       },
       "metrics": {
         "股息率": "3.5%",
-        "所有者收益率": "6.7%",
+        "所有者收益率": "6.6%",
         "三年ROE": "27.4%",
         "护城河代理分": "96.0"
       },
@@ -1208,9 +1208,9 @@
         "repairConditions": [],
         "failureSignals": [],
         "institutionReferences": [],
-        "currentPrice": 56.48,
+        "currentPrice": 56.79,
         "baseDcfValuePerShare": 63.01654939828426,
-        "baseDcfMargin": 0.1157321069101322,
+        "baseDcfMargin": 0.1096416516690308,
         "optimisticDcfValuePerShare": 79.03287768333422,
         "institutionReferencePrice": null,
         "institutionReferenceAboveOptimistic": false,
@@ -1229,14 +1229,14 @@
       "theme": "稳定现金流",
       "industry": "医药生物",
       "weight": 0.125,
-      "price": 156.68,
-      "dailyReturn": -0.008668142992723893,
+      "price": 155.46,
+      "dailyReturn": -0.007786571355629324,
       "reason": "基准DCF略高于当前价格，但乐观情景仍有估值支撑；保留原仓位、暂停加仓，不因一天溢价直接替换。",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.6159818484309613,
-        "excessKurtosis": 0.44186022614780596,
+        "skewness": 0.6256415164324168,
+        "excessKurtosis": 0.4700534839278907,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "常态尾部",
         "observations": 252
@@ -1294,7 +1294,7 @@
           "earningsMultiplier": 1.1,
           "terminalValueShare": 0.7955512515886383,
           "valuePerShare": 249.07636241789223,
-          "marginOfSafety": 0.5897138270225444
+          "marginOfSafety": 0.6021893890254228
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -1303,7 +1303,7 @@
           "earningsMultiplier": 1.05,
           "terminalValueShare": 0.7491645686751457,
           "valuePerShare": 187.24603435441713,
-          "marginOfSafety": 0.1950857439010538
+          "marginOfSafety": 0.204464391833379
         },
         "base": {
           "discountRate": 0.1,
@@ -1312,7 +1312,7 @@
           "earningsMultiplier": 1.0,
           "terminalValueShare": 0.7046832515657074,
           "valuePerShare": 146.85666044185507,
-          "marginOfSafety": -0.062696831491862
+          "marginOfSafety": -0.0553411781689497
         },
         "cautious": {
           "discountRate": 0.11,
@@ -1321,7 +1321,7 @@
           "earningsMultiplier": 0.9,
           "terminalValueShare": 0.6503538413800465,
           "valuePerShare": 107.24419932405752,
-          "marginOfSafety": -0.3155208110540112
+          "marginOfSafety": -0.310149238877798
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -1330,7 +1330,7 @@
           "earningsMultiplier": 0.8,
           "terminalValueShare": 0.5800460207811095,
           "valuePerShare": 76.07773004535457,
-          "marginOfSafety": -0.5144387921537237
+          "marginOfSafety": -0.5106282642135946
         }
       },
       "metrics": {
@@ -1391,9 +1391,9 @@
         ],
         "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以装机、续购、海外合规和现金流供人工判断。",
         "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on installations, renewals, overseas compliance and cash flow.",
-        "currentPrice": 156.68,
+        "currentPrice": 155.46,
         "baseDcfValuePerShare": 146.85666044185507,
-        "baseDcfMargin": -0.062696831491862,
+        "baseDcfMargin": -0.0553411781689497,
         "optimisticDcfValuePerShare": 187.24603435441713,
         "institutionReferencePrice": 213.0,
         "institutionReferenceAboveOptimistic": true,
@@ -1408,14 +1408,14 @@
       "theme": "稳定现金流",
       "industry": "通信",
       "weight": 0.0499999999999999,
-      "price": 41.74,
-      "dailyReturn": 0.007239382239382364,
+      "price": 41.52,
+      "dailyReturn": -0.005270723526593191,
       "reason": "估值仍高于乐观DCF情景，但冷静期后没有新的财务、业绩或DCF恶化证据；保持仓位，不重复减仓。",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.5383099016095704,
-        "excessKurtosis": 4.878654817936786,
+        "skewness": 0.535708457672412,
+        "excessKurtosis": 4.904539879778534,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
@@ -1473,7 +1473,7 @@
           "earningsMultiplier": 1.1,
           "terminalValueShare": 0.7955512515886384,
           "valuePerShare": 52.076041225044854,
-          "marginOfSafety": 0.247629162075823
+          "marginOfSafety": 0.2542399138979974
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -1482,7 +1482,7 @@
           "earningsMultiplier": 1.05,
           "terminalValueShare": 0.7491645686751456,
           "valuePerShare": 38.5336874549566,
-          "marginOfSafety": -0.0768163043853235
+          "marginOfSafety": -0.0719246759403516
         },
         "base": {
           "discountRate": 0.1,
@@ -1491,7 +1491,7 @@
           "earningsMultiplier": 1.0,
           "terminalValueShare": 0.7046832515657075,
           "valuePerShare": 29.68742693512284,
-          "marginOfSafety": -0.2887535473137796
+          "marginOfSafety": -0.2849849004064827
         },
         "cautious": {
           "discountRate": 0.11,
@@ -1500,7 +1500,7 @@
           "earningsMultiplier": 0.9,
           "terminalValueShare": 0.6503538413800465,
           "valuePerShare": 21.01132931502993,
-          "marginOfSafety": -0.4966140557012476
+          "marginOfSafety": -0.4939467891370442
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -1509,7 +1509,7 @@
           "earningsMultiplier": 0.8,
           "terminalValueShare": 0.5800460207811095,
           "valuePerShare": 14.1851104357853,
-          "marginOfSafety": -0.6601554759035625
+          "marginOfSafety": -0.6583547582903349
         }
       },
       "metrics": {
@@ -1570,9 +1570,9 @@
         ],
         "disclaimer": "这是模型辅助研究，不是自动买卖信号；当前没有整理公开机构目标价，需由人工补充和核验。",
         "disclaimerEn": "This is a model research aid, not an automatic trading signal; no public institution target has been compiled here and human verification is required.",
-        "currentPrice": 41.74,
+        "currentPrice": 41.52,
         "baseDcfValuePerShare": 29.68742693512284,
-        "baseDcfMargin": -0.2887535473137796,
+        "baseDcfMargin": -0.2849849004064827,
         "optimisticDcfValuePerShare": 38.5336874549566,
         "institutionReferencePrice": 42.5,
         "institutionReferenceAboveOptimistic": true,
@@ -1588,13 +1588,13 @@
       "industry": "建筑材料",
       "weight": 0.1,
       "price": 16.05,
-      "dailyReturn": -0.013521819299323834,
+      "dailyReturn": 0.0,
       "reason": "人工研究决定：房地产下行暴露尚未充分缓解，主动将北新建材由15%降至10%，释放的5%保留为现金；这不是护城河失效或自动清仓。",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": -0.014147048422711188,
-        "excessKurtosis": 1.8720249880904651,
+        "skewness": -0.012793384068601896,
+        "excessKurtosis": 1.8732806749395365,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
@@ -1766,14 +1766,14 @@
       "theme": "稳定现金流",
       "industry": "家用电器",
       "weight": 0.0398648648648648,
-      "price": 38.18,
-      "dailyReturn": 0.00473684210526315,
+      "price": 38.36,
+      "dailyReturn": 0.004714510214772094,
       "reason": "上一交易日锚仓保留：基本面、基准DCF和护城河代理没有硬性退出条件，避免因每日评分波动频繁换仓。",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.005272654326029586,
-        "excessKurtosis": 5.5227280078983405,
+        "skewness": -0.0017687410487182101,
+        "excessKurtosis": 5.509872819529049,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
@@ -1831,7 +1831,7 @@
           "earningsMultiplier": 1.1,
           "terminalValueShare": 0.7955512515886384,
           "valuePerShare": 147.45059682576564,
-          "marginOfSafety": 2.861985249496219
+          "marginOfSafety": 2.8438633166257987
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -1840,7 +1840,7 @@
           "earningsMultiplier": 1.05,
           "terminalValueShare": 0.7491645686751456,
           "valuePerShare": 109.80003832475822,
-          "marginOfSafety": 1.875852234802468
+          "marginOfSafety": 1.8623576205619976
         },
         "base": {
           "discountRate": 0.1,
@@ -1849,7 +1849,7 @@
           "earningsMultiplier": 1.0,
           "terminalValueShare": 0.7046832515657075,
           "valuePerShare": 85.20559522633499,
-          "marginOfSafety": 1.2316813836127554
+          "marginOfSafety": 1.22120946888256
         },
         "cautious": {
           "discountRate": 0.11,
@@ -1858,7 +1858,7 @@
           "earningsMultiplier": 0.9,
           "terminalValueShare": 0.6503538413800464,
           "valuePerShare": 61.08424036058996,
-          "marginOfSafety": 0.5999015285644307
+          "marginOfSafety": 0.5923941699840969
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -1867,7 +1867,7 @@
           "earningsMultiplier": 0.8,
           "terminalValueShare": 0.5800460207811095,
           "valuePerShare": 42.10593292474707,
-          "marginOfSafety": 0.1028269493123905
+          "marginOfSafety": 0.0976520574751582
         }
       },
       "metrics": {
@@ -1928,9 +1928,9 @@
         ],
         "disclaimer": "这是模型辅助研究，不是自动买卖信号；公开机构参考待补充，当前以渠道、现金转化和多元化回报供人工判断。",
         "disclaimerEn": "This is a model research aid, not an automatic trading signal; institution references are pending, so human review should focus on channels, cash conversion and diversification returns.",
-        "currentPrice": 38.18,
+        "currentPrice": 38.36,
         "baseDcfValuePerShare": 85.20559522633499,
-        "baseDcfMargin": 1.2316813836127554,
+        "baseDcfMargin": 1.22120946888256,
         "optimisticDcfValuePerShare": 109.80003832475822,
         "institutionReferencePrice": 54.1,
         "institutionReferenceAboveOptimistic": false,
@@ -1945,14 +1945,14 @@
       "theme": "稳定现金流",
       "industry": "美容护理",
       "weight": 0.025,
-      "price": 93.35,
-      "dailyReturn": -0.005221653878943022,
+      "price": 93.47,
+      "dailyReturn": 0.0012854847348688914,
       "reason": "基准DCF略高于当前价格，但乐观情景仍有估值支撑；保留原仓位、暂停加仓，不因一天溢价直接替换。",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 0.6203691937329487,
-        "excessKurtosis": 2.574419331438679,
+        "skewness": 0.6158889445977607,
+        "excessKurtosis": 2.570771369219819,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
@@ -2001,7 +2001,7 @@
           "earningsMultiplier": 1.1,
           "terminalValueShare": 0.7955512515886384,
           "valuePerShare": 154.90518091471586,
-          "marginOfSafety": 0.6594020451496077
+          "marginOfSafety": 0.6572716477449005
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -2010,7 +2010,7 @@
           "earningsMultiplier": 1.05,
           "terminalValueShare": 0.7491645686751457,
           "valuePerShare": 114.93335029056765,
-          "marginOfSafety": 0.2312088943820851
+          "marginOfSafety": 0.229628226067911
         },
         "base": {
           "discountRate": 0.1,
@@ -2019,7 +2019,7 @@
           "earningsMultiplier": 1.0,
           "terminalValueShare": 0.7046832515657075,
           "valuePerShare": 88.82258452864345,
-          "marginOfSafety": -0.0484993623069796
+          "marginOfSafety": -0.049720931543346
         },
         "cautious": {
           "discountRate": 0.11,
@@ -2028,7 +2028,7 @@
           "earningsMultiplier": 0.9,
           "terminalValueShare": 0.6503538413800464,
           "valuePerShare": 63.21407433635143,
-          "marginOfSafety": -0.3228272700980028
+          "marginOfSafety": -0.323696647733482
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -2037,7 +2037,7 @@
           "earningsMultiplier": 0.8,
           "terminalValueShare": 0.5800460207811095,
           "valuePerShare": 43.06569618312355,
-          "marginOfSafety": -0.5386642080008189
+          "marginOfSafety": -0.5392564867537868
         }
       },
       "metrics": {
@@ -2054,9 +2054,9 @@
         "repairConditions": [],
         "failureSignals": [],
         "institutionReferences": [],
-        "currentPrice": 93.35,
+        "currentPrice": 93.47,
         "baseDcfValuePerShare": 88.82258452864345,
-        "baseDcfMargin": -0.0484993623069796,
+        "baseDcfMargin": -0.049720931543346,
         "optimisticDcfValuePerShare": 114.93335029056765,
         "institutionReferencePrice": null,
         "institutionReferenceAboveOptimistic": false,
@@ -2073,14 +2073,14 @@
       "theme": "稳定现金流",
       "industry": "美容护理",
       "weight": 0.025,
-      "price": 56.48,
-      "dailyReturn": -0.007206890490420226,
+      "price": 56.79,
+      "dailyReturn": 0.005488668555240883,
       "reason": "上一交易日锚仓保留：基本面、基准DCF和护城河代理没有硬性退出条件，避免因每日评分波动频繁换仓。",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": 1.094336107000537,
-        "excessKurtosis": 4.0566554681546805,
+        "skewness": 1.085745343520269,
+        "excessKurtosis": 4.059455843882782,
         "skewLabel": "右尾机会型",
         "kurtosisLabel": "高厚尾跳跃型",
         "observations": 252
@@ -2129,7 +2129,7 @@
           "earningsMultiplier": 1.1,
           "terminalValueShare": 0.7955512515886384,
           "valuePerShare": 103.55157496200007,
-          "marginOfSafety": 0.8334202365793215
+          "marginOfSafety": 0.8234121317485485
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -2138,7 +2138,7 @@
           "earningsMultiplier": 1.05,
           "terminalValueShare": 0.7491645686751456,
           "valuePerShare": 79.03287768333422,
-          "marginOfSafety": 0.3993073244216398
+          "marginOfSafety": 0.3916689150085266
         },
         "base": {
           "discountRate": 0.1,
@@ -2147,7 +2147,7 @@
           "earningsMultiplier": 1.0,
           "terminalValueShare": 0.7046832515657075,
           "valuePerShare": 63.01654939828426,
-          "marginOfSafety": 0.1157321069101322
+          "marginOfSafety": 0.1096416516690308
         },
         "cautious": {
           "discountRate": 0.11,
@@ -2156,7 +2156,7 @@
           "earningsMultiplier": 0.9,
           "terminalValueShare": 0.6503538413800464,
           "valuePerShare": 47.30830438277799,
-          "marginOfSafety": -0.162388378491891
+          "marginOfSafety": -0.16696065534816
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -2165,12 +2165,12 @@
           "earningsMultiplier": 0.8,
           "terminalValueShare": 0.5800460207811095,
           "valuePerShare": 34.94930113270842,
-          "marginOfSafety": -0.3812092575653608
+          "marginOfSafety": -0.3845870552437327
         }
       },
       "metrics": {
         "股息率": "3.5%",
-        "所有者收益率": "6.7%",
+        "所有者收益率": "6.6%",
         "三年ROE": "27.4%",
         "护城河代理分": "96.0"
       },
@@ -2182,9 +2182,9 @@
         "repairConditions": [],
         "failureSignals": [],
         "institutionReferences": [],
-        "currentPrice": 56.48,
+        "currentPrice": 56.79,
         "baseDcfValuePerShare": 63.01654939828426,
-        "baseDcfMargin": 0.1157321069101322,
+        "baseDcfMargin": 0.1096416516690308,
         "optimisticDcfValuePerShare": 79.03287768333422,
         "institutionReferencePrice": null,
         "institutionReferenceAboveOptimistic": false,
@@ -2201,14 +2201,14 @@
       "theme": "十五五六网",
       "industry": "通信",
       "weight": 0.025,
-      "price": 96.45,
-      "dailyReturn": 0.004582855952504961,
+      "price": 96.4,
+      "dailyReturn": -0.0005184033177811909,
       "reason": "既有未来仓尚未通过可审计护城河确认；冻结加仓和晋级，须在 2026-09-25 前完成复核，否则按阶梯退出。",
       "moatReviewConfirmed": false,
       "humanMoatConfirmed": false,
       "distribution": {
-        "skewness": -0.01091520986287311,
-        "excessKurtosis": 1.8547249733400806,
+        "skewness": -0.01882588399199949,
+        "excessKurtosis": 1.890255712214314,
         "skewLabel": "近对称分布",
         "kurtosisLabel": "厚尾波动型",
         "observations": 252
@@ -2266,7 +2266,7 @@
           "earningsMultiplier": null,
           "terminalValueShare": null,
           "valuePerShare": 199.5473160813045,
-          "marginOfSafety": 1.068919814217776
+          "marginOfSafety": 1.069992905407723
         },
         "optimistic": {
           "discountRate": 0.09,
@@ -2275,7 +2275,7 @@
           "earningsMultiplier": null,
           "terminalValueShare": null,
           "valuePerShare": 148.395725946722,
-          "marginOfSafety": 0.538576733506708
+          "marginOfSafety": 0.539374750484668
         },
         "base": {
           "discountRate": 0.1,
@@ -2284,7 +2284,7 @@
           "earningsMultiplier": null,
           "terminalValueShare": null,
           "valuePerShare": 114.9820151534227,
-          "marginOfSafety": 0.1921411628141285
+          "marginOfSafety": 0.1927594932927665
         },
         "cautious": {
           "discountRate": 0.11,
@@ -2293,7 +2293,7 @@
           "earningsMultiplier": null,
           "terminalValueShare": null,
           "valuePerShare": 82.21103627005779,
-          "marginOfSafety": -0.1476305207873739
+          "marginOfSafety": -0.1471884204350851
         },
         "very_pessimistic": {
           "discountRate": 0.12,
@@ -2302,7 +2302,7 @@
           "earningsMultiplier": null,
           "terminalValueShare": null,
           "valuePerShare": 56.42733897429627,
-          "marginOfSafety": -0.4149576052431698
+          "marginOfSafety": -0.4146541600176736
         }
       },
       "milestoneValuation": {
@@ -2310,9 +2310,9 @@
         "verifiedMilestones": 0,
         "currentBusinessFloor": 82.21103627005779,
         "probabilityWeightedValue": 88.30573953873503,
-        "marginOfSafety": -0.0844402328798856,
+        "marginOfSafety": -0.0839653574820018,
         "minimumMarginRequired": 0.3,
-        "failureDownside": 0.4149576052431698,
+        "failureDownside": 0.4146541600176736,
         "maximumFailureDownside": 0.3,
         "scenarios": {
           "failure": {
@@ -2416,9 +2416,9 @@
         ],
         "disclaimer": "机构目标价是公开预测，不是事实或保证；不同货币、估值方法和发布日期不可直接横向比较。该卡只辅助人工判断，不自动改变confirmed、护城河状态、仓位或收益。",
         "disclaimerEn": "Institution targets are public forecasts, not facts or guarantees; currencies, methods and dates are not directly comparable. This panel only assists human review and never changes confirmation, moat status, weights or returns.",
-        "currentPrice": 96.45,
+        "currentPrice": 96.4,
         "baseDcfValuePerShare": 114.9820151534227,
-        "baseDcfMargin": 0.1921411628141285,
+        "baseDcfMargin": 0.1927594932927665,
         "optimisticDcfValuePerShare": 148.395725946722,
         "institutionReferencePrice": 112.0,
         "institutionReferenceAboveOptimistic": false,
@@ -2431,23 +2431,23 @@
     "totalCount": 7,
     "confirmedWeight": 0,
     "grayWeight": 0.3898648648648647,
-    "modelDailyReturn": -0.0020810393320626,
+    "modelDailyReturn": -0.0008925205338591,
     "confirmedDailyReturn": null,
-    "grayDailyReturn": -0.0020810393320626927,
+    "grayDailyReturn": -0.0008925205338591956,
     "note": "护城河确认可由人工或AI完成，但必须引用当前有效的一手证据并留下审核记录；它是新未来种子仓的硬门槛，既有未确认未来仓在限期内冻结加仓和晋级，逾期后按阶梯退出。"
   },
   "allocationChange": {
     "changed": false,
-    "activeAsOf": "2026-09-21",
-    "nextAsOf": "2026-09-23",
+    "activeAsOf": "2026-09-22",
+    "nextAsOf": "2026-09-24",
     "effectiveLabel": "下一交易日开盘后生效",
     "marketContext": "本轮没有使用宏观大环境择时信号；变化只由个股筛选/证据状态、锚仓继承纪律、经济因子分散和现金预算约束驱动。",
     "changes": [],
     "valuationWarnings": []
   },
   "moatRadar": {
-    "asOf": "2026-09-22",
-    "checkedAt": "2026-09-22T09:43:23-04:00",
+    "asOf": "2026-09-23",
+    "checkedAt": "2026-09-23T04:31:24-04:00",
     "financialStatus": "OK",
     "pendingAlerts": 5,
     "highAlerts": 0,
@@ -2455,28 +2455,28 @@
     "note": "财报与复核期限命中会生成有截止日的人工复核事件；高优先级逾期在连续确认后逐档降低风险预算"
   },
   "distributionSummary": {
-    "skewness": 0.36875390533185737,
-    "excessKurtosis": 0.9924262429521544,
+    "skewness": 0.3639278106190202,
+    "excessKurtosis": 1.0137684950680503,
     "skewLabel": "近对称分布",
-    "kurtosisLabel": "常态尾部",
+    "kurtosisLabel": "厚尾波动型",
     "observations": 252,
-    "periodStart": "2025-09-09",
-    "periodEnd": "2026-09-22",
+    "periodStart": "2025-09-10",
+    "periodEnd": "2026-09-23",
     "method": "当日生效仓位的近252个共同交易日；偏度描述方向，峰度为超额峰度并描述极端波动频率"
   },
   "performanceMetrics": {
-    "sharpe": 1.1492678698824363,
-    "smartSharpe": 1.1915170587754407,
-    "observations": 49,
+    "sharpe": 1.0983400630337303,
+    "smartSharpe": 1.1392392468887462,
+    "observations": 50,
     "periodStart": "2026-07-16",
-    "periodEnd": "2026-09-22",
+    "periodEnd": "2026-09-23",
     "annualRiskFreeRate": 0.0,
     "annualizationFactor": 252,
     "status": "OK",
     "minimumObservations": 30,
     "method": "标准Sharpe=(日均超额收益/日收益标准差)×√252；Smart Sharpe再按偏度与超额峰度修正",
-    "skewness": 0.6450142828765583,
-    "excessKurtosis": 1.5769735253674901
+    "skewness": 0.6625106691965994,
+    "excessKurtosis": 1.6719460366571326
   },
   "dividendSummary": {
     "cumulativeCash": 0.0050882854926811,
@@ -2885,6 +2885,14 @@
       "priceCoverage": 0.3898648648648647,
       "cashDividendReturn": 0.0,
       "stockDividendReturn": 0.0
+    },
+    {
+      "date": "2026-09-23",
+      "nav": 1.0240246100393078,
+      "dailyReturn": -0.0008925205338591,
+      "priceCoverage": 0.3898648648648647,
+      "cashDividendReturn": 0.0,
+      "stockDividendReturn": 0.0
     }
   ],
   "benchmark": {
@@ -2895,7 +2903,7 @@
     "basisEn": "CSI 300 raw close proxy, excluding index dividends; normalized to 1 on the same recorded dates",
     "status": "OK",
     "startDate": "2026-07-15",
-    "endDate": "2026-09-22",
+    "endDate": "2026-09-23",
     "history": [
       {
         "date": "2026-07-15",
@@ -3146,6 +3154,11 @@
         "date": "2026-09-22",
         "nav": 0.9494033236686652,
         "dailyReturn": 0.0011062953295042366
+      },
+      {
+        "date": "2026-09-23",
+        "nav": 0.9436982392432763,
+        "dailyReturn": -0.006009126240830276
       }
     ]
   },
