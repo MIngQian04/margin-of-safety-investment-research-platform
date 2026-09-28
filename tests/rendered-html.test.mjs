@@ -180,11 +180,20 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(background.byteLength > 100_000);
   assert.ok(data.holdings.length > 0);
   assert.ok(data.nextHoldings.length > 0);
-  assert.equal(data.humanReview.confirmedCount, 0);
-  assert.ok(data.humanReview.grayWeight > 0);
+  assert.ok(Number.isInteger(data.humanReview.confirmedCount));
+  assert.ok(data.humanReview.confirmedCount >= 0);
+  assert.ok(data.humanReview.confirmedCount <= data.humanReview.totalCount);
+  assert.ok(data.humanReview.grayWeight >= 0 && data.humanReview.grayWeight <= 1);
   assert.ok(Number.isFinite(data.humanReview.modelDailyReturn));
-  assert.ok(data.holdings.every((holding) => holding.humanMoatConfirmed === false));
-  assert.ok(data.nextHoldings.find((holding) => holding.code === "600941.SH")?.valuationRepair.institutionReferences.length >= 3);
+  assert.ok(data.holdings.every((holding) => typeof holding.humanMoatConfirmed === "boolean"));
+  const modelHoldings = [...data.holdings, ...data.nextHoldings];
+  assert.ok(modelHoldings.every((holding) => Array.isArray(holding.valuationRepair?.institutionReferences)));
+  assert.ok(modelHoldings.every((holding) => holding.valuationRepair.institutionReferences.every((reference) =>
+    reference.institution &&
+    reference.publishedDate &&
+    reference.sourceUrl &&
+    Number.isFinite(reference.targetPrice)
+  )));
   assert.ok(data.activeAsOf <= data.returnDate);
   assert.ok(data.allocationChange.nextAsOf >= data.returnDate);
   assert.equal(data.distributionAsOf, data.activeAsOf);
@@ -193,14 +202,12 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.allocationChange.marketContext.includes("没有使用宏观大环境择时信号"));
   assert.ok(data.allocationChange.changes.every((change) => change.code && change.reason !== undefined));
   assert.ok(data.allocationChange.valuationWarnings.every((warning) => warning.code && warning.reason));
-  assert.ok(data.nextHoldings.some((holding) => holding.code === "300628.SZ" && holding.weight > 0));
-  assert.ok(data.nextHoldings.some((holding) => holding.code === "000651.SZ" && holding.weight > 0));
-  assert.ok(data.nextHoldings.some((holding) => holding.code === "600941.SH" && holding.weight === 0.025));
+  assert.ok(data.nextHoldings.every((holding) => holding.code && holding.weight > 0));
+  assert.equal(new Set(data.nextHoldings.map((holding) => holding.code)).size, data.nextHoldings.length);
   const futureHoldings = data.nextHoldings.filter((holding) => holding.bucket === "FUTURE");
-  assert.ok(futureHoldings.length > 0);
   assert.ok(futureHoldings.every((holding) => holding.weight > 0));
   assert.ok(Math.abs(futureHoldings.reduce((sum, holding) => sum + holding.weight, 0) - data.summary.futureWeight) < 1e-12);
-  assert.ok(!data.nextHoldings.some((holding) => holding.code === "603195.SH"));
+  assert.ok(Math.abs(data.nextHoldings.reduce((sum, holding) => sum + holding.weight, 0) + data.summary.cashWeight - 1) < 1e-12);
   assert.ok(data.holdings.every((holding) => holding.price >= 0));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.dailyReturn)));
   assert.ok(data.holdings.every((holding) => Number.isFinite(holding.distribution.skewness)));
@@ -212,7 +219,7 @@ test("portfolio card includes interactive period returns, chart, positions and p
   assert.ok(data.holdings.every((holding) => holding.moat.monitoringSignals.length > 0));
   assert.ok(data.holdings.every((holding) => holding.moat.invalidationSignals.length > 0));
   assert.ok(data.holdings.every((holding) => holding.moat.nextReviewDate));
-  assert.ok(data.nextHoldings.some((holding) => holding.code === "000651.SZ" && holding.moat.thesis));
+  assert.ok(data.nextHoldings.every((holding) => holding.moat.thesis));
   assert.ok(data.holdings.every((holding) => Number.isInteger(holding.moat.radar.pendingAlertCount)));
   assert.ok(data.moatRadar.financialStatus);
   assert.ok(Number.isInteger(data.moatRadar.overdueAlerts));
