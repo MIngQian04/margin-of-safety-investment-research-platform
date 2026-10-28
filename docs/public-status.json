@@ -1,21 +1,21 @@
 {
-  "snapshot_date": "2026-10-27",
+  "snapshot_date": "2026-10-28",
   "securities_scanned": 5570,
-  "financial_reviewed": 6,
-  "financial_complete": 6,
-  "ranked_screen_rows": 6,
-  "anchor_eligible": 0,
-  "dcf_valuations_generated": 6,
+  "financial_reviewed": 207,
+  "financial_complete": 207,
+  "ranked_screen_rows": 8,
+  "anchor_eligible": 14,
+  "dcf_valuations_generated": 207,
   "moat_registry_records": 10,
   "forward_nav_start_date": "2026-07-15",
-  "forward_nav_end_date": "2026-10-27",
+  "forward_nav_end_date": "2026-10-28",
   "radar_health_available": true,
-  "radar_health_as_of": "2026-10-27",
+  "radar_health_as_of": "2026-10-28",
   "screening_funnel": {
     "scanned": 5570,
-    "financial_reviewed_and_valuation_ready": 6,
-    "anchor_threshold": 0,
-    "public_research_queue": 6
+    "financial_reviewed_and_valuation_ready": 207,
+    "anchor_threshold": 14,
+    "public_research_queue": 8
   },
   "source_files": [
     "outputs/barbell-strategy/portfolio_summary.csv",
