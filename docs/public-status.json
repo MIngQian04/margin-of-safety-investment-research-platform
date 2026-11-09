@@ -1,20 +1,20 @@
 {
-  "snapshot_date": "2026-11-06",
+  "snapshot_date": "2026-11-09",
   "securities_scanned": 5573,
   "financial_reviewed": 208,
   "financial_complete": 208,
   "ranked_screen_rows": 8,
-  "anchor_eligible": 13,
+  "anchor_eligible": 15,
   "dcf_valuations_generated": 208,
   "moat_registry_records": 10,
   "forward_nav_start_date": "2026-07-15",
-  "forward_nav_end_date": "2026-11-06",
+  "forward_nav_end_date": "2026-11-09",
   "radar_health_available": true,
-  "radar_health_as_of": "2026-11-06",
+  "radar_health_as_of": "2026-11-09",
   "screening_funnel": {
     "scanned": 5573,
     "financial_reviewed_and_valuation_ready": 208,
-    "anchor_threshold": 13,
+    "anchor_threshold": 15,
     "public_research_queue": 8
   },
   "source_files": [
